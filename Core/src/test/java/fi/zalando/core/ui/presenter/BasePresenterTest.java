@@ -12,7 +12,7 @@ import org.robolectric.annotation.Config;
 import java.io.Serializable;
 
 import fi.zalando.core.BuildConfig;
-import fi.zalando.core.helper.SubscriptionHelper;
+import fi.zalando.core.domain.helper.SubscriptionHelper;
 import fi.zalando.core.module.BaseHelperModule;
 import fi.zalando.core.ui.view.BaseView;
 import icepick.State;

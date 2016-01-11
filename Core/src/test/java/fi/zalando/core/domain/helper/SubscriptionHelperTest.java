@@ -1,4 +1,4 @@
-package fi.zalando.core.helper;
+package fi.zalando.core.domain.helper;
 
 import org.junit.Before;
 import org.junit.Test;

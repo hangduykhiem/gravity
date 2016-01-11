@@ -5,7 +5,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import fi.zalando.core.helper.SubscriptionHelper;
+import fi.zalando.core.domain.helper.SubscriptionHelper;
 import fi.zalando.core.ui.view.BaseView;
 import fi.zalando.core.utils.Preconditions;
 import icepick.Icepick;
