@@ -1,8 +1,8 @@
-package fi.zalando.core.helper.impl;
+package fi.zalando.core.domain.helper.impl;
 
 import android.support.annotation.NonNull;
 
-import fi.zalando.core.helper.SubscriptionHelper;
+import fi.zalando.core.domain.helper.SubscriptionHelper;
 import fi.zalando.core.utils.Preconditions;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;

@@ -4,7 +4,7 @@ import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
-import fi.zalando.core.helper.SubscriptionHelper;
+import fi.zalando.core.domain.helper.SubscriptionHelper;
 import fi.zalando.core.persistence.PersistentHashTable;
 import fi.zalando.core.persistence.impl.SharedPreferencesPersistentHashTableImpl;
 

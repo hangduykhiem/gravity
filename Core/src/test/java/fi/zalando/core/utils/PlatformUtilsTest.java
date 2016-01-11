@@ -6,7 +6,7 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import fi.zalando.core.BuildConfig;
-import fi.zalando.core.helper.SubscriptionHelper;
+import fi.zalando.core.domain.helper.SubscriptionHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
