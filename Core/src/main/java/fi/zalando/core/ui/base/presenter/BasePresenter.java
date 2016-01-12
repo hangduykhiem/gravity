@@ -1,4 +1,4 @@
-package fi.zalando.core.ui.presenter;
+package fi.zalando.core.ui.base.presenter;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import fi.zalando.core.domain.helper.SubscriptionHelper;
-import fi.zalando.core.ui.view.BaseView;
+import fi.zalando.core.ui.base.view.BaseView;
 import fi.zalando.core.utils.Preconditions;
 import icepick.Icepick;
 

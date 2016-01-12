@@ -1,4 +1,4 @@
-package fi.zalando.core.ui.presenter;
+package fi.zalando.core.ui.base.presenter;
 
 import android.os.Bundle;
 
@@ -14,7 +14,7 @@ import java.io.Serializable;
 import fi.zalando.core.BuildConfig;
 import fi.zalando.core.domain.helper.SubscriptionHelper;
 import fi.zalando.core.module.BaseHelperModule;
-import fi.zalando.core.ui.view.BaseView;
+import fi.zalando.core.ui.base.view.BaseView;
 import icepick.State;
 import rx.Observable;
 
