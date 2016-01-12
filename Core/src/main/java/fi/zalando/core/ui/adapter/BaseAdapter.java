@@ -5,14 +5,15 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 
+import fi.zalando.core.ui.adapter.viewholder.BaseViewHolder;
+
 /**
  * Abstract activity that holds common methods usable by all the {@link RecyclerView.Adapter} on the
  * app.
  *
  * Created by jduran on 12/01/16.
  */
-public abstract class BaseAdapter<T, U extends RecyclerView.ViewHolder> extends RecyclerView
-        .Adapter<U> {
+public abstract class BaseAdapter<T, U extends BaseViewHolder> extends RecyclerView.Adapter<U> {
 
     protected List<T> items;
 
