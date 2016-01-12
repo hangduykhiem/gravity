@@ -13,7 +13,7 @@ import fi.zalando.core.ui.adapter.viewholder.BaseViewHolder;
  *
  * Created by jduran on 12/01/16.
  */
-public abstract class BaseAdapter<T, U extends BaseViewHolder> extends RecyclerView.Adapter<U> {
+public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends RecyclerView.Adapter<U> {
 
     protected List<T> items;
 
