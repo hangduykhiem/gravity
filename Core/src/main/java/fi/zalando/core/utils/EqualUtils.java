@@ -17,7 +17,7 @@ public class EqualUtils {
      * @return {@link Boolean} indicating if the objects are equal
      */
     public static boolean areEqual(@Nullable Object aThis, @Nullable Object aThat) {
-        //System.out.println("Object");
+
         return aThis == null ? aThat == null : aThis.equals(aThat);
     }
 

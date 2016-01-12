@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
-import fi.zalando.core.ui.presenter.BasePresenter;
-import fi.zalando.core.ui.view.BaseView;
+import fi.zalando.core.ui.base.presenter.BasePresenter;
+import fi.zalando.core.ui.base.view.BaseView;
 
 /**
  * Base fragment to wrap all together some utility methods for fragments

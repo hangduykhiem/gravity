@@ -1,4 +1,4 @@
-package fi.zalando.core.ui.view;
+package fi.zalando.core.ui.base.view;
 
 /**
  * Base interface that will be extended by Activities and Fragments that will define the actions
