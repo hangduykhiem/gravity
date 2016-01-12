@@ -14,8 +14,8 @@ import butterknife.ButterKnife;
 import dagger.Lazy;
 import fi.zalando.core.R;
 import fi.zalando.core.ui.animator.ToolbarAnimator;
-import fi.zalando.core.ui.base.presenter.BasePresenter;
-import fi.zalando.core.ui.base.view.BaseView;
+import fi.zalando.core.ui.presenter.BasePresenter;
+import fi.zalando.core.ui.view.BaseView;
 
 /**
  * Abstract activity that holds common methods usable by all the {@link android.app.Activity} on the
