@@ -1,5 +1,6 @@
 package fi.zalando.core.ui.adapter.viewholder;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,6 +13,8 @@ import butterknife.ButterKnife;
  * Created by jduran on 12/01/16.
  */
 public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder {
+
+    private T model;
 
     /**
      * Constructor
@@ -31,5 +34,17 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder {
      * @param modelToBind {@link T} model that will be bound with the {@link
      *                    RecyclerView.ViewHolder}
      */
-    public abstract void bindData(@NonNull T modelToBind);
+    @CallSuper
+    public void bindData(@NonNull T modelToBind) {
+        model = modelToBind;
+    }
+
+    /**
+     * Provides the model that was bound to the view holder
+     *
+     * @return {@link T} bound in the view holder
+     */
+    public T getModel() {
+        return model;
+    }
 }
