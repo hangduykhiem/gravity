@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder {
 
     private T model;
+    private View view;
 
     /**
      * Constructor
@@ -26,6 +27,8 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder {
         super(itemView);
         // Inflate items in ViewHolder with butterknife
         ButterKnife.bind(this, itemView);
+
+        view = itemView;
     }
 
     /**
@@ -47,4 +50,11 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder {
     public T getModel() {
         return model;
     }
+
+    /**
+     * Returns the View root this ViewHolder holds.
+     *
+     * @return {@link View} that this ViewHolder hosts.
+     */
+    public View getView() { return view; }
 }
