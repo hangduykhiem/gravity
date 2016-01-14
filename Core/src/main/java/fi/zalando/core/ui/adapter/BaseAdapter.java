@@ -27,4 +27,10 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
         this.items = items;
     }
 
+    @Override
+    public int getItemCount() {
+
+        return items.size();
+    }
+
 }
