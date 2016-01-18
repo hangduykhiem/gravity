@@ -55,11 +55,11 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.1.0'
 
     // Retrofit Library
-    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
     // GSON converter for retrofit
-    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
     // RXJava adapter for retrofit
-    compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta3'
 
     // Add test dependencies
     testCompile 'junit:junit:4.12'
