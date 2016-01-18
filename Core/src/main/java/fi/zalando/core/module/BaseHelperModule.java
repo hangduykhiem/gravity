@@ -2,6 +2,7 @@ package fi.zalando.core.module;
 
 import dagger.Module;
 import dagger.Provides;
+import fi.zalando.core.data.helper.GooglePlayServicesHelper;
 import fi.zalando.core.domain.helper.SubscriptionHelper;
 
 /**
@@ -11,6 +12,17 @@ import fi.zalando.core.domain.helper.SubscriptionHelper;
  */
 @Module
 public class BaseHelperModule {
+
+    /**
+     * Provides a {@link GooglePlayServicesHelper} instance dependency
+     *
+     * @return {@link GooglePlayServicesHelper} instance
+     */
+    @Provides
+    public GooglePlayServicesHelper provideGooglePlayServicesHelper() {
+
+        return new GooglePlayServicesHelper();
+    }
 
     /**
      * Provides a {@link SubscriptionHelper} instance dependency

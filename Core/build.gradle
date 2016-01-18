@@ -32,6 +32,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
 
+    // Google Play Services
+    compile 'com.google.android.gms:play-services-location:8.4.0'
+
     // Butterknife library to ease the access to inject views in activities and fragments
     compile 'com.jakewharton:butterknife:7.0.1'
 
