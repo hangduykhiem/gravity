@@ -3,7 +3,6 @@ package fi.zalando.core.module;
 import dagger.Module;
 import dagger.Provides;
 import fi.zalando.core.domain.helper.SubscriptionHelper;
-import fi.zalando.core.domain.helper.impl.SubscriptionHelperImpl;
 
 /**
  * Module that provides the implementations of all the injected helpers
@@ -21,7 +20,7 @@ public class BaseHelperModule {
     @Provides
     public SubscriptionHelper provideSubscriptionHelper() {
 
-        return new SubscriptionHelperImpl();
+        return new SubscriptionHelper();
     }
 
 }
