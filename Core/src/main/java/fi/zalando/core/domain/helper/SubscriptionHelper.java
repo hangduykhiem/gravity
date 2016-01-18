@@ -2,7 +2,10 @@ package fi.zalando.core.domain.helper;
 
 import android.support.annotation.NonNull;
 
+import fi.zalando.core.utils.Preconditions;
 import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 /**
  * Definition of methods to handle unsubscriptions of {@link rx.Observable} when {@link
@@ -10,25 +13,53 @@ import rx.Subscription;
  *
  * Created by jduran on 19/11/15.
  */
-public interface SubscriptionHelper {
+public class SubscriptionHelper {
+
+    private CompositeSubscription subscriptions;
+
+    /**
+     * Constructor
+     */
+    public SubscriptionHelper() {
+
+        subscriptions = new CompositeSubscription();
+    }
 
     /**
      * Adds a {@link Subscription} to the {@link SubscriptionHelper}
      *
      * @param subscription {@link Subscription} tp add
      */
-    public void addSubscription(@NonNull Subscription subscription);
+    public void addSubscription(@NonNull Subscription subscription) {
+
+        // Check preconditions
+        Preconditions.checkNotNull(subscription);
+
+        Timber.d("addSubscription " + subscription.toString());
+
+        subscriptions.add(subscription);
+    }
 
     /**
      * Checks if the manager has any subscription attached to it
      *
      * @return {@link Boolean} indicating if the manager has subscriptions attached
      */
-    public boolean hasSubscriptions();
+    public boolean hasSubscriptions() {
+
+        return subscriptions.hasSubscriptions();
+    }
 
     /**
      * Unsubscribe all the added {@link Subscription}s
      */
-    public void unsubscribeAll();
+    public void unsubscribeAll() {
 
+        Timber.d("unsubscribeAll");
+
+        // Unsubscribe first
+        subscriptions.unsubscribe();
+        // Force clear of subscriptions
+        subscriptions.clear();
+    }
 }

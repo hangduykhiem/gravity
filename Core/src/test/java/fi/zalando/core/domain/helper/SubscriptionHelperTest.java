@@ -31,7 +31,7 @@ public class SubscriptionHelperTest {
         // Check it is empty
         assertFalse(subscriptionHelper.hasSubscriptions());
 
-        // Create a sample Subscription, use timer to ensure it's not automatically finishing
+        // Create a sample Subscription, ensure it's never ending
         Subscription sampleSubscription = Observable.never().subscribe();
 
         // Add the subscription
