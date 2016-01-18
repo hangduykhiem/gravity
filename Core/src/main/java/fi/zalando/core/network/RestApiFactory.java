@@ -7,10 +7,10 @@ import android.support.annotation.Nullable;
 import android.util.Patterns;
 
 import fi.zalando.core.utils.Preconditions;
-import retrofit.CallAdapter;
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
+import retrofit2.CallAdapter;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Retrofit;
+import retrofit2.RxJavaCallAdapterFactory;
 import timber.log.Timber;
 
 /**
@@ -50,7 +50,7 @@ public final class RestApiFactory {
      * Creates a {@link Retrofit} object with the given settings
      *
      * @param url                  {@link String} with the Base Url
-     * @param callAdapterFactory   {@link retrofit.CallAdapter.Factory}
+     * @param callAdapterFactory   {@link retrofit2.CallAdapter.Factory}
      * @param gsonConverterFactory {@link Gson} converter to use for serialising
      * @return {@link Retrofit} object with the given settings
      */

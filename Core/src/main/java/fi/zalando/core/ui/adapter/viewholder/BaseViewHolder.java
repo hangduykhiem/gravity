@@ -53,5 +53,7 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder {
      *
      * @return {@link View} that this ViewHolder hosts.
      */
-    public View getView() { return itemView; }
+    public View getView() {
+        return itemView;
+    }
 }
