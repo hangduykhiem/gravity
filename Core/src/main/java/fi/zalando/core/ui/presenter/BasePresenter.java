@@ -66,6 +66,8 @@ public abstract class BasePresenter<T extends BaseView> {
         isPresenterInitialised = true;
         // Restore saved values using IcePick
         Icepick.restoreInstanceState(this, savedInstanceState);
+        // Init View
+        view.initView();
     }
 
     /**
