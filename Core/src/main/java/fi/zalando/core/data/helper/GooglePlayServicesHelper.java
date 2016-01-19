@@ -5,8 +5,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
-import fi.zalando.core.data.helper.throwable.GooglePlayServicesConnectionResultThrowable;
+import fi.zalando.core.data.helper.exception.GooglePlayServicesConnectionResultException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.subscriptions.Subscriptions;
@@ -18,12 +19,23 @@ import rx.subscriptions.Subscriptions;
  */
 public class GooglePlayServicesHelper {
 
+    /**
+     * Provides an {@link Observable} that connects the given {@link GoogleApiClient}
+     * asynchronously
+     *
+     * @param googleApiClient {@link GoogleApiClient} to connect
+     * @return {@link Observable} to connect asynchronously the {@link GoogleApiClient}
+     */
     public Observable<GoogleApiClient> loadGooglePlayServices(GoogleApiClient googleApiClient) {
 
-        return Observable.create(new ObservableConnection(googleApiClient));
+        return Observable.create(new ConnectionObservable(googleApiClient));
     }
 
-    private final class ObservableConnection implements Observable.OnSubscribe<GoogleApiClient>,
+    /**
+     * {@link Observable} that provides a connected {@link GoogleApiClient} asynchronously
+     */
+    @VisibleForTesting
+    private final class ConnectionObservable implements Observable.OnSubscribe<GoogleApiClient>,
             GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
         private final GoogleApiClient googleAPIClient;
@@ -34,7 +46,7 @@ public class GooglePlayServicesHelper {
          *
          * @param client {@link GoogleApiClient} to connect
          */
-        private ObservableConnection(GoogleApiClient client) {
+        private ConnectionObservable(GoogleApiClient client) {
 
             this.googleAPIClient = client;
         }
@@ -50,14 +62,14 @@ public class GooglePlayServicesHelper {
 
             ConnectionResult suspendedConnectionResult = new ConnectionResult(ConnectionResult
                     .CANCELED);
-            observer.onError(new GooglePlayServicesConnectionResultThrowable
+            observer.onError(new GooglePlayServicesConnectionResultException
                     (suspendedConnectionResult.toString(), suspendedConnectionResult));
         }
 
         @Override
         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-            observer.onError(new GooglePlayServicesConnectionResultThrowable(connectionResult
+            observer.onError(new GooglePlayServicesConnectionResultException(connectionResult
                     .toString(), connectionResult));
         }
 
@@ -69,13 +81,14 @@ public class GooglePlayServicesHelper {
             googleAPIClient.registerConnectionFailedListener(this);
             googleAPIClient.connect();
 
+            // Add an event to be called when unsubscribe the observable
             observer.add(Subscriptions.create(() -> {
 
                 if (googleAPIClient.isConnected() || googleAPIClient.isConnecting()) {
                     googleAPIClient.disconnect();
                 }
-                googleAPIClient.unregisterConnectionFailedListener(ObservableConnection.this);
-                googleAPIClient.unregisterConnectionCallbacks(ObservableConnection.this);
+                googleAPIClient.unregisterConnectionFailedListener(ConnectionObservable.this);
+                googleAPIClient.unregisterConnectionCallbacks(ConnectionObservable.this);
             }));
         }
     }
