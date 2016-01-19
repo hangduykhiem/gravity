@@ -13,5 +13,9 @@ package fi.zalando.core.ui.view;
  */
 public abstract interface BaseView {
 
+    /**
+     * This is used to initialize the View for the first time. This method is called at the end of
+     * onCreate or onActivityCreated by the BasePresenter.
+     */
     public void initView();
 }
