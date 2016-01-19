@@ -1,11 +1,11 @@
-package fi.zalando.core.data.helper.throwable;
+package fi.zalando.core.data.helper.exception;
 
 import com.google.android.gms.common.ConnectionResult;
 
 /**
- * {@link Throwable} class to wrap errors related with Google Play Services
+ * {@link Exception} class to wrap errors related with Google Play Services
  */
-public class GooglePlayServicesConnectionResultThrowable extends Throwable {
+public class GooglePlayServicesConnectionResultException extends Exception {
 
     private final ConnectionResult connectionResult;
 
@@ -15,7 +15,7 @@ public class GooglePlayServicesConnectionResultThrowable extends Throwable {
      * @param description {@link String} with the error description
      * @param result      {@link ConnectionResult} with the error details
      */
-    public GooglePlayServicesConnectionResultThrowable(String description, ConnectionResult
+    public GooglePlayServicesConnectionResultException(String description, ConnectionResult
             result) {
 
         super(description);

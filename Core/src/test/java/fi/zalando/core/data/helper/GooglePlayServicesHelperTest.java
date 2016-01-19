@@ -10,7 +10,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import fi.zalando.core.module.BaseHelperModule;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -44,7 +46,25 @@ public class GooglePlayServicesHelperTest {
                 (GoogleApiClient.ConnectionCallbacks.class));
         verify(mockedGoogleApiClient).registerConnectionFailedListener(any
                 (GoogleApiClient.OnConnectionFailedListener.class));
+    }
+
+    @Test
+    public void testConnectCalled() {
+
+        // Make a fake subscription
+        googlePlayServicesHelper.loadGooglePlayServices(mockedGoogleApiClient).subscribe();
+        // Verify connect is called
         verify(mockedGoogleApiClient).connect();
+    }
+
+    @Test
+    public void testGoogleApiReturnedWhenConnected() {
+
+        // Setup persistence mock. Return the hardcoded date
+        doAnswer(invocation -> true).when(mockedGoogleApiClient).isConnected();
+        // Verify google api client is returned if connected succesfully
+        assertEquals(googlePlayServicesHelper.loadGooglePlayServices(mockedGoogleApiClient)
+                .toBlocking().first(), mockedGoogleApiClient);
     }
 
     // TODO Investigate how to test connection failures, etc. Check -> http://bit.ly/1U6YQ09

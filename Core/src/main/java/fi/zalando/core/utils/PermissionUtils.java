@@ -19,7 +19,7 @@ public class PermissionUtils {
     }
 
     /**
-     * Checks if the given permissions are granted for current application.
+     * Checks if all the given permissions are granted for current application.
      *
      * @param applicationContext {@link Context} of the app
      * @param permissions        {@link String} array with the permissions to check
