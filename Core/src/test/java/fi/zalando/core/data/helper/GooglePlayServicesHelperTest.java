@@ -57,16 +57,6 @@ public class GooglePlayServicesHelperTest {
         verify(mockedGoogleApiClient).connect();
     }
 
-    @Test
-    public void testGoogleApiReturnedWhenConnected() {
-
-        // Setup persistence mock. Return the hardcoded date
-        doAnswer(invocation -> true).when(mockedGoogleApiClient).isConnected();
-        // Verify google api client is returned if connected succesfully
-        assertEquals(googlePlayServicesHelper.loadGooglePlayServices(mockedGoogleApiClient)
-                .toBlocking().first(), mockedGoogleApiClient);
-    }
-
     // TODO Investigate how to test connection failures, etc. Check -> http://bit.ly/1U6YQ09
 
 }

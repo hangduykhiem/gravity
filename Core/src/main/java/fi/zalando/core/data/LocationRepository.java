@@ -89,12 +89,12 @@ public class LocationRepository {
                     .ACCESS_FINE_LOCATION));
             return;
         }
-        Location lastKnwonLocation = LocationServices.FusedLocationApi
+        Location lastKnownLocation = LocationServices.FusedLocationApi
                 .getLastLocation(googleApiClient);
         // If last known location available, use it!
-        if (lastKnwonLocation != null) {
-            subscriber.onNext(new LatLng(lastKnwonLocation.getLatitude(),
-                    lastKnwonLocation.getLongitude()));
+        if (lastKnownLocation != null) {
+            subscriber.onNext(new LatLng(lastKnownLocation.getLatitude(),
+                    lastKnownLocation.getLongitude()));
             subscriber.onCompleted();
         } else {
             // If last known location not available, look for updates
