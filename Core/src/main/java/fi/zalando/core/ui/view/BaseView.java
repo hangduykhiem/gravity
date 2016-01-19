@@ -13,4 +13,5 @@ package fi.zalando.core.ui.view;
  */
 public abstract interface BaseView {
 
+    public void initView();
 }
