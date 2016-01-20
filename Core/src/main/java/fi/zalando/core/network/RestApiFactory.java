@@ -1,6 +1,7 @@
 package fi.zalando.core.network;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -43,7 +44,7 @@ public final class RestApiFactory {
                 "gson: " + gson);
 
         return setupRetrofit(baseUrl, RxJavaCallAdapterFactory.create(), gson != null ? gson :
-                new Gson()).create(restInterface);
+                new GsonBuilder().create()).create(restInterface);
     }
 
     /**
