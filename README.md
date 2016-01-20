@@ -13,6 +13,16 @@ This document describes the setup instructions, tools, libraries, style and nami
 - Create a pull request to merge your changes to team repos
 - ONLY a reviewer can merge your changes to the team-level repository
 
+## Creating a Pull Request
+
+Please, follow this steps before creating a pull requests with your changes to the main repository:
+
+- Fetch all content from upstream (master android repositories)
+- Pull changes from upstream and add the changes to the branch you are gonna push for the PR.
+- ENSURE that the code compiles, run the tests and executes properly.
+- Push changes to your GitHub forked repository.
+- Create PR.
+
 ## Coding Style
 
 [Follow Google Java coding guidelines](https://google.github.io/styleguide/javaguide.html#s3.3-import-statements). Column limit is 100 characters for a better readability. Take [Intellij google formatting XML](https://raw.githubusercontent.com/google/styleguide/gh-pages/intellij-java-google-style.xml) and install it in Android Studio. Copy it into your config/codestyles folder in your intellij settings folder. Under Settings/Code Style select the google-styleguide as current code style for the project. Then, following changes are done to coding style in settings:
