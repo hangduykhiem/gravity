@@ -14,8 +14,7 @@ public class MapsUtils {
 
 
     /**
-     * Decode the encoded poly. Found this on the internet, please don't hit me if something went
-     * wrong with this.
+     * Decode the encoded polylines from Google Maps Direction API.
      *
      * @param encoded encoded poly
      * @return decoded poly
