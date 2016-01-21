@@ -86,7 +86,6 @@ public class LocationRepository {
      * @param subscriber      {@link Subscriber} to fill
      * @throws SecurityException {@link SecurityException} if location is not granted
      */
-    @SuppressLint("all")
     private void fillSubscriberWithLocation(GoogleApiClient googleApiClient, Subscriber<? super
             LatLng> subscriber) throws SecurityException {
 
