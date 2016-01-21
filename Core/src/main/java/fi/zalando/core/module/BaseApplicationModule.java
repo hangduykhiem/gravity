@@ -17,6 +17,7 @@ package fi.zalando.core.module;
 
 import android.app.Application;
 import android.content.Context;
+import android.location.LocationManager;
 
 import javax.inject.Singleton;
 
@@ -65,5 +66,16 @@ public class BaseApplicationModule {
     public Context provideApplicationContext() {
 
         return application.getApplicationContext();
+    }
+
+    /**
+     * Provides the {@link LocationManager} of the app for dependency injections
+     *
+     * @return {@link LocationManager} of the app
+     */
+    @Provides
+    public LocationManager provideLocationManager() {
+
+        return (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
     }
 }
