@@ -29,9 +29,11 @@ public class BaseDataModule {
     public LocationRepository provideLocationRepository(Context applicationContext,
                                                         GooglePlayServicesHelper
                                                                 googlePlayServicesHelper,
+                                                        LocationManager locationManager,
                                                         LocationHelper locationHelper) {
 
-        return new LocationRepository(applicationContext, googlePlayServicesHelper, locationHelper);
+        return new LocationRepository(applicationContext, googlePlayServicesHelper,
+                locationManager, locationHelper);
     }
 
 }

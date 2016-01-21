@@ -11,6 +11,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import fi.zalando.core.exception.PermissionSecurityException;
+import fi.zalando.core.exception.ServiceDisabledException;
+import fi.zalando.core.utils.DeviceUtils;
 import fi.zalando.core.utils.PermissionUtils;
 import rx.Observable;
 import rx.Subscriber;
@@ -59,6 +61,14 @@ public class LocationHelper {
 
             subscriber.onError(new PermissionSecurityException(Manifest.permission
                     .ACCESS_FINE_LOCATION));
+            return;
+        }
+
+        // Throw error if location services are disabled
+        if (!DeviceUtils.isLocationEnabled(locationManager)) {
+
+            subscriber.onError(new ServiceDisabledException(ServiceDisabledException.ServiceType
+                    .LOCATION_SERVICES));
             return;
         }
 
