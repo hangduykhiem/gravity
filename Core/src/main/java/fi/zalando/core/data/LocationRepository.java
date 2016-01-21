@@ -7,12 +7,16 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
+import android.location.LocationManager;
 
 import fi.zalando.core.data.helper.GooglePlayServicesHelper;
 import fi.zalando.core.data.helper.LocationHelper;
 import fi.zalando.core.exception.PermissionSecurityException;
+import fi.zalando.core.exception.ServiceDisabledException;
+import fi.zalando.core.utils.DeviceUtils;
 import fi.zalando.core.utils.PermissionUtils;
 import rx.Observable;
 import rx.Subscriber;
@@ -28,6 +32,7 @@ public class LocationRepository {
 
     private final Context applicationContext;
     private final GooglePlayServicesHelper googlePlayServicesHelper;
+    private final LocationManager locationManager;
     private final LocationHelper locationHelper;
 
     /**
@@ -35,14 +40,17 @@ public class LocationRepository {
      *
      * @param applicationContext       {@link Context} of the application
      * @param googlePlayServicesHelper {@link GooglePlayServicesHelper} to connect G.P.Services
+     * @param locationManager          {@link LocationManager} of the app
      * @param locationHelper           {@link LocationHelper} to use as backup if G.P.Services
      *                                 fails
      */
     public LocationRepository(Context applicationContext, GooglePlayServicesHelper
-            googlePlayServicesHelper, LocationHelper locationHelper) {
+            googlePlayServicesHelper, LocationManager locationManager, LocationHelper
+                                      locationHelper) {
 
         this.applicationContext = applicationContext;
         this.googlePlayServicesHelper = googlePlayServicesHelper;
+        this.locationManager = locationManager;
         this.locationHelper = locationHelper;
     }
 
@@ -89,6 +97,15 @@ public class LocationRepository {
                     .ACCESS_FINE_LOCATION));
             return;
         }
+
+        // Throw error if location services are disabled
+        if (!DeviceUtils.isLocationEnabled(locationManager)) {
+
+            subscriber.onError(new ServiceDisabledException(ServiceDisabledException.ServiceType
+                    .LOCATION_SERVICES));
+            return;
+        }
+
         Location lastKnownLocation = LocationServices.FusedLocationApi
                 .getLastLocation(googleApiClient);
         // If last known location available, use it!
@@ -116,9 +133,12 @@ public class LocationRepository {
             LocationServices.FusedLocationApi.requestLocationUpdates
                     (googleApiClient, locationRequest, locationListener);
             // If observable is unsubscribed, stop listening for updates
-            subscriber.add(Subscriptions.create(() ->
+            subscriber.add(Subscriptions.create(() -> {
+                if (googleApiClient.isConnected()) {
                     LocationServices.FusedLocationApi.removeLocationUpdates
-                            (googleApiClient, locationListener)));
+                            (googleApiClient, locationListener);
+                }
+            }));
         }
     }
 
