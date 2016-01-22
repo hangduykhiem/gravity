@@ -10,9 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import fi.zalando.core.module.BaseHelperModule;
 
-import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 

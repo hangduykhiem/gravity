@@ -23,6 +23,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Tests for {@link BasePresenter} class
@@ -89,6 +91,18 @@ public class BasePresenterTest {
 
         // Check if unsubscribed
         assertFalse(basePresenter.getSubscriptionHelper().hasSubscriptions());
+    }
+
+    @Test
+    public void testInitViewCalled() {
+
+        // Set mocked view
+        basePresenter.setView(baseView);
+        // Init presenter
+        basePresenter.initialise(null);
+        basePresenter.resume();
+
+        verify(baseView, times(1)).initView();
     }
 
     @SuppressWarnings("all")
