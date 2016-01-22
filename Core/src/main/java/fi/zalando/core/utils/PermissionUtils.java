@@ -30,13 +30,27 @@ public class PermissionUtils {
 
         // Check if any of the permissions is not granted
         for (String permission : permissions) {
-            if (ActivityCompat.checkSelfPermission(applicationContext, permission) ==
-                    PackageManager.PERMISSION_DENIED) {
+
+            if (!checkRuntimePermission(applicationContext, permission)) {
                 return false;
             }
         }
         // All permissions are granted
         return true;
+    }
+
+    /**
+     * Checks that a single permission is granted. Important to mock the static method.
+     *
+     * @param applicationContext {@link Context} of the application
+     * @param permission         {@link String} with the permission to check
+     * @return {@link Boolean} indicating if runtime permission is allowed
+     */
+    private static boolean checkRuntimePermission(@NonNull Context applicationContext, @NonNull
+    String permission) {
+
+        return ActivityCompat.checkSelfPermission(applicationContext, permission) ==
+                PackageManager.PERMISSION_GRANTED;
     }
 
 }
