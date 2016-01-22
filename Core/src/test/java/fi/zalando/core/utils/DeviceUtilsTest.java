@@ -1,14 +1,20 @@
 package fi.zalando.core.utils;
 
+import android.graphics.Point;
 import android.location.LocationManager;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
+
+import fi.zalando.core.BuildConfig;
 
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -18,7 +24,8 @@ import static org.mockito.Mockito.mock;
  *
  * Created by jduran on 21/01/16.
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 16, manifest = "src/main/AndroidManifest.xml")
 public class DeviceUtilsTest {
 
     @Mock
@@ -55,7 +62,7 @@ public class DeviceUtilsTest {
     }
 
     @Test
-    public void testWhenNothingEnabled() {
+    public void testWhenNoLocationEnabled() {
 
         // Setup the mock
         doAnswer(invocation -> false).when(locationManager).isProviderEnabled(LocationManager
@@ -64,6 +71,17 @@ public class DeviceUtilsTest {
                 .NETWORK_PROVIDER);
 
         assertFalse(DeviceUtils.isLocationEnabled(locationManager));
+    }
+
+    @Test
+    public void testDeviceScreenResolution() {
+
+        Point testSize = DeviceUtils.screenResolution(RuntimeEnvironment.application);
+        // Check that is not null
+        assertNotNull(testSize);
+        // Check that size is actually bigger than 0
+        assertTrue(testSize.x > 0);
+        assertTrue(testSize.y > 0);
     }
 
 }

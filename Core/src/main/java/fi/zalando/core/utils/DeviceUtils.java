@@ -34,21 +34,21 @@ public class DeviceUtils {
     }
 
     /**
-     * Gets the device's native screen resolution rotated
-     * based on the device's current screen orientation.
+     * Gets the device's native screen resolution rotated based on the device's current screen
+     * orientation.
+     *
+     * @param context {@link Context} of the app
+     * @return {@link Point} with the device screen native resolution
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1) //To remove warning about using
-    //getRealSize prior to API 17
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static Point screenResolution(Context context) {
-        WindowManager windowManager =
-                (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = windowManager.getDefaultDisplay();
+
+        // TargetApi is needed To remove warning about using getRealSize prior to API 17
+
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context
+                .WINDOW_SERVICE);
         Point screenResolution = new Point();
-
-        if (Build.VERSION.SDK_INT < 14)
-            throw new RuntimeException("Unsupported Android version.");
-        display.getRealSize(screenResolution);
-
+        windowManager.getDefaultDisplay().getRealSize(screenResolution);
         return screenResolution;
     }
 
