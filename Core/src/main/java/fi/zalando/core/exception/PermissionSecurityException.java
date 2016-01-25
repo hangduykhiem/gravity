@@ -1,5 +1,7 @@
 package fi.zalando.core.exception;
 
+import fi.zalando.core.utils.EqualUtils;
+
 /**
  * Custom {@link SecurityException} used when a runtime permission is required
  *
@@ -29,5 +31,17 @@ public class PermissionSecurityException extends SecurityException {
      */
     public String getRequiredPermission() {
         return requiredPermission;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+
+        if (other instanceof PermissionSecurityException) {
+            PermissionSecurityException otherPermissionSecurityException =
+                    (PermissionSecurityException) other;
+            return EqualUtils.areEqual(getRequiredPermission(), otherPermissionSecurityException
+                    .getRequiredPermission());
+        }
+        return false;
     }
 }

@@ -8,8 +8,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import fi.zalando.core.module.BaseHelperModule;
-
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -30,7 +28,7 @@ public class GooglePlayServicesHelperTest {
     @Before
     public void setup() {
 
-        googlePlayServicesHelper = new BaseHelperModule().provideGooglePlayServicesHelper();
+        googlePlayServicesHelper = new GooglePlayServicesHelper();
         mockedGoogleApiClient = mock(GoogleApiClient.class);
     }
 
