@@ -1,5 +1,6 @@
 package fi.zalando.core.exception;
 
+import fi.zalando.core.utils.EqualUtils;
 import fi.zalando.core.utils.Preconditions;
 
 /**
@@ -54,5 +55,17 @@ public class ServiceDisabledException extends IllegalStateException {
      */
     public String getDisabledService() {
         return disabledService;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+
+        if (other instanceof ServiceDisabledException) {
+            ServiceDisabledException otherServiceDisabledException = (ServiceDisabledException)
+                    other;
+            return EqualUtils.areEqual(getDisabledService(), otherServiceDisabledException
+                    .getDisabledService());
+        }
+        return false;
     }
 }
