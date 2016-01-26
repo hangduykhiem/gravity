@@ -84,4 +84,27 @@ public class DeviceUtilsTest {
         assertTrue(testSize.y > 0);
     }
 
+    @Test
+    public void testPxToDp() throws Exception {
+
+        float testValue = 100f;
+        float density = RuntimeEnvironment.application.getResources().getDisplayMetrics().density;
+        // Check that density is valid:
+        assertTrue(density > 0);
+        float result = DeviceUtils.dpToPx(RuntimeEnvironment.application, testValue);
+        // Check that the result is valid:
+        assertTrue(result == testValue*density);
+    }
+
+    @Test
+    public void testDpToPx() throws Exception {
+
+        float testValue = 100f;
+        float density = RuntimeEnvironment.application.getResources().getDisplayMetrics().density;
+        // Check that density is valid:
+        assertTrue(density > 0);
+        float result = DeviceUtils.pxToDp(RuntimeEnvironment.application, testValue);
+        // Check that the result is valid:
+        assertTrue(result == testValue/density);
+    }
 }
