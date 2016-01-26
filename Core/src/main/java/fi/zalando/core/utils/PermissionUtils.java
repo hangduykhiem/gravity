@@ -1,5 +1,6 @@
 package fi.zalando.core.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -37,6 +38,20 @@ public class PermissionUtils {
         }
         // All permissions are granted
         return true;
+    }
+
+    /**
+     * Requests the runtime permissions provided
+     *
+     * @param activityRequestingPermission {@link Activity} where the result will be given
+     * @param requestcode                  {@link Integer} with the request code provided by the
+     *                                     Activity
+     * @param permisions                   {@link String} with the permissions to request
+     */
+    public static void requestPermissions(Activity activityRequestingPermission, int requestcode,
+                                          String... permisions) {
+
+        ActivityCompat.requestPermissions(activityRequestingPermission, permisions, requestcode);
     }
 
     /**
