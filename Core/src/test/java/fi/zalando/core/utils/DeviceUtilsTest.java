@@ -84,4 +84,15 @@ public class DeviceUtilsTest {
         assertTrue(testSize.y > 0);
     }
 
+    @Test
+    public void testPxToDp() throws Exception {
+        float result = DeviceUtils.dpToPx(RuntimeEnvironment.application, 100f);
+        assertTrue(result > 0);
+    }
+
+    @Test
+    public void testDpToPx() throws Exception {
+        float result = DeviceUtils.pxToDp(RuntimeEnvironment.application, 100f);
+        assertTrue(result > 0);
+    }
 }

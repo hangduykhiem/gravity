@@ -54,8 +54,8 @@ public class DeviceUtils {
     /**
      * Converts the given pixel amount to dp.
      * @param context Context
-     * @param px The pixel amount to be converted to dp.
-     * @return
+     * @param px Pixels
+     * @return Converted amount in dp
      */
     public static float pxToDp(final Context context, final float px) {
         return px / context.getResources().getDisplayMetrics().density;
@@ -64,8 +64,8 @@ public class DeviceUtils {
     /**
      * Convert the given dp amount to pixels.
      * @param context Context
-     * @param dp The dp amount to be converted to pixels.
-     * @return
+     * @param dp Dps
+     * @return Converted amount in pixels
      */
     public static float dpToPx(final Context context, final float dp) {
         return dp * context.getResources().getDisplayMetrics().density;
