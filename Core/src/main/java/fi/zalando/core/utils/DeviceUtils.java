@@ -52,4 +52,23 @@ public class DeviceUtils {
         return screenResolution;
     }
 
+    /**
+     * Converts the given pixel amount to dp.
+     * @param context Context
+     * @param px The pixel amount to be converted to dp.
+     * @return
+     */
+    public static float pxToDp(final Context context, final float px) {
+        return px / context.getResources().getDisplayMetrics().density;
+    }
+
+    /**
+     * Convert the given dp amount to pixels.
+     * @param context Context
+     * @param dp The dp amount to be converted to pixels.
+     * @return
+     */
+    public static float dpToPx(final Context context, final float dp) {
+        return dp * context.getResources().getDisplayMetrics().density;
+    }
 }
