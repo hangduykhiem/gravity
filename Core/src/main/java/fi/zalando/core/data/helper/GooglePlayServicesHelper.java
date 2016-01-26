@@ -2,7 +2,9 @@ package fi.zalando.core.data.helper;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -18,6 +20,18 @@ import rx.subscriptions.Subscriptions;
  * Created by jduran on 18/01/16.
  */
 public class GooglePlayServicesHelper {
+
+    /**
+     * Builds a {@link GoogleApiClient} that will make use of {@link LocationServices} API
+     *
+     * @param applicationContext {@link Context} of the application
+     * @return {@link GoogleApiClient} to use location services
+     */
+    public GoogleApiClient createLocationApiGoogleApiClient(Context applicationContext) {
+
+        return new GoogleApiClient.Builder(applicationContext.getApplicationContext()).addApi
+                (LocationServices.API).build();
+    }
 
     /**
      * Provides an {@link Observable} that connects the given {@link GoogleApiClient}
