@@ -27,7 +27,7 @@ import timber.log.Timber;
  *
  * Created by jduran on 19/01/16.
  */
-public class LocationRepository {
+public class LocationRepository extends BaseRepository {
 
     private final Context applicationContext;
     private final GooglePlayServicesHelper googlePlayServicesHelper;
@@ -61,8 +61,8 @@ public class LocationRepository {
     public Observable<LatLng> loadCurrentLocation() {
 
         // First, try fetching location using google play services client
-        return googlePlayServicesHelper.loadGooglePlayServices(new GoogleApiClient.Builder
-                (applicationContext).addApi(LocationServices.API).build()).
+        return googlePlayServicesHelper.loadGooglePlayServices(googlePlayServicesHelper
+                .createLocationApiGoogleApiClient(applicationContext)).
                 // Once Google Api Client connected, use it to fetch the location
                         flatMap(googleApiClient -> Observable.create(new Observable
                         .OnSubscribe<LatLng>() {
