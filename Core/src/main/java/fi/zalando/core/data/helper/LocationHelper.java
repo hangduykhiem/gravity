@@ -61,17 +61,57 @@ public class LocationHelper {
 
         final Criteria defaultLocationCriteria = new Criteria();
         defaultLocationCriteria.setAccuracy(Criteria.ACCURACY_COARSE);
-        defaultLocationCriteria.setPowerRequirement(Criteria.POWER_LOW);
+        defaultLocationCriteria.setPowerRequirement(Criteria.POWER_MEDIUM);
         return defaultLocationCriteria;
     }
 
+    /**
+     * Provides an {@link Observable} that calls onNext everytime there is a {@link Location}
+     * update
+     *
+     * @param locationUpdateFrequency {@link Long} with the milliseconds about the frequency of the
+     *                                required updates
+     * @return {@link Observable} that provides {@link LatLng} updates
+     */
+    public Observable<LatLng> loadLocations(long locationUpdateFrequency) {
+
+        return createLocationUpdatesObservable(false, locationUpdateFrequency);
+    }
+
+    /**
+     * Provides an {@link Observable} that provides asynchronously current {@link LatLng}
+     *
+     * @return {@link Observable} to load current {@link LatLng}
+     */
     public Observable<LatLng> loadCurrentLocation() {
 
         return Observable.create(new Observable.OnSubscribe<LatLng>() {
             @Override
             public void call(Subscriber<? super LatLng> subscriber) {
 
-                fillSubscriberWithLocation(subscriber);
+                fillSubscriberWithLocation(subscriber, true, 0L);
+            }
+        });
+    }
+
+    /**
+     * Creates the {@link Observable} that will load the {@link LatLng} updates
+     *
+     * @param singleLocationUpdateRequest {@link Boolean} indicating if we are just requesting a
+     *                                    single update
+     * @param locationUpdateFrequency     {@link Long} with the milliseconds about the frequency of
+     *                                    the required updates
+     * @return {@link Observable} to load {@link LatLng} asynchronously
+     */
+    private Observable<LatLng> createLocationUpdatesObservable(boolean singleLocationUpdateRequest,
+                                                               long locationUpdateFrequency) {
+
+        return Observable.create(new Observable.OnSubscribe<LatLng>() {
+            @Override
+            public void call(Subscriber<? super LatLng> subscriber) {
+
+                fillSubscriberWithLocation(subscriber, singleLocationUpdateRequest,
+                        locationUpdateFrequency);
             }
         });
     }
@@ -79,11 +119,15 @@ public class LocationHelper {
     /**
      * Fills the subscriber with the location fetching logic
      *
-     * @param subscriber {@link Subscriber} to fill
+     * @param subscriber                  {@link Subscriber} to fill
+     * @param singleLocationUpdateRequest {@link Boolean} indicating if only location update is
+     *                                    required
+     * @param locationUpdateFrequency     {@link Long} with the amount of time location updates are
+     *                                    required
      * @throws SecurityException {@link SecurityException} if location is not granted
      */
-    private void fillSubscriberWithLocation(Subscriber<? super LatLng> subscriber) throws
-            SecurityException {
+    private void fillSubscriberWithLocation(Subscriber<? super LatLng> subscriber, boolean
+            singleLocationUpdateRequest, long locationUpdateFrequency) throws SecurityException {
 
         // Throw error if access location is not granted
         if (!PermissionUtils.checkRuntimePermissions(applicationContext, Manifest.permission
@@ -109,7 +153,12 @@ public class LocationHelper {
 
                 subscriber.onNext(new LatLng(location.getLatitude(), location
                         .getLongitude()));
-                subscriber.onCompleted();
+
+                // If we are requesting a single location update, call on completed
+                // as soon as we get one location
+                if (singleLocationUpdateRequest) {
+                    subscriber.onCompleted();
+                }
             }
 
             @Override
@@ -128,8 +177,13 @@ public class LocationHelper {
             }
         };
 
-        // listen for updates
-        locationManager.requestSingleUpdate(criteria, locationListener, null);
+        // Make a single request or register for multiple changes otherwise
+        if (singleLocationUpdateRequest) {
+            locationManager.requestSingleUpdate(criteria, locationListener, null);
+        } else {
+            locationManager.requestLocationUpdates(locationUpdateFrequency, 10f, criteria,
+                    locationListener, null);
+        }
 
         // Unregister listener if unsubscribed
         subscriber.add(Subscriptions.create(() -> locationManager.removeUpdates
