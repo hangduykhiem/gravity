@@ -54,6 +54,16 @@ public class LocationRepository extends BaseRepository {
     }
 
     /**
+     * Provides an {@link Observable} that provides asynchronously current {@link LatLng}
+     *
+     * @return {@link Observable} to load current {@link LatLng}
+     */
+    public Observable<LatLng> loadCurrentLocation() {
+
+        return createLocationUpdatesObservable(true, 0L);
+    }
+
+    /**
      * Provides an {@link Observable} that calls onNext everytime there is a {@link Location}
      * update
      *
@@ -64,16 +74,6 @@ public class LocationRepository extends BaseRepository {
     public Observable<LatLng> loadLocations(long locationUpdateFrequency) {
 
         return createLocationUpdatesObservable(false, locationUpdateFrequency);
-    }
-
-    /**
-     * Provides an {@link Observable} that provides asynchronously current {@link LatLng}
-     *
-     * @return {@link Observable} to load current {@link LatLng}
-     */
-    public Observable<LatLng> loadCurrentLocation() {
-
-        return createLocationUpdatesObservable(true, 0L);
     }
 
     /**
