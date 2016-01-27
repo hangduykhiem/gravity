@@ -60,6 +60,34 @@ public class LocationRepository extends BaseRepository {
      */
     public Observable<LatLng> loadCurrentLocation() {
 
+        return createLocationUpdatesObservable(true, 0L);
+    }
+
+    /**
+     * Provides an {@link Observable} that calls onNext everytime there is a {@link Location}
+     * update
+     *
+     * @param locationUpdateFrequency {@link Long} with the milliseconds about the frequency of the
+     *                                required updates
+     * @return {@link Observable} that provides {@link LatLng} updates
+     */
+    public Observable<LatLng> loadLocations(long locationUpdateFrequency) {
+
+        return createLocationUpdatesObservable(false, locationUpdateFrequency);
+    }
+
+    /**
+     * Creates the {@link Observable} that will load the {@link LatLng} updates
+     *
+     * @param singleLocationUpdateRequest {@link Boolean} indicating if we are just requesting a
+     *                                    single update
+     * @param locationUpdateFrequency     {@link Long} with the milliseconds about the frequency of
+     *                                    the required updates
+     * @return {@link Observable} to load {@link LatLng} asynchronously
+     */
+    private Observable<LatLng> createLocationUpdatesObservable(boolean singleLocationUpdateRequest,
+                                                               long locationUpdateFrequency) {
+
         // First, try fetching location using google play services client
         return googlePlayServicesHelper.loadGooglePlayServices(googlePlayServicesHelper
                 .createLocationApiGoogleApiClient(applicationContext)).
@@ -69,24 +97,35 @@ public class LocationRepository extends BaseRepository {
                     @Override
                     public void call(Subscriber<? super LatLng> subscriber) {
 
-                        fillSubscriberWithLocation(googleApiClient, subscriber);
+                        fillSubscriberWithLocation(googleApiClient, subscriber,
+                                singleLocationUpdateRequest, locationUpdateFrequency);
                     }
                     // If fails, use default location manager
                 })).onErrorResumeNext(throwable -> {
                     Timber.w(throwable, "Google Play services location fetch failed");
-                    return locationHelper.loadCurrentLocation();
+
+                    if (singleLocationUpdateRequest) {
+                        return locationHelper.loadCurrentLocation();
+                    } else {
+                        return locationHelper.loadLocations(locationUpdateFrequency);
+                    }
                 });
     }
 
     /**
      * Fills the subscriber with the location fetching logic
      *
-     * @param googleApiClient {@link GoogleApiClient} to use for fetching location
-     * @param subscriber      {@link Subscriber} to fill
+     * @param googleApiClient         {@link GoogleApiClient} to use for fetching location
+     * @param subscriber              {@link Subscriber} to fill
+     * @param singleLocationUpdate    {@link Boolean} indicating if only location update is
+     *                                required
+     * @param locationUpdateFrequency {@link Long} with the amount of time location updates are
+     *                                required
      * @throws SecurityException {@link SecurityException} if location is not granted
      */
     private void fillSubscriberWithLocation(GoogleApiClient googleApiClient, Subscriber<? super
-            LatLng> subscriber) throws SecurityException {
+            LatLng> subscriber, boolean singleLocationUpdate, long locationUpdateFrequency)
+            throws SecurityException {
 
         // Throw error if access location is not granted
         if (!PermissionUtils.checkRuntimePermissions(applicationContext, Manifest.permission
@@ -111,21 +150,32 @@ public class LocationRepository extends BaseRepository {
         if (lastKnownLocation != null) {
             subscriber.onNext(new LatLng(lastKnownLocation.getLatitude(),
                     lastKnownLocation.getLongitude()));
-            subscriber.onCompleted();
+
+            // If we are requesting a single location update, call on completed
+            // as soon as we get one location
+            if (singleLocationUpdate) {
+                subscriber.onCompleted();
+            }
         } else {
             // If last known location not available, look for updates
             // Create location listener to handle the callback
             LocationListener locationListener = location -> {
                 subscriber.onNext(new LatLng(location.getLatitude(), location
                         .getLongitude()));
-                subscriber.onCompleted();
+
+                // If we are requesting a single location update, call on completed
+                // as soon as we get one location
+                if (singleLocationUpdate) {
+                    subscriber.onCompleted();
+                }
             };
             // Create LocationRequest
             LocationRequest locationRequest = new LocationRequest();
             // Get the update ASAP
-            locationRequest.setInterval(0);
+            locationRequest.setInterval(locationUpdateFrequency);
             // Get the update ASAP
-            locationRequest.setFastestInterval(0);
+            locationRequest.setFastestInterval(locationUpdateFrequency);
+
             locationRequest.setPriority(LocationRequest
                     .PRIORITY_BALANCED_POWER_ACCURACY);
             // Start listening for updates

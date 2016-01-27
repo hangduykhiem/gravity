@@ -74,6 +74,7 @@ public class BaseApplicationModule {
      * @return {@link LocationManager} of the app
      */
     @Provides
+    @Singleton
     public LocationManager provideLocationManager() {
 
         return (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);

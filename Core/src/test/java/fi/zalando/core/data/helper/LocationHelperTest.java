@@ -20,6 +20,8 @@ import fi.zalando.core.utils.PermissionUtils;
 import rx.functions.Action1;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyFloat;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -108,7 +110,8 @@ public class LocationHelperTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testRequestSingleUpdateWhenAllPermissionsAndServicesOn() throws Exception {
+    public void testRequestSingleUpdateForCurrentLocationWhenAllPermissionsAndServicesOn() throws
+            Exception {
 
         PowerMockito.spy(PermissionUtils.class);
 
@@ -131,7 +134,32 @@ public class LocationHelperTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testRemoveUpdatesAfterUnsubscribingSubscriber() throws Exception {
+    public void testRequestMultipleUpdatesForCurrentLocationWhenAllPermissionsAndServicesOn() throws
+            Exception {
+
+        PowerMockito.spy(PermissionUtils.class);
+
+        // Mock the answers from the permission check
+        doReturn(true).when(PermissionUtils.class, "checkRuntimePermission",
+                any(), eq(Manifest.permission.ACCESS_FINE_LOCATION));
+
+        // Setup the mock saying that location services are up and running
+        doAnswer(invocation -> true).when(locationManager).isProviderEnabled(LocationManager
+                .GPS_PROVIDER);
+        doAnswer(invocation -> false).when(locationManager).isProviderEnabled(LocationManager
+                .NETWORK_PROVIDER);
+
+        // Subscribe to fetch the location
+        locationHelper.loadLocations(1000L).subscribe();
+
+        verify(locationManager, times(1)).requestLocationUpdates(eq(1000L), anyFloat(), eq
+                (criteria), any(LocationListener.class), any());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testRemoveUpdatesAfterUnsubscribingSubscriberWhenRequestingLastLocation() throws
+            Exception {
 
         PowerMockito.spy(PermissionUtils.class);
 
@@ -147,6 +175,29 @@ public class LocationHelperTest {
 
         // Subscribe to fetch the location and just unsubscribe right away
         locationHelper.loadCurrentLocation().subscribe().unsubscribe();
+
+        verify(locationManager, times(1)).removeUpdates(any(LocationListener.class));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testRemoveUpdatesAfterUnsubscribingSubscriberWhenRequestingLocationUpdates() throws
+            Exception {
+
+        PowerMockito.spy(PermissionUtils.class);
+
+        // Mock the answers from the permission check
+        doReturn(true).when(PermissionUtils.class, "checkRuntimePermission",
+                any(), eq(Manifest.permission.ACCESS_FINE_LOCATION));
+
+        // Setup the mock saying that location services are up and running
+        doAnswer(invocation -> true).when(locationManager).isProviderEnabled(LocationManager
+                .GPS_PROVIDER);
+        doAnswer(invocation -> false).when(locationManager).isProviderEnabled(LocationManager
+                .NETWORK_PROVIDER);
+
+        // Subscribe to fetch the location and just unsubscribe right away
+        locationHelper.loadLocations(1000L).subscribe().unsubscribe();
 
         verify(locationManager, times(1)).removeUpdates(any(LocationListener.class));
     }

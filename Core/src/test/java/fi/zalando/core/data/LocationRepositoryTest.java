@@ -83,7 +83,8 @@ public class LocationRepositoryTest {
     }
 
     @Test
-    public void testLocationHelperUsedWhenGooglePlayServicesFails() throws Exception {
+    public void testLocationHelperUsedWhenGooglePlayServicesFailsForSingleRequest() throws
+            Exception {
 
         // Prepare Google Play Services Helper mock
         doAnswer(invocation -> Observable.error(new Exception())).when
@@ -93,6 +94,20 @@ public class LocationRepositoryTest {
         locationRepository.loadCurrentLocation().toBlocking().subscribe(new SubscriberAdapter<>());
         // Verify that once google play services fails, location helper is used
         verify(locationHelper, times(1)).loadCurrentLocation();
+    }
+
+    @Test
+    public void testLocationHelperUsedWhenGooglePlayServicesFailsFoLocationUpdatesRequest() throws
+            Exception {
+
+        // Prepare Google Play Services Helper mock
+        doAnswer(invocation -> Observable.error(new Exception())).when
+                (googlePlayServicesHelper).loadGooglePlayServices(any(GoogleApiClient.class));
+
+        // Call loadLocations
+        locationRepository.loadLocations(1000L).toBlocking().subscribe(new SubscriberAdapter<>());
+        // Verify that once google play services fails, location helper is used
+        verify(locationHelper, times(1)).loadLocations(eq(1000L));
     }
 
     @Test
