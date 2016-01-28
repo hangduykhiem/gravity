@@ -82,6 +82,11 @@ public abstract class BasePresenter<T extends BaseView> {
     }
 
     /**
+     * Gets called when the Fragment/Activity is paused.
+     */
+    public void pause() {}
+
+    /**
      * Gets a callback when the Fragment/Activity where the presenter is linked appears on the
      * screen
      */
