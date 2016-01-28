@@ -56,6 +56,16 @@ public abstract class BaseFragment extends Fragment implements BaseView {
      * Lifecycle method
      */
     @Override
+    public void onPause() {
+
+        super.onPause();
+        getPresenter().pause();
+    }
+
+    /**
+     * Lifecycle method
+     */
+    @Override
     public void onResume() {
 
         super.onResume();
