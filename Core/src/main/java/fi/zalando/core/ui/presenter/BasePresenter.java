@@ -84,6 +84,7 @@ public abstract class BasePresenter<T extends BaseView> {
     /**
      * Gets called when the Fragment/Activity is paused.
      */
+    @CallSuper
     public void pause() {}
 
     /**
