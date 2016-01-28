@@ -148,6 +148,7 @@ public class LocationRepository extends BaseRepository {
                 .getLastLocation(googleApiClient);
         // If last known location available, use it!
         if (lastKnownLocation != null) {
+
             subscriber.onNext(new LatLng(lastKnownLocation.getLatitude(),
                     lastKnownLocation.getLongitude()));
 
@@ -155,40 +156,43 @@ public class LocationRepository extends BaseRepository {
             // as soon as we get one location
             if (singleLocationUpdate) {
                 subscriber.onCompleted();
+                return;
             }
-        } else {
-            // If last known location not available, look for updates
-            // Create location listener to handle the callback
-            LocationListener locationListener = location -> {
-                subscriber.onNext(new LatLng(location.getLatitude(), location
-                        .getLongitude()));
-
-                // If we are requesting a single location update, call on completed
-                // as soon as we get one location
-                if (singleLocationUpdate) {
-                    subscriber.onCompleted();
-                }
-            };
-            // Create LocationRequest
-            LocationRequest locationRequest = new LocationRequest();
-            // Get the update ASAP
-            locationRequest.setInterval(locationUpdateFrequency);
-            // Get the update ASAP
-            locationRequest.setFastestInterval(locationUpdateFrequency);
-
-            locationRequest.setPriority(LocationRequest
-                    .PRIORITY_BALANCED_POWER_ACCURACY);
-            // Start listening for updates
-            LocationServices.FusedLocationApi.requestLocationUpdates
-                    (googleApiClient, locationRequest, locationListener);
-            // If observable is unsubscribed, stop listening for updates
-            subscriber.add(Subscriptions.create(() -> {
-                if (googleApiClient.isConnected()) {
-                    LocationServices.FusedLocationApi.removeLocationUpdates
-                            (googleApiClient, locationListener);
-                }
-            }));
         }
+
+        // Register for location updates if last known location was not known or location updates
+        // are required until further notice
+
+        // If last known location not available, look for updates
+        // Create location listener to handle the callback
+        LocationListener locationListener = location -> {
+            subscriber.onNext(new LatLng(location.getLatitude(), location
+                    .getLongitude()));
+
+            // If we are requesting a single location update, call on completed
+            // as soon as we get one location
+            if (singleLocationUpdate) {
+                subscriber.onCompleted();
+            }
+        };
+        // Create LocationRequest
+        LocationRequest locationRequest = new LocationRequest();
+        // Get the update as defined by the repository user
+        locationRequest.setInterval(locationUpdateFrequency);
+        // Get the update as defined by the repository user
+        locationRequest.setFastestInterval(locationUpdateFrequency);
+        // Set high accuracy
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        // Start listening for updates
+        LocationServices.FusedLocationApi.requestLocationUpdates
+                (googleApiClient, locationRequest, locationListener);
+        // If observable is unsubscribed, stop listening for updates
+        subscriber.add(Subscriptions.create(() -> {
+            if (googleApiClient.isConnected()) {
+                LocationServices.FusedLocationApi.removeLocationUpdates
+                        (googleApiClient, locationListener);
+            }
+        }));
     }
 
 }
