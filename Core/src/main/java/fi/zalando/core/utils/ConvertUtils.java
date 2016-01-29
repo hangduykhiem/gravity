@@ -12,7 +12,7 @@ public class ConvertUtils {
      * @param meter to be converted
      * @return converted foot
      */
-    public static long convertMeterToFoot(Long meter){
+    public static long convertMeterToFoot(long meter){
         float foot = meter * 3.28084f;
         return (long) foot;
     }
