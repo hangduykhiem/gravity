@@ -20,8 +20,14 @@ public class ConvertUtilsTest {
 
     @Test
     public void testRoundToTwoDecimal(){
-        float numberToRound = 21415.1342523f;
+        // Round up
+        float numberToRound = 21415.126f;
         float result = ConvertUtils.roundsToNearestTwoDecimal(numberToRound);
-        Assert.assertEquals(result, 21415.14f);
+        Assert.assertEquals(result, 21415.13f);
+
+        // Round down
+        float numberToRound2 = 21415.122f;
+        float result2 = ConvertUtils.roundsToNearestTwoDecimal(numberToRound2);
+        Assert.assertEquals(result2, 21415.12f);
     }
 }

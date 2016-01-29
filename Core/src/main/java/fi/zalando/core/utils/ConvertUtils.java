@@ -24,7 +24,7 @@ public class ConvertUtils {
      * @return rounded number
      */
     public static float roundsToNearestTwoDecimal(float numberToRounds){
-        return Math.round(numberToRounds*100)/100.f;
+        return Math.round(numberToRounds*100.f)/100.f;
     }
 
 }
