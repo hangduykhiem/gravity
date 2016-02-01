@@ -60,8 +60,8 @@ public class LocationHelper {
     private Criteria initDefaultCriteria() {
 
         final Criteria defaultLocationCriteria = new Criteria();
-        defaultLocationCriteria.setAccuracy(Criteria.ACCURACY_COARSE);
-        defaultLocationCriteria.setPowerRequirement(Criteria.POWER_MEDIUM);
+        defaultLocationCriteria.setAccuracy(Criteria.ACCURACY_FINE);
+        defaultLocationCriteria.setPowerRequirement(Criteria.POWER_HIGH);
         return defaultLocationCriteria;
     }
 
