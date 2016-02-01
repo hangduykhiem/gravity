@@ -288,16 +288,6 @@ public class ConvertUtils {
     }
 
     /**
-     * Method to convert meter to foot
-     *
-     * @param meter to be converted
-     * @return converted foot
-     */
-    public static double convertMeterToFoot(double meter) {
-        return meter * 3.28084f;
-    }
-
-    /**
      * Method to round to the nearest two decimal
      *
      * @param numberToRound    double number to be rounded
