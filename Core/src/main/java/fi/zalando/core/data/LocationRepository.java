@@ -182,7 +182,7 @@ public class LocationRepository extends BaseRepository {
         // Get the update as defined by the repository user
         locationRequest.setFastestInterval(locationUpdateFrequency);
         // Set high accuracy
-        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         // Start listening for updates
         LocationServices.FusedLocationApi.requestLocationUpdates
                 (googleApiClient, locationRequest, locationListener);
