@@ -28,8 +28,7 @@ public class HidingToolbarScrollListener extends RecyclerView.OnScrollListener {
 
     }
 
-    private static final int HIDE_THRESHOLD = 20;
-
+    private final int hideThreshold;
     private final OnToolbarHideOrShowListener onToolbarHideOrShowListener;
 
     // Variables to keep the status of the scrolling
@@ -39,11 +38,15 @@ public class HidingToolbarScrollListener extends RecyclerView.OnScrollListener {
     /**
      * Constructor
      *
+     * @param hideThreshold               {@link Integer} with the threshold to scroll before hiding
+     *                                    the toolbar
      * @param onToolbarHideOrShowListener {@link OnToolbarHideOrShowListener} listener to call when
      *                                    hide or show is needed
      */
-    public HidingToolbarScrollListener(OnToolbarHideOrShowListener onToolbarHideOrShowListener) {
+    public HidingToolbarScrollListener(int hideThreshold, OnToolbarHideOrShowListener
+            onToolbarHideOrShowListener) {
 
+        this.hideThreshold = hideThreshold;
         this.onToolbarHideOrShowListener = onToolbarHideOrShowListener;
     }
 
@@ -52,11 +55,11 @@ public class HidingToolbarScrollListener extends RecyclerView.OnScrollListener {
 
         super.onScrolled(recyclerView, dx, dy);
 
-        if (scrolledDistance > HIDE_THRESHOLD && controlsVisible) {
+        if (scrolledDistance > hideThreshold && controlsVisible) {
             onHide();
             controlsVisible = false;
             scrolledDistance = 0;
-        } else if (scrolledDistance < -HIDE_THRESHOLD && !controlsVisible) {
+        } else if (scrolledDistance < -hideThreshold && !controlsVisible) {
             onShow();
             controlsVisible = true;
             scrolledDistance = 0;
