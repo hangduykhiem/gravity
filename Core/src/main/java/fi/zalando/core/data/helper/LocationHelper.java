@@ -14,11 +14,22 @@ import fi.zalando.core.exception.PermissionSecurityException;
 import fi.zalando.core.exception.ServiceDisabledException;
 import fi.zalando.core.utils.DeviceUtils;
 import fi.zalando.core.utils.PermissionUtils;
+import fi.zalando.core.utils.Preconditions;
 import rx.Observable;
 import rx.Subscriber;
 import rx.subscriptions.Subscriptions;
 
 public class LocationHelper {
+
+    /**
+     * Constant definition for the location provider accuracy
+     */
+    public interface LocationCriteria {
+
+        public static final int ACCURACY_FINE = 0;
+        public static final int ACCURACY_BALANCED = 1;
+        public static final int ACCURACY_LOW_ENERGY = 2;
+    }
 
     private final Context applicationContext;
     private final LocationManager locationManager;
@@ -71,11 +82,19 @@ public class LocationHelper {
      *
      * @param locationUpdateFrequency {@link Long} with the milliseconds about the frequency of the
      *                                required updates
+     * @param accuracyCriteria        {@link Integer} with the accuracy criteria. @See {@link
+     *                                LocationHelper.LocationCriteria}
      * @return {@link Observable} that provides {@link LatLng} updates
      */
-    public Observable<LatLng> loadLocations(long locationUpdateFrequency) {
+    public Observable<LatLng> loadLocations(long locationUpdateFrequency, int accuracyCriteria) {
 
-        return createLocationUpdatesObservable(false, locationUpdateFrequency);
+        // Check that requested criteria is right
+        Preconditions.checkArgument(accuracyCriteria >= LocationHelper.LocationCriteria
+                .ACCURACY_FINE && accuracyCriteria <= LocationHelper.LocationCriteria
+                .ACCURACY_LOW_ENERGY, "Accuracy criteria parameter is invalid, please, check " +
+                "LocationCriteria constants");
+
+        return createLocationUpdatesObservable(false, locationUpdateFrequency, accuracyCriteria);
     }
 
     /**
@@ -89,7 +108,8 @@ public class LocationHelper {
             @Override
             public void call(Subscriber<? super LatLng> subscriber) {
 
-                fillSubscriberWithLocation(subscriber, true, 0L);
+                fillSubscriberWithLocation(subscriber, true, 0L, LocationCriteria
+                        .ACCURACY_BALANCED);
             }
         });
     }
@@ -101,17 +121,20 @@ public class LocationHelper {
      *                                    single update
      * @param locationUpdateFrequency     {@link Long} with the milliseconds about the frequency of
      *                                    the required updates
+     * @param accuracyCriteria            {@link Integer} with the accuracy criteria. @See {@link
+     *                                    LocationHelper.LocationCriteria}
      * @return {@link Observable} to load {@link LatLng} asynchronously
      */
     private Observable<LatLng> createLocationUpdatesObservable(boolean singleLocationUpdateRequest,
-                                                               long locationUpdateFrequency) {
+                                                               long locationUpdateFrequency, int
+                                                                       accuracyCriteria) {
 
         return Observable.create(new Observable.OnSubscribe<LatLng>() {
             @Override
             public void call(Subscriber<? super LatLng> subscriber) {
 
                 fillSubscriberWithLocation(subscriber, singleLocationUpdateRequest,
-                        locationUpdateFrequency);
+                        locationUpdateFrequency, accuracyCriteria);
             }
         });
     }
@@ -124,10 +147,13 @@ public class LocationHelper {
      *                                    required
      * @param locationUpdateFrequency     {@link Long} with the amount of time location updates are
      *                                    required
+     * @param accuracyCriteria            {@link Integer} with the accuracy criteria. @See {@link
+     *                                    LocationHelper.LocationCriteria}
      * @throws SecurityException {@link SecurityException} if location is not granted
      */
     private void fillSubscriberWithLocation(Subscriber<? super LatLng> subscriber, boolean
-            singleLocationUpdateRequest, long locationUpdateFrequency) throws SecurityException {
+            singleLocationUpdateRequest, long locationUpdateFrequency, int accuracyCriteria)
+            throws SecurityException {
 
         // Throw error if access location is not granted
         if (!PermissionUtils.checkRuntimePermissions(applicationContext, Manifest.permission
@@ -176,6 +202,23 @@ public class LocationHelper {
                 // no operations
             }
         };
+
+        // Change Criteria with the given one
+        // Set accuracy according to the parameter
+        switch (accuracyCriteria) {
+            case LocationHelper.LocationCriteria.ACCURACY_FINE:
+                criteria.setAccuracy(Criteria.ACCURACY_FINE);
+                criteria.setPowerRequirement(Criteria.POWER_HIGH);
+                break;
+            case LocationHelper.LocationCriteria.ACCURACY_BALANCED:
+                criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+                criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
+                break;
+            case LocationHelper.LocationCriteria.ACCURACY_LOW_ENERGY:
+                criteria.setAccuracy(Criteria.ACCURACY_LOW);
+                criteria.setPowerRequirement(Criteria.POWER_LOW);
+                break;
+        }
 
         // Make a single request or register for multiple changes otherwise
         if (singleLocationUpdateRequest) {

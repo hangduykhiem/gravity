@@ -17,6 +17,7 @@ import fi.zalando.core.exception.PermissionSecurityException;
 import fi.zalando.core.exception.ServiceDisabledException;
 import fi.zalando.core.utils.DeviceUtils;
 import fi.zalando.core.utils.PermissionUtils;
+import fi.zalando.core.utils.Preconditions;
 import rx.Observable;
 import rx.Subscriber;
 import rx.subscriptions.Subscriptions;
@@ -54,13 +55,16 @@ public class LocationRepository extends BaseRepository {
     }
 
     /**
-     * Provides an {@link Observable} that provides asynchronously current {@link LatLng}
+     * Provides an {@link Observable} that provides asynchronously current {@link LatLng} using the
+     * best available criteria.
      *
      * @return {@link Observable} to load current {@link LatLng}
      */
     public Observable<LatLng> loadCurrentLocation() {
 
-        return createLocationUpdatesObservable(true, 0L);
+        // We need current location, use balance criteria for a faster retrieval of
+        return createLocationUpdatesObservable(true, 0L, LocationHelper.LocationCriteria
+                .ACCURACY_BALANCED);
     }
 
     /**
@@ -69,11 +73,19 @@ public class LocationRepository extends BaseRepository {
      *
      * @param locationUpdateFrequency {@link Long} with the milliseconds about the frequency of the
      *                                required updates
+     * @param accuracyCriteria        {@link Integer} with the accuracy criteria. @See {@link
+     *                                LocationHelper.LocationCriteria}
      * @return {@link Observable} that provides {@link LatLng} updates
      */
-    public Observable<LatLng> loadLocations(long locationUpdateFrequency) {
+    public Observable<LatLng> loadLocations(long locationUpdateFrequency, int accuracyCriteria) {
 
-        return createLocationUpdatesObservable(false, locationUpdateFrequency);
+        // Check that requested criteria is right
+        Preconditions.checkArgument(accuracyCriteria >= LocationHelper.LocationCriteria
+                .ACCURACY_FINE && accuracyCriteria <= LocationHelper.LocationCriteria
+                .ACCURACY_LOW_ENERGY, "Accuracy criteria parameter is invalid, please, check " +
+                "LocationCriteria constants");
+
+        return createLocationUpdatesObservable(false, locationUpdateFrequency, accuracyCriteria);
     }
 
     /**
@@ -83,10 +95,13 @@ public class LocationRepository extends BaseRepository {
      *                                    single update
      * @param locationUpdateFrequency     {@link Long} with the milliseconds about the frequency of
      *                                    the required updates
+     * @param accuracyCriteria            {@link Integer} with the accuracy criteria. @See {@link
+     *                                    LocationHelper.LocationCriteria}
      * @return {@link Observable} to load {@link LatLng} asynchronously
      */
     private Observable<LatLng> createLocationUpdatesObservable(boolean singleLocationUpdateRequest,
-                                                               long locationUpdateFrequency) {
+                                                               long locationUpdateFrequency, int
+                                                                       accuracyCriteria) {
 
         // First, try fetching location using google play services client
         return googlePlayServicesHelper.loadGooglePlayServices(googlePlayServicesHelper
@@ -98,7 +113,8 @@ public class LocationRepository extends BaseRepository {
                     public void call(Subscriber<? super LatLng> subscriber) {
 
                         fillSubscriberWithLocation(googleApiClient, subscriber,
-                                singleLocationUpdateRequest, locationUpdateFrequency);
+                                singleLocationUpdateRequest, locationUpdateFrequency,
+                                accuracyCriteria);
                     }
                     // If fails, use default location manager
                 })).onErrorResumeNext(throwable -> {
@@ -107,7 +123,8 @@ public class LocationRepository extends BaseRepository {
                     if (singleLocationUpdateRequest) {
                         return locationHelper.loadCurrentLocation();
                     } else {
-                        return locationHelper.loadLocations(locationUpdateFrequency);
+                        return locationHelper.loadLocations(locationUpdateFrequency,
+                                accuracyCriteria);
                     }
                 });
     }
@@ -121,11 +138,13 @@ public class LocationRepository extends BaseRepository {
      *                                required
      * @param locationUpdateFrequency {@link Long} with the amount of time location updates are
      *                                required
+     * @param accuracyCriteria        {@link Integer} with the accuracy criteria. @See {@link
+     *                                LocationHelper.LocationCriteria}
      * @throws SecurityException {@link SecurityException} if location is not granted
      */
     private void fillSubscriberWithLocation(GoogleApiClient googleApiClient, Subscriber<? super
-            LatLng> subscriber, boolean singleLocationUpdate, long locationUpdateFrequency)
-            throws SecurityException {
+            LatLng> subscriber, boolean singleLocationUpdate, long locationUpdateFrequency, int
+                                                    accuracyCriteria) throws SecurityException {
 
         // Throw error if access location is not granted
         if (!PermissionUtils.checkRuntimePermissions(applicationContext, Manifest.permission
@@ -181,8 +200,18 @@ public class LocationRepository extends BaseRepository {
         locationRequest.setInterval(locationUpdateFrequency);
         // Get the update as defined by the repository user
         locationRequest.setFastestInterval(locationUpdateFrequency);
-        // Set high accuracy
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        // Set accuracy according to the parameter
+        switch (accuracyCriteria) {
+            case LocationHelper.LocationCriteria.ACCURACY_FINE:
+                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                break;
+            case LocationHelper.LocationCriteria.ACCURACY_BALANCED:
+                locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                break;
+            case LocationHelper.LocationCriteria.ACCURACY_LOW_ENERGY:
+                locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+                break;
+        }
         // Start listening for updates
         LocationServices.FusedLocationApi.requestLocationUpdates
                 (googleApiClient, locationRequest, locationListener);

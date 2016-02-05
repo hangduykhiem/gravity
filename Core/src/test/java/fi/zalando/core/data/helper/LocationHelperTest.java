@@ -21,7 +21,6 @@ import rx.functions.Action1;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyFloat;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -150,8 +149,13 @@ public class LocationHelperTest {
                 .NETWORK_PROVIDER);
 
         // Subscribe to fetch the location
-        locationHelper.loadLocations(1000L).subscribe();
+        locationHelper.loadLocations(1000L, LocationHelper.LocationCriteria.ACCURACY_FINE)
+                .subscribe();
 
+        // verify criteria is changed
+        verify(criteria).setAccuracy(Criteria.ACCURACY_FINE);
+        verify(criteria).setPowerRequirement(Criteria.POWER_HIGH);
+        // Verify request location updates is properly used
         verify(locationManager, times(1)).requestLocationUpdates(eq(1000L), anyFloat(), eq
                 (criteria), any(LocationListener.class), any());
     }
@@ -197,7 +201,8 @@ public class LocationHelperTest {
                 .NETWORK_PROVIDER);
 
         // Subscribe to fetch the location and just unsubscribe right away
-        locationHelper.loadLocations(1000L).subscribe().unsubscribe();
+        locationHelper.loadLocations(1000L, LocationHelper.LocationCriteria.ACCURACY_FINE)
+                .subscribe().unsubscribe();
 
         verify(locationManager, times(1)).removeUpdates(any(LocationListener.class));
     }

@@ -11,10 +11,12 @@ import java.util.concurrent.TimeUnit;
 
 import fi.zalando.core.BuildConfig;
 import fi.zalando.core.data.LocationRepository;
+import fi.zalando.core.data.helper.LocationHelper;
 import fi.zalando.core.domain.LocationService;
 import fi.zalando.core.module.BaseDomainModule;
 import rx.Observable;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -59,10 +61,12 @@ public class LocationServiceTest {
         // Setup LocationRepository mock  to return something when loadDigest is called
         // If not, test will crash
         doAnswer(invocation -> Observable.never()).when(locationRepository).loadLocations(anyLong
-                ());
+                (), anyInt());
         // Make the request
-        locationService.loadLocations(10L, TimeUnit.SECONDS);
+        locationService.loadLocations(10L, TimeUnit.SECONDS, LocationHelper.LocationCriteria
+                .ACCURACY_FINE);
         // Check that mocked loadLocations is used with proper time calculation
-        verify(locationRepository).loadLocations(TimeUnit.SECONDS.toMillis(10L));
+        verify(locationRepository).loadLocations(TimeUnit.SECONDS.toMillis(10L), LocationHelper
+                .LocationCriteria.ACCURACY_FINE);
     }
 }
