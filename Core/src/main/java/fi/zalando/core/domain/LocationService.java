@@ -7,6 +7,7 @@ import android.location.Location;
 import java.util.concurrent.TimeUnit;
 
 import fi.zalando.core.data.LocationRepository;
+import fi.zalando.core.data.helper.LocationHelper;
 import rx.Observable;
 
 /**
@@ -45,11 +46,14 @@ public class LocationService extends BaseService {
      * @param locationUpdateFrequency {@link Long} with the milliseconds about the frequency of the
      *                                required updates
      * @param timeUnit                {@link TimeUnit} if the provided frequency
+     * @param accuracyCriteria        {@link Integer} with the accuracy criteria. @See {@link
+     *                                LocationHelper.LocationCriteria}
      * @return {@link Observable} that provides {@link LatLng} updates
      */
-    public Observable<LatLng> loadLocations(Long locationUpdateFrequency, TimeUnit timeUnit) {
+    public Observable<LatLng> loadLocations(Long locationUpdateFrequency, TimeUnit timeUnit, int
+            accuracyCriteria) {
 
-        return locationRepository.loadLocations(timeUnit.toMillis(locationUpdateFrequency))
-                .compose(applySchedulers());
+        return locationRepository.loadLocations(timeUnit.toMillis(locationUpdateFrequency),
+                accuracyCriteria).compose(applySchedulers());
     }
 }
