@@ -26,6 +26,7 @@ public class ToolbarAnimatorImpl implements ToolbarAnimator {
         Timber.d("hideToolbar animated? " + (onAnimationEnded != null));
 
         toolbarView.post(() -> {
+
             ValueAnimator toolbarShowAnim =
                     ObjectAnimator.ofFloat(toolbarView, "translationY", -toolbarView.getBottom());
             toolbarShowAnim.setDuration(onAnimationEnded != null ? toolbarView.getContext()
@@ -51,21 +52,26 @@ public class ToolbarAnimatorImpl implements ToolbarAnimator {
 
         toolbarView.post(() -> {
 
-            ValueAnimator toolbarShowAnim =
-                    ObjectAnimator.ofFloat(toolbarView, "translationY", -toolbarView.getBottom(), 0);
-            toolbarShowAnim.setDuration(onAnimationEnded != null ? toolbarView.getContext()
-                    .getResources().getInteger(android.R.integer.config_shortAnimTime) : 0);
-            // Do not add the listener and animation definitions if null is provided as listener
-            if (onAnimationEnded != null) {
-                toolbarShowAnim.setInterpolator(new DecelerateInterpolator(2));
-                toolbarShowAnim.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        onAnimationEnded.onAnimationEnded();
-                    }
-                });
+            // Only animate if the toolbar is not in place
+            if (toolbarView.getTranslationY() != 0) {
+
+                ValueAnimator toolbarShowAnim = ObjectAnimator.ofFloat(toolbarView, "translationY",
+                        -toolbarView.getBottom(), 0);
+
+                toolbarShowAnim.setDuration(onAnimationEnded != null ? toolbarView.getContext()
+                        .getResources().getInteger(android.R.integer.config_shortAnimTime) : 0);
+                // Do not add the listener and animation definitions if null is provided as listener
+                if (onAnimationEnded != null) {
+                    toolbarShowAnim.setInterpolator(new DecelerateInterpolator(2));
+                    toolbarShowAnim.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            onAnimationEnded.onAnimationEnded();
+                        }
+                    });
+                    toolbarShowAnim.start();
+                }
             }
-            toolbarShowAnim.start();
         });
     }
 }

@@ -105,9 +105,11 @@ public class LocationRepositoryTest {
                 (googlePlayServicesHelper).loadGooglePlayServices(any(GoogleApiClient.class));
 
         // Call loadLocations
-        locationRepository.loadLocations(1000L).toBlocking().subscribe(new SubscriberAdapter<>());
+        locationRepository.loadLocations(1000L, LocationHelper.LocationCriteria.ACCURACY_FINE)
+                .toBlocking().subscribe(new SubscriberAdapter<>());
         // Verify that once google play services fails, location helper is used
-        verify(locationHelper, times(1)).loadLocations(eq(1000L));
+        verify(locationHelper, times(1)).loadLocations(eq(1000L), eq(LocationHelper
+                .LocationCriteria.ACCURACY_FINE));
     }
 
     @Test
