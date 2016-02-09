@@ -1,6 +1,7 @@
 package fi.zalando.core.persistence;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,8 @@ import static org.junit.Assert.assertTrue;
  * Created by jduran on 23/11/15.
  */
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
+@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, manifest =
+        "src/main/AndroidManifest.xml")
 public class SharedPreferencesPersistentHashTableTest {
 
     private PersistentHashTable persistentHashTable;
@@ -144,7 +146,8 @@ public class SharedPreferencesPersistentHashTableTest {
         assertEquals(persistentHashTable.get(booleanKey, !booleanValue), !booleanValue);
         assertEquals(persistentHashTable.get(stringKey, "anotherString"), "anotherString");
         assertEquals(persistentHashTable.get(longKey, Long.MAX_VALUE).longValue(), Long.MAX_VALUE);
-        assertEquals(persistentHashTable.get(integerKey, Integer.MAX_VALUE).intValue(), Integer.MAX_VALUE);
+        assertEquals(persistentHashTable.get(integerKey, Integer.MAX_VALUE).intValue(), Integer
+                .MAX_VALUE);
         assertEquals(persistentHashTable.get(dateKey, new Date(0)), new Date(0));
 
         // Save the values
@@ -154,7 +157,8 @@ public class SharedPreferencesPersistentHashTableTest {
         assertEquals(persistentHashTable.get(booleanKey, !booleanValue), booleanValue);
         assertEquals(persistentHashTable.get(stringKey, "anotherString"), stringValue);
         assertEquals(persistentHashTable.get(longKey, Long.MAX_VALUE).longValue(), longValue);
-        assertEquals(persistentHashTable.get(integerKey, Integer.MAX_VALUE).intValue(), integerValue);
+        assertEquals(persistentHashTable.get(integerKey, Integer.MAX_VALUE).intValue(),
+                integerValue);
         assertEquals(persistentHashTable.get(dateKey, new Date(0)), dateValue);
     }
 

@@ -1,5 +1,7 @@
 package fi.zalando.core.utils;
 
+import android.os.Build;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -22,7 +24,7 @@ import static org.junit.Assert.assertTrue;
         "src/main/AndroidManifest.xml")
 public class PlatformUtilsTest {
 
-    public static final int SDK_LEVEL_TO_TEST = 16;
+    public static final int SDK_LEVEL_TO_TEST = Build.VERSION_CODES.JELLY_BEAN;
 
     @Test
     public void testGetOSVersion() {
