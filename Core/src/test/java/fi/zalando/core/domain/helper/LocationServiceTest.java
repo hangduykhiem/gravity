@@ -1,5 +1,7 @@
 package fi.zalando.core.domain.helper;
 
+import android.os.Build;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +30,8 @@ import static org.mockito.Mockito.verify;
  * Created by jduran on 27/01/16.
  */
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
+@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, manifest =
+        "src/main/AndroidManifest.xml")
 public class LocationServiceTest {
 
     private LocationService locationService;

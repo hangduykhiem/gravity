@@ -2,6 +2,7 @@ package fi.zalando.core.utils;
 
 import android.graphics.Point;
 import android.location.LocationManager;
+import android.os.Build;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +26,8 @@ import static org.mockito.Mockito.mock;
  * Created by jduran on 21/01/16.
  */
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 16, manifest = "src/main/AndroidManifest.xml")
+@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, manifest =
+        "src/main/AndroidManifest.xml")
 public class DeviceUtilsTest {
 
     @Mock
@@ -93,7 +95,7 @@ public class DeviceUtilsTest {
         assertTrue(density > 0);
         float result = DeviceUtils.dpToPx(RuntimeEnvironment.application, testValue);
         // Check that the result is valid:
-        assertTrue(result == testValue*density);
+        assertTrue(result == testValue * density);
     }
 
     @Test
@@ -105,6 +107,6 @@ public class DeviceUtilsTest {
         assertTrue(density > 0);
         float result = DeviceUtils.pxToDp(RuntimeEnvironment.application, testValue);
         // Check that the result is valid:
-        assertTrue(result == testValue/density);
+        assertTrue(result == testValue / density);
     }
 }

@@ -1,5 +1,6 @@
 package fi.zalando.core.ui.presenter;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import org.junit.Before;
@@ -32,7 +33,8 @@ import static org.mockito.Mockito.verify;
  * Created by jduran on 29/11/15.
  */
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
+@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, manifest =
+        "src/main/AndroidManifest.xml")
 public class BasePresenterTest {
 
     private MockBasePresenter basePresenter;
