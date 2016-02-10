@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import fi.zalando.core.BuildConfig;
-import fi.zalando.core.persistence.impl.SharedPreferencesPersistentHashTableImpl;
 import fi.zalando.core.utils.SecurityUtils;
 
 import static junit.framework.Assert.assertEquals;
@@ -48,8 +47,7 @@ public class KeyChainTest {
     @Test
     public void testSaveAndGetSingleItem() {
 
-        KeyChain keyChain = new KeyChain(new SharedPreferencesPersistentHashTableImpl
-                (RuntimeEnvironment.application));
+        KeyChain keyChain = new KeyChain(new PersistentHashTable(RuntimeEnvironment.application));
 
         String keyToUse = "key";
         String valueToStore = "value";
@@ -76,8 +74,7 @@ public class KeyChainTest {
     @Test
     public void testSaveAndGetMultipleItems() {
 
-        KeyChain keyChain = new KeyChain(new SharedPreferencesPersistentHashTableImpl
-                (RuntimeEnvironment.application));
+        KeyChain keyChain = new KeyChain(new PersistentHashTable(RuntimeEnvironment.application));
 
         String keyToUse = "key";
         String valueToStore = "value";

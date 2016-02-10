@@ -1,6 +1,5 @@
 package fi.zalando.core.persistence;
 
-import android.content.SharedPreferences;
 import android.os.Build;
 
 import org.junit.Before;
@@ -23,14 +22,14 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test for {@link SharedPreferences}
+ * Test for {@link PersistentHashTable}
  *
  * Created by jduran on 23/11/15.
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, manifest =
         "src/main/AndroidManifest.xml")
-public class SharedPreferencesPersistentHashTableTest {
+public class PersistentHashTableTest {
 
     private PersistentHashTable persistentHashTable;
 
