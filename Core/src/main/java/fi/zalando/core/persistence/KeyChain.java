@@ -5,8 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.text.TextUtils;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,43 +32,41 @@ public class KeyChain {
 
         this.persistentHashTable = persistentHashTable;
 
-        try {
-            initKeyChain();
-        } catch (Exception ignore) {
-        }
+        initKeyChain();
     }
 
     /**
      * Inits the {@link KeyChain}
-     *
-     * @throws GeneralSecurityException     if AES is not implemented on this system
-     * @throws UnsupportedEncodingException if UTF-8 is not supported in this system
      */
-    private void initKeyChain() throws GeneralSecurityException, UnsupportedEncodingException {
+    private void initKeyChain() {
 
         // switch to an own storage in the persistent storage
         persistentHashTable.switchStorage(KeyChain.class.getName());
 
-        // Check if the keychain has been initialised
+        // Check if the keychain has been initialised, it will just add random data to make
+        // reading the items more complicated
         if (persistentHashTable.isEmpty()) {
-
-            // Create a map to store about 1000 elements to the persistent hash table to make
-            // search of key more difficult to hack
-            Map<String, Object> toAddItems = new HashMap<>();
-            Random random = new Random(System.currentTimeMillis());
-            int amountOfItems = random.nextInt(100);
-            for (int i = 0; i <= amountOfItems; i++) {
-                // Add randomly key encrypts or value encrypts
-                if (random.nextBoolean()) {
-                    toAddItems.put(SecurityUtils.generateRandomKey(), SecurityUtils
-                            .generateRandomKey());
-                } else {
-                    toAddItems.put(SecurityUtils.encryptKey(SecurityUtils
-                            .generateRandomString()), SecurityUtils.generateRandomKey());
+            // Takes some time to create the fake data, doing it in a background thread
+            new Thread(() -> {
+                // Create a map to store about 100 elements to the persistent hash table to make
+                // search of key more difficult to hack
+                Random random = new Random(System.currentTimeMillis());
+                int amountOfItems = random.nextInt(100);
+                try {
+                    for (int i = 0; i <= amountOfItems; i++) {
+                        // Add randomly key encrypts or value encrypts
+                        if (random.nextBoolean()) {
+                            persistentHashTable.put(SecurityUtils.generateRandomKey(),
+                                    SecurityUtils.generateRandomKey());
+                        } else {
+                            persistentHashTable.put(SecurityUtils.encryptKey(SecurityUtils
+                                    .generateRandomString()), SecurityUtils.generateRandomKey
+                                    ());
+                        }
+                    }
+                } catch (Exception ignore) {
                 }
-            }
-            // Save all the items in the persistent hash
-            persistentHashTable.put(toAddItems);
+            }).start();
         }
     }
 
