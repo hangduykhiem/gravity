@@ -182,6 +182,31 @@ public class SharedPreferencesPersistentHashTableTest {
     }
 
     @Test
+    public void testIsEmpty() {
+
+        String stringKey = "stringKey";
+        String stringValue = "stringValue";
+
+        assertTrue(persistentHashTable.isEmpty());
+        // add some value
+        persistentHashTable.put(stringKey, stringValue);
+        // Check that now it's not empty
+        assertFalse(persistentHashTable.isEmpty());
+
+        // switch storage
+        persistentHashTable.switchStorage("anotherone!");
+        assertTrue(persistentHashTable.isEmpty());
+        // add some value
+        persistentHashTable.put(stringKey, stringValue);
+        // Check that now it's not empty
+        assertFalse(persistentHashTable.isEmpty());
+        // reset storage
+        persistentHashTable.reset();
+        // check is empty again
+        assertTrue(persistentHashTable.isEmpty());
+    }
+
+    @Test
     public void testSwitchStorage() {
 
         final String key = "testSwitchStorage";

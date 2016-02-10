@@ -163,7 +163,6 @@ public class SharedPreferencesPersistentHashTableImpl implements PersistentHashT
         }
 
         editor.apply();
-
     }
 
     @Override
@@ -176,6 +175,12 @@ public class SharedPreferencesPersistentHashTableImpl implements PersistentHashT
     }
 
     @Override
+    public boolean isEmpty() {
+
+        return sharedPreferences.getAll().isEmpty();
+    }
+
+    @Override
     public synchronized void switchStorage(@NonNull String persistentHashTableId) {
 
         // Check preconditions
@@ -185,7 +190,8 @@ public class SharedPreferencesPersistentHashTableImpl implements PersistentHashT
         Timber.w("switchStorage: " + persistentHashTableId);
 
         this.persistentHashTableId = persistentHashTableId;
-        sharedPreferences = context.getSharedPreferences(this.persistentHashTableId, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(this.persistentHashTableId, Context
+                .MODE_PRIVATE);
     }
 
     private void checkNonEmptyKeyPrecondition(String key) {
