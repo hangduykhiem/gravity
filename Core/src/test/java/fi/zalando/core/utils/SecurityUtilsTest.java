@@ -27,8 +27,44 @@ import static junit.framework.Assert.assertNotSame;
         "src/main/AndroidManifest.xml")
 public class SecurityUtilsTest {
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testFailingToDecryptWhenUsingDifferentKey() throws GeneralSecurityException,
+            UnsupportedEncodingException {
+
+        String textToEncrypt = "Text to encrypt!";
+
+        Pair<String, String> encryptionDuple = SecurityUtils.encrypt(textToEncrypt);
+
+        // Check that we can decrypt it using the same key
+        assertNotSame(SecurityUtils.decrypt(encryptionDuple.first, "AnotherKey to force crash"),
+                textToEncrypt);
+    }
+
     @Test
-    public void testEncryptionDecryption() throws GeneralSecurityException,
+    public void testGeneratingRandomKey() throws GeneralSecurityException {
+
+        assertNotNull(SecurityUtils.generateRandomKey());
+    }
+
+    @Test
+    public void testGeneratingString() throws GeneralSecurityException {
+
+        assertNotNull(SecurityUtils.generateRandomString());
+    }
+
+    @Test
+    public void testGenerateKeyAlwaysSame() throws GeneralSecurityException {
+
+        String textToEncrypt = "Password to use";
+
+        String initialKey = SecurityUtils.generateKey(textToEncrypt);
+        String secondKey = SecurityUtils.generateKey(textToEncrypt);
+
+        assertEquals(initialKey, secondKey);
+    }
+
+    @Test
+    public void testEncryptionDecryptionRandomKey() throws GeneralSecurityException,
             UnsupportedEncodingException {
 
         String textToEncrypt = "Text to encrypt!";
@@ -42,17 +78,17 @@ public class SecurityUtilsTest {
                 textToEncrypt);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testFailingToDecryptWhenUsingDifferentKey() throws GeneralSecurityException,
+    @Test
+    public void testEncryptionWithSameKeyAlwaysSame() throws GeneralSecurityException,
             UnsupportedEncodingException {
 
-        String textToEncrypt = "Text to encrypt!";
+        String textToEncrypt = "Password to use";
 
-        Pair<String, String> encryptionDuple = SecurityUtils.encrypt(textToEncrypt);
+        String encryptedText = SecurityUtils.encryptKey(textToEncrypt);
+        String encryptedText2 = SecurityUtils.encryptKey(textToEncrypt);
 
         // Check that we can decrypt it using the same key
-        assertNotSame(SecurityUtils.decrypt(encryptionDuple.first, "AnotherKey to force crash"),
-                textToEncrypt);
+        assertEquals(encryptedText, encryptedText2);
     }
 
 }
