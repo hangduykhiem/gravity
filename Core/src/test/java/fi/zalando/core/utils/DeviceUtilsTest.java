@@ -1,8 +1,10 @@
 package fi.zalando.core.utils;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.location.LocationManager;
 import android.os.Build;
+import android.telephony.TelephonyManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +16,10 @@ import org.robolectric.annotation.Config;
 
 import fi.zalando.core.BuildConfig;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -32,11 +36,51 @@ public class DeviceUtilsTest {
 
     @Mock
     private LocationManager locationManager;
+    @Mock
+    private TelephonyManager telephonyManager;
 
     @Before
     public void setup() {
 
         locationManager = mock(LocationManager.class);
+        telephonyManager = mock(TelephonyManager.class);
+    }
+
+    @Test
+    public void testGetUserCountry() {
+
+        // Robolectric provides null since it doesn't have sim
+        assertNull(DeviceUtils.getUserCountry(RuntimeEnvironment.application));
+
+        // mock get telephony manager from the context
+        Context mockContext = mock(Context.class);
+        doAnswer(invocation -> telephonyManager).when(mockContext).getSystemService(Context
+                .TELEPHONY_SERVICE);
+
+        // Setup the telephony manager mock
+        doAnswer(invocation -> "ES").when(telephonyManager).getSimCountryIso();
+        assertEquals(DeviceUtils.getUserCountry(mockContext), "ES".toLowerCase());
+
+        // setup telephony manager mock when fetched from network country iso code
+        doAnswer(invocation -> null).when(telephonyManager).getSimCountryIso();
+        doAnswer(invocation -> TelephonyManager.PHONE_TYPE_GSM).when(telephonyManager)
+                .getPhoneType();
+        doAnswer(invocation -> "ES").when(telephonyManager).getNetworkCountryIso();
+        assertEquals(DeviceUtils.getUserCountry(mockContext), "ES".toLowerCase());
+
+        // setup telephony manager mock when PHONE_TYPE_CDMA phone
+        doAnswer(invocation -> null).when(telephonyManager).getSimCountryIso();
+        doAnswer(invocation -> TelephonyManager.PHONE_TYPE_CDMA).when(telephonyManager)
+                .getPhoneType();
+        doAnswer(invocation -> "ES").when(telephonyManager).getNetworkCountryIso();
+        assertNull(DeviceUtils.getUserCountry(mockContext));
+
+        // setup telephony manager mock when getNetworkCountryIso null
+        doAnswer(invocation -> null).when(telephonyManager).getSimCountryIso();
+        doAnswer(invocation -> TelephonyManager.PHONE_TYPE_CDMA).when(telephonyManager)
+                .getPhoneType();
+        doAnswer(invocation -> null).when(telephonyManager).getNetworkCountryIso();
+        assertNull(DeviceUtils.getUserCountry(mockContext));
     }
 
     @Test
