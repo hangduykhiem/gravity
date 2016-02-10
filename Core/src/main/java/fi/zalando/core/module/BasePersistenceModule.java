@@ -9,7 +9,6 @@ import dagger.Provides;
 import fi.zalando.core.domain.helper.SubscriptionHelper;
 import fi.zalando.core.persistence.KeyChain;
 import fi.zalando.core.persistence.PersistentHashTable;
-import fi.zalando.core.persistence.impl.SharedPreferencesPersistentHashTableImpl;
 
 /**
  * Module that provides the implementations of all the injected persistence dependencies
@@ -39,7 +38,7 @@ public class BasePersistenceModule {
     @Provides
     public PersistentHashTable providePersistentHashTable(Context applicationContext) {
 
-        return new SharedPreferencesPersistentHashTableImpl(applicationContext);
+        return new PersistentHashTable(applicationContext);
     }
 
 }
