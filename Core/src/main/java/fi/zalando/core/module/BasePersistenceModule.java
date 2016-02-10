@@ -2,9 +2,12 @@ package fi.zalando.core.module;
 
 import android.content.Context;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import fi.zalando.core.domain.helper.SubscriptionHelper;
+import fi.zalando.core.persistence.KeyChain;
 import fi.zalando.core.persistence.PersistentHashTable;
 import fi.zalando.core.persistence.impl.SharedPreferencesPersistentHashTableImpl;
 
@@ -17,6 +20,18 @@ import fi.zalando.core.persistence.impl.SharedPreferencesPersistentHashTableImpl
 public class BasePersistenceModule {
 
     /**
+     * Provides a {@link KeyChain} instance dependency
+     *
+     * @return {@link KeyChain} instance
+     */
+    @Provides
+    @Singleton
+    public KeyChain provideKeyChain(PersistentHashTable persistentHashTable) {
+
+        return new KeyChain(persistentHashTable);
+    }
+
+    /**
      * Provides a {@link SubscriptionHelper} instance dependency
      *
      * @return {@link SubscriptionHelper} instance
@@ -26,4 +41,5 @@ public class BasePersistenceModule {
 
         return new SharedPreferencesPersistentHashTableImpl(applicationContext);
     }
+
 }

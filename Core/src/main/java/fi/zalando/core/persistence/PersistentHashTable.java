@@ -111,6 +111,13 @@ public interface PersistentHashTable {
     public void reset();
 
     /**
+     * Checks if the persistent hash table is empty
+     *
+     * @return {@link Boolean} indicating if the table is empty
+     */
+    public boolean isEmpty();
+
+    /**
      * Switches the {@link PersistentHashTable} to the given Id. It creates the table if it does not
      * exist
      *
