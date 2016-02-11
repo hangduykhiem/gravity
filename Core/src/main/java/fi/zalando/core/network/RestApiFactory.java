@@ -43,13 +43,13 @@ public final class RestApiFactory {
      * @return {@link T} with the implementation of the Rest interface
      */
     public static <T> T createApi(Class<T> restInterface, @NonNull String baseUrl, @Nullable
-    List<Interceptor> interceptors, @NonNull Gson gson) {
+    List<Interceptor> interceptors, @Nullable Gson gson) {
 
         Timber.d("getRestApi: " + baseUrl + " interface: " + restInterface.getName() + " " +
                 "gson: " + gson);
 
-        return setupRetrofit(baseUrl, interceptors, RxJavaCallAdapterFactory.create(), gson).create
-                (restInterface);
+        return setupRetrofit(baseUrl, interceptors, RxJavaCallAdapterFactory.create(), gson !=
+                null ? gson : new GsonBuilder().create()).create(restInterface);
     }
 
     /**
