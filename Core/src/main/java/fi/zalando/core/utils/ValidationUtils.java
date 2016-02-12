@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
  */
 public class ValidationUtils {
 
-    private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\" +
+            ".[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
     /**
      * Private constructor to avoid object instance
@@ -28,7 +28,7 @@ public class ValidationUtils {
      */
     public static boolean isValidEmail(String emailToCheck) {
 
-        return !TextUtils.isEmpty(emailToCheck) && Pattern.compile(EMAIL_PATTERN).matcher
+        return !TextUtils.isEmpty(emailToCheck) && EMAIL_PATTERN.matcher
                 (emailToCheck).matches();
     }
 

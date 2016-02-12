@@ -27,6 +27,9 @@ public class ValidationUtilsTest {
 
         String validEmail = "name@domain.com";
         assertTrue(ValidationUtils.isValidEmail(validEmail));
+
+        validEmail = "name@domain.fashion";
+        assertTrue(ValidationUtils.isValidEmail(validEmail));
     }
 
     @Test
@@ -44,6 +47,9 @@ public class ValidationUtilsTest {
         assertFalse(ValidationUtils.isValidEmail(invalidEmail));
 
         invalidEmail = "invalid@invalid.";
+        assertFalse(ValidationUtils.isValidEmail(invalidEmail));
+
+        invalidEmail = "invalid@invalid.invalid@invalid.com";
         assertFalse(ValidationUtils.isValidEmail(invalidEmail));
     }
 
