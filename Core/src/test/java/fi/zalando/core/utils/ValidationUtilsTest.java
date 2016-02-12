@@ -32,10 +32,9 @@ public class ValidationUtilsTest {
     @Test
     public void testInvalidEmail() {
 
-        String invalidEmail = null;
-        assertFalse(ValidationUtils.isValidEmail(invalidEmail));
+        assertFalse(ValidationUtils.isValidEmail(null));
 
-        invalidEmail = "";
+        String invalidEmail = "";
         assertFalse(ValidationUtils.isValidEmail(invalidEmail));
 
         invalidEmail = "invalid";
