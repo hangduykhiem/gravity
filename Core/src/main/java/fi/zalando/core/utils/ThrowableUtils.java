@@ -17,7 +17,7 @@ public class ThrowableUtils {
 
     /**
      * Checks if the given {@link Throwable} is an {@link HttpException} related with the given
-     * HttpError coe
+     * HttpError code
      *
      * @param throwableToCheck {@link Throwable} to check
      * @param codeToCheck      {@link Integer} with the Http Code to check
