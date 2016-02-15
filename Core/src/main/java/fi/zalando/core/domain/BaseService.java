@@ -17,7 +17,7 @@ public abstract class BaseService {
      * @param <T> {@link T} type to create the transformer
      * @return {@link rx.Observable.Transformer} that will apply correctly the right schedulers
      */
-    protected <T> Observable.Transformer<T, T> applySchedulers() {
+    public <T> Observable.Transformer<T, T> applySchedulers() {
 
         return observable -> observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                 .mainThread());
