@@ -35,6 +35,9 @@ dependencies {
     // Google Play Services
     compile 'com.google.android.gms:play-services-location:8.4.0'
 
+    // Reactive location library
+    compile 'pl.charmas.android:android-reactive-location:0.8@aar'
+
     // Butterknife library to ease the access to inject views in activities and fragments
     compile 'com.jakewharton:butterknife:7.0.1'
 
