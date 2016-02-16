@@ -1,5 +1,7 @@
 package fi.zalando.core.data.helper;
 
+import com.google.android.gms.location.LocationRequest;
+
 import android.Manifest;
 import android.content.Context;
 import android.location.Criteria;
@@ -149,8 +151,7 @@ public class LocationHelperTest {
                 .NETWORK_PROVIDER);
 
         // Subscribe to fetch the location
-        locationHelper.loadLocations(1000L, LocationHelper.LocationCriteria.ACCURACY_FINE)
-                .subscribe();
+        locationHelper.loadLocations(1000L, LocationRequest.PRIORITY_HIGH_ACCURACY).subscribe();
 
         // verify criteria is changed
         verify(criteria).setAccuracy(Criteria.ACCURACY_FINE);
@@ -201,8 +202,8 @@ public class LocationHelperTest {
                 .NETWORK_PROVIDER);
 
         // Subscribe to fetch the location and just unsubscribe right away
-        locationHelper.loadLocations(1000L, LocationHelper.LocationCriteria.ACCURACY_FINE)
-                .subscribe().unsubscribe();
+        locationHelper.loadLocations(1000L, LocationRequest.PRIORITY_HIGH_ACCURACY).subscribe()
+                .unsubscribe();
 
         verify(locationManager, times(1)).removeUpdates(any(LocationListener.class));
     }
