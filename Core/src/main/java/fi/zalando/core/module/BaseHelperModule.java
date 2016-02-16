@@ -3,6 +3,8 @@ package fi.zalando.core.module;
 import android.content.Context;
 import android.location.LocationManager;
 
+import pl.charmas.android.reactivelocation.ReactiveLocationProvider;
+
 import dagger.Module;
 import dagger.Provides;
 import fi.zalando.core.data.helper.GooglePlayServicesHelper;
@@ -20,12 +22,13 @@ public class BaseHelperModule {
     /**
      * Provides a {@link GooglePlayServicesHelper} instance dependency
      *
+     * @param applicationContext {@link Context} of the app
      * @return {@link GooglePlayServicesHelper} instance
      */
     @Provides
-    public GooglePlayServicesHelper provideGooglePlayServicesHelper() {
+    public GooglePlayServicesHelper provideGooglePlayServicesHelper(Context applicationContext) {
 
-        return new GooglePlayServicesHelper();
+        return new GooglePlayServicesHelper(new ReactiveLocationProvider(applicationContext));
     }
 
     /**
