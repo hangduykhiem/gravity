@@ -17,6 +17,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -49,6 +50,8 @@ public class LocationServiceTest {
         locationService.loadCurrentLocation();
         // Check that mocked loadCurrentLocation is used
         verify(locationRepository).loadCurrentLocation();
+        // Verify that apply schedulers is called
+        verify(locationService, times(1)).applySchedulers();
     }
 
     @Test
@@ -64,5 +67,7 @@ public class LocationServiceTest {
         // Check that mocked loadLocations is used with proper time calculation
         verify(locationRepository).loadLocations(TimeUnit.SECONDS.toMillis(10L), LocationRequest
                 .PRIORITY_HIGH_ACCURACY);
+        // Verify that apply schedulers is called
+        verify(locationService, times(1)).applySchedulers();
     }
 }
