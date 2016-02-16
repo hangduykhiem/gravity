@@ -1,6 +1,6 @@
 package fi.zalando.core.data.helper;
 
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,8 +8,15 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import pl.charmas.android.reactivelocation.ReactiveLocationProvider;
+
+import rx.Observable;
+
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -23,36 +30,28 @@ public class GooglePlayServicesHelperTest {
     private GooglePlayServicesHelper googlePlayServicesHelper;
 
     @Mock
-    private GoogleApiClient mockedGoogleApiClient;
+    private ReactiveLocationProvider mockedReactiveLocationProvider;
 
     @Before
     public void setup() {
 
-        googlePlayServicesHelper = new GooglePlayServicesHelper();
-        mockedGoogleApiClient = mock(GoogleApiClient.class);
+        mockedReactiveLocationProvider = mock(ReactiveLocationProvider.class);
+
+        // Setup a dummy answer from ReactiveLocationProvider so the test will not crash
+        doAnswer(invocation -> Observable.never()).when(mockedReactiveLocationProvider)
+                .getUpdatedLocation(any());
+
+        googlePlayServicesHelper = new GooglePlayServicesHelper(mockedReactiveLocationProvider);
     }
 
     @Test
-    public void testCallbacksRegistered() {
+    public void testGetGoogleApiClientObservableUsed() {
 
         // Make a fake subscription
-        googlePlayServicesHelper.loadGooglePlayServices(mockedGoogleApiClient).subscribe();
+        googlePlayServicesHelper.loadGooglePlayServices(LocationServices.API);
         // Verify needed methods are called
-        verify(mockedGoogleApiClient).registerConnectionCallbacks(any
-                (GoogleApiClient.ConnectionCallbacks.class));
-        verify(mockedGoogleApiClient).registerConnectionFailedListener(any
-                (GoogleApiClient.OnConnectionFailedListener.class));
+        verify(mockedReactiveLocationProvider, times(1)).getGoogleApiClientObservable(eq
+                (LocationServices.API));
     }
-
-    @Test
-    public void testConnectCalled() {
-
-        // Make a fake subscription
-        googlePlayServicesHelper.loadGooglePlayServices(mockedGoogleApiClient).subscribe();
-        // Verify connect is called
-        verify(mockedGoogleApiClient).connect();
-    }
-
-    // TODO Investigate how to test connection failures, etc. Check -> http://bit.ly/1U6YQ09
 
 }

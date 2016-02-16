@@ -1,187 +1,132 @@
 package fi.zalando.core.data;
 
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.model.LatLng;
 
-import android.Manifest;
-import android.content.Context;
-import android.location.LocationManager;
+import android.location.Location;
+import android.os.Build;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
-import fi.zalando.core.data.helper.GooglePlayServicesHelper;
+import pl.charmas.android.reactivelocation.ReactiveLocationProvider;
+
+import fi.zalando.core.BuildConfig;
 import fi.zalando.core.data.helper.LocationHelper;
 import fi.zalando.core.domain.helper.SubscriberAdapter;
-import fi.zalando.core.exception.PermissionSecurityException;
-import fi.zalando.core.exception.ServiceDisabledException;
-import fi.zalando.core.utils.PermissionUtils;
 import rx.Observable;
-import rx.functions.Action1;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
 
 /**
  * Tests for {@link LocationRepository} class
  *
  * Created by jduran on 25/01/16.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(PermissionUtils.class)
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, manifest =
+        "src/main/AndroidManifest.xml")
 public class LocationRepositoryTest {
 
     private LocationRepository locationRepository;
 
     @Mock
-    private GooglePlayServicesHelper googlePlayServicesHelper;
-    @Mock
-    private GoogleApiClient googleApiClient;
-    @Mock
-    private LocationManager locationManager;
+    private ReactiveLocationProvider reactiveLocationProvider;
     @Mock
     private LocationHelper locationHelper;
 
     @Before
     public void setup() {
 
-        googlePlayServicesHelper = mock(GooglePlayServicesHelper.class);
-        locationManager = mock(LocationManager.class);
+        reactiveLocationProvider = mock(ReactiveLocationProvider.class);
         locationHelper = mock(LocationHelper.class);
-        googleApiClient = mock(GoogleApiClient.class);
 
-        locationRepository = new LocationRepository(mock(Context.class), googlePlayServicesHelper,
-                locationManager, locationHelper);
+        locationRepository = new LocationRepository(reactiveLocationProvider, locationHelper);
     }
 
     @Test
-    public void testGooglePlayServicesCorrectlyUsed() throws Exception {
+    public void testLoadCurrentLocation() {
 
-        // Prepare Google Play Services Helper mock
-        doAnswer(invocation -> Observable.just(googleApiClient)).when
-                (googlePlayServicesHelper).loadGooglePlayServices(any(GoogleApiClient.class));
-        doAnswer(invocation -> googleApiClient).when(googlePlayServicesHelper)
-                .createLocationApiGoogleApiClient(any());
+        final double lat = 1f;
+        final double lon = 2f;
 
-        // make a fake call
-        locationRepository.loadCurrentLocation().toBlocking();
-        // Check that load Google play services is executed
-        verify(googlePlayServicesHelper, times(1)).loadGooglePlayServices(any(GoogleApiClient
-                .class));
-        // Check that we are loading google api client from the helper
-        verify(googlePlayServicesHelper, times(1)).createLocationApiGoogleApiClient(any(Context
-                .class));
+        // Prepare mock reactiveLocationProvider
+        final LatLng latLng = new LatLng(lat, lon);
+        final Location location = new Location("mockedProvider");
+        location.setLatitude(lat);
+        location.setLongitude(lon);
+
+        doAnswer(invocation -> Observable.just(location)).when(reactiveLocationProvider)
+                .getLastKnownLocation();
+
+        // verify location is provided correctly
+        LatLng providedLatLng = locationRepository.loadCurrentLocation().toBlocking().first();
+
+        assertEquals(latLng, providedLatLng);
     }
 
     @Test
-    public void testLocationHelperUsedWhenGooglePlayServicesFailsForSingleRequest() throws
-            Exception {
+    public void testLoadCurrentLocationUsingHelperWhenFails() {
 
-        // Prepare Google Play Services Helper mock
-        doAnswer(invocation -> Observable.error(new Exception())).when
-                (googlePlayServicesHelper).loadGooglePlayServices(any(GoogleApiClient.class));
+        doAnswer(invocation -> Observable.error(new Exception())).when(reactiveLocationProvider)
+                .getLastKnownLocation();
 
-        // Call load location
-        locationRepository.loadCurrentLocation().toBlocking().subscribe(new SubscriberAdapter<>());
-        // Verify that once google play services fails, location helper is used
+        locationRepository.loadCurrentLocation().subscribe(new SubscriberAdapter<>());
+
         verify(locationHelper, times(1)).loadCurrentLocation();
     }
 
-    @Test
-    public void testLocationHelperUsedWhenGooglePlayServicesFailsFoLocationUpdatesRequest() throws
-            Exception {
+    @Test(expected = IllegalArgumentException.class)
+    public void testLoadLocationsFailsWhenAccuracyNotRecognised() {
 
-        // Prepare Google Play Services Helper mock
-        doAnswer(invocation -> Observable.error(new Exception())).when
-                (googlePlayServicesHelper).loadGooglePlayServices(any(GoogleApiClient.class));
-
-        // Call loadLocations
-        locationRepository.loadLocations(1000L, LocationHelper.LocationCriteria.ACCURACY_FINE)
-                .toBlocking().subscribe(new SubscriberAdapter<>());
-        // Verify that once google play services fails, location helper is used
-        verify(locationHelper, times(1)).loadLocations(eq(1000L), eq(LocationHelper
-                .LocationCriteria.ACCURACY_FINE));
+        locationRepository.loadLocations(0L, Integer.MAX_VALUE);
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    public void testErrorWhenLocationPermissionNotAllowed() throws Exception {
+    public void loadLocationsCalled() {
 
-        // Prepare Google Play Services Helper mock
-        doAnswer(invocation -> Observable.just(googleApiClient)).when
-                (googlePlayServicesHelper).loadGooglePlayServices(any(GoogleApiClient.class));
-        doAnswer(invocation -> googleApiClient).when(googlePlayServicesHelper)
-                .createLocationApiGoogleApiClient(any());
+        // Setup locationRepository mock  to return something when loadLocations is called
+        // If not, test will crash with null pointer
+        doAnswer(invocation -> Observable.never()).when(reactiveLocationProvider)
+                .getUpdatedLocation(any());
 
-        PowerMockito.spy(PermissionUtils.class);
+        final int accuracyCriteria = LocationRequest.PRIORITY_HIGH_ACCURACY;
+        final long locationUpdateFrequency = 5000L;
 
-        // Mock the answers from the permission check
-        doReturn(false).when(PermissionUtils.class, "checkRuntimePermission",
-                any(), eq(Manifest.permission.ACCESS_FINE_LOCATION));
-        doReturn(false).when(PermissionUtils.class, "checkRuntimePermission",
-                any(), eq(Manifest.permission.ACCESS_COARSE_LOCATION));
+        // Build location request adding user defined settings
+        LocationRequest locationRequest = LocationRequest.create().setPriority(accuracyCriteria)
+                .setInterval(locationUpdateFrequency);
 
-        // Make location helper to crash also
-        doAnswer(invocation -> Observable.error(new PermissionSecurityException(Manifest
-                .permission.ACCESS_FINE_LOCATION))).when(locationHelper).loadCurrentLocation();
+        locationRepository.loadLocations(locationUpdateFrequency, accuracyCriteria).subscribe(new
+                SubscriberAdapter<>());
 
-        // Mock on error handling
-        Action1<Throwable> mockedOnErrorHandler = mock(Action1.class);
-        locationRepository.loadCurrentLocation().toBlocking().subscribe(latLng -> {
-            // no operation, exception should raise
-        }, mockedOnErrorHandler);
-
-        verify(mockedOnErrorHandler).call(eq(new PermissionSecurityException
-                (Manifest.permission.ACCESS_FINE_LOCATION)));
+        verify(reactiveLocationProvider).getUpdatedLocation(eq(locationRequest));
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    public void testErrorWhenLocationServiceDisabled() throws Exception {
+    public void loadLocationsCalledUsingHelperWhenFails() {
 
-        // Prepare Google Play Services Helper mock
-        doAnswer(invocation -> Observable.just(googleApiClient)).when
-                (googlePlayServicesHelper).loadGooglePlayServices(any(GoogleApiClient.class));
-        doAnswer(invocation -> googleApiClient).when(googlePlayServicesHelper)
-                .createLocationApiGoogleApiClient(any());
+        final int accuracyCriteria = LocationRequest.PRIORITY_HIGH_ACCURACY;
+        final long locationUpdateFrequency = 5000L;
 
-        PowerMockito.spy(PermissionUtils.class);
+        // force location provider to fail
+        doAnswer(invocation -> Observable.error(new Exception())).when(reactiveLocationProvider)
+                .getUpdatedLocation(any());
 
-        // Mock the answers from the permission check
-        doReturn(true).when(PermissionUtils.class, "checkRuntimePermission",
-                any(), eq(Manifest.permission.ACCESS_FINE_LOCATION));
-        doReturn(true).when(PermissionUtils.class, "checkRuntimePermission",
-                any(), eq(Manifest.permission.ACCESS_COARSE_LOCATION));
+        locationRepository.loadLocations(locationUpdateFrequency, accuracyCriteria).subscribe(new
+                SubscriberAdapter<>());
 
-        // Mock answer from location manager, telling that location is disabled
-        // Setup the mock
-        doAnswer(invocation -> false).when(locationManager).isProviderEnabled(LocationManager
-                .GPS_PROVIDER);
-        doAnswer(invocation -> false).when(locationManager).isProviderEnabled(LocationManager
-                .NETWORK_PROVIDER);
-
-        // Make location helper to crash also
-        doAnswer(invocation -> Observable.error(new ServiceDisabledException
-                (ServiceDisabledException.ServiceType.LOCATION_SERVICES))).when(locationHelper)
-                .loadCurrentLocation();
-
-        // Mock on error handling
-        Action1<Throwable> mockedOnErrorHandler = mock(Action1.class);
-        locationRepository.loadCurrentLocation().toBlocking().subscribe(latLng -> {
-            // no operation, exception should raise
-        }, mockedOnErrorHandler);
-
-        verify(mockedOnErrorHandler).call(eq(new ServiceDisabledException
-                (ServiceDisabledException.ServiceType.LOCATION_SERVICES)));
+        verify(locationHelper, times(1)).loadLocations(locationUpdateFrequency, accuracyCriteria);
     }
 
 }

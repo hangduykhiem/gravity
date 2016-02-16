@@ -1,5 +1,6 @@
 package fi.zalando.core.domain;
 
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.model.LatLng;
 
 import android.location.Location;
@@ -7,7 +8,6 @@ import android.location.Location;
 import java.util.concurrent.TimeUnit;
 
 import fi.zalando.core.data.LocationRepository;
-import fi.zalando.core.data.helper.LocationHelper;
 import rx.Observable;
 
 /**
@@ -47,7 +47,7 @@ public class LocationService extends BaseService {
      *                                required updates
      * @param timeUnit                {@link TimeUnit} if the provided frequency
      * @param accuracyCriteria        {@link Integer} with the accuracy criteria. @See {@link
-     *                                LocationHelper.LocationCriteria}
+     *                                LocationRequest}
      * @return {@link Observable} that provides {@link LatLng} updates
      */
     public Observable<LatLng> loadLocations(Long locationUpdateFrequency, TimeUnit timeUnit, int
