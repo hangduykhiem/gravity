@@ -1,18 +1,10 @@
 package fi.zalando.core.utils;
 
 import android.annotation.TargetApi;
-import android.content.Context;
-import android.graphics.Point;
-import android.location.LocationManager;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.telephony.TelephonyManager;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.widget.RelativeLayout;
-
-import timber.log.Timber;
 
 /**
  * Utility class to help with UI related tasks
@@ -36,14 +28,17 @@ public class UIUtils {
      * @param view View or Layout whose view hierarchy onGlobalLayout to monitor.
      * @param runnable Runnable to be run once the layout is finished.
      */
-    public static void runOnGlobalLayout(View view, Runnable runnable) {
+    public static void runOnGlobalLayout(@NonNull View view, @NonNull Runnable runnable) {
         view.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
 
+                    @SuppressWarnings("deprecation")
                     @Override
                     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                     public void onGlobalLayout() {
+                        //Run the runnable:
                         runnable.run();
+                        //Unregister the listener so that the runnable is only run once:
                         if (Build.VERSION.SDK_INT < 16) {
                             view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                         } else {
