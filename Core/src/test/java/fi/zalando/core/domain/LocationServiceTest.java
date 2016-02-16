@@ -1,27 +1,22 @@
-package fi.zalando.core.domain.helper;
+package fi.zalando.core.domain;
 
-import android.os.Build;
+import com.google.android.gms.location.LocationRequest;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.annotation.Config;
 
 import java.util.concurrent.TimeUnit;
 
-import fi.zalando.core.BuildConfig;
 import fi.zalando.core.data.LocationRepository;
-import fi.zalando.core.data.helper.LocationHelper;
-import fi.zalando.core.domain.LocationService;
-import fi.zalando.core.module.BaseDomainModule;
+import fi.zalando.core.test.TestUtils;
 import rx.Observable;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -29,9 +24,6 @@ import static org.mockito.Mockito.verify;
  *
  * Created by jduran on 27/01/16.
  */
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, manifest =
-        "src/main/AndroidManifest.xml")
 public class LocationServiceTest {
 
     private LocationService locationService;
@@ -43,7 +35,8 @@ public class LocationServiceTest {
     public void setUp() {
 
         locationRepository = mock(LocationRepository.class);
-        locationService = new BaseDomainModule().provideLocationService(locationRepository);
+        locationService = spy(new LocationService(locationRepository));
+        TestUtils.setupMockedDomainService(locationService);
     }
 
     @Test
@@ -66,10 +59,10 @@ public class LocationServiceTest {
         doAnswer(invocation -> Observable.never()).when(locationRepository).loadLocations(anyLong
                 (), anyInt());
         // Make the request
-        locationService.loadLocations(10L, TimeUnit.SECONDS, LocationHelper.LocationCriteria
-                .ACCURACY_FINE);
+        locationService.loadLocations(10L, TimeUnit.SECONDS, LocationRequest
+                .PRIORITY_HIGH_ACCURACY);
         // Check that mocked loadLocations is used with proper time calculation
-        verify(locationRepository).loadLocations(TimeUnit.SECONDS.toMillis(10L), LocationHelper
-                .LocationCriteria.ACCURACY_FINE);
+        verify(locationRepository).loadLocations(TimeUnit.SECONDS.toMillis(10L), LocationRequest
+                .PRIORITY_HIGH_ACCURACY);
     }
 }
