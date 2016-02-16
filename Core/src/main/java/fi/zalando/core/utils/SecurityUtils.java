@@ -132,7 +132,7 @@ public class SecurityUtils {
      */
     private static String toBase64(String textToTransform) {
 
-        return Base64.encodeToString(textToTransform.getBytes(), Base64.DEFAULT);
+        return Base64.encodeToString(textToTransform.getBytes(), Base64.NO_WRAP);
     }
 
     /**
