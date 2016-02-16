@@ -1,12 +1,12 @@
 package fi.zalando.core.module;
 
 import android.content.Context;
-import android.location.LocationManager;
+
+import pl.charmas.android.reactivelocation.ReactiveLocationProvider;
 
 import dagger.Module;
 import dagger.Provides;
 import fi.zalando.core.data.LocationRepository;
-import fi.zalando.core.data.helper.GooglePlayServicesHelper;
 import fi.zalando.core.data.helper.LocationHelper;
 
 /**
@@ -20,20 +20,16 @@ public class BaseDataModule {
     /**
      * Provides a {@link LocationRepository} instance dependency
      *
-     * @param applicationContext       {@link Context} of the app
-     * @param googlePlayServicesHelper {@link GooglePlayServicesHelper} to inject
-     * @param locationHelper           {@link LocationHelper} to inject
+     * @param applicationContext {@link Context} of the app
+     * @param locationHelper     {@link LocationHelper} to inject
      * @return {@link LocationRepository} initialised
      */
     @Provides
     public LocationRepository provideLocationRepository(Context applicationContext,
-                                                        GooglePlayServicesHelper
-                                                                googlePlayServicesHelper,
-                                                        LocationManager locationManager,
                                                         LocationHelper locationHelper) {
 
-        return new LocationRepository(applicationContext, googlePlayServicesHelper,
-                locationManager, locationHelper);
+        return new LocationRepository(new ReactiveLocationProvider(applicationContext),
+                locationHelper);
     }
 
 }
