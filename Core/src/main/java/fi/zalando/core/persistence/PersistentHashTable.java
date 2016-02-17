@@ -38,10 +38,7 @@ public class PersistentHashTable {
      */
     public synchronized Boolean get(@NonNull String key, boolean defaultValue) {
 
-        // Check preconditions
-        checkNonEmptyKeyPrecondition(key);
-
-        return sharedPreferences.getBoolean(key, defaultValue);
+        return sharedPreferences.getBoolean(validateAndCleanKey(key), defaultValue);
     }
 
     /**
@@ -52,10 +49,7 @@ public class PersistentHashTable {
      */
     public synchronized void put(@NonNull String key, boolean keyValue) {
 
-        // Check preconditions
-        checkNonEmptyKeyPrecondition(key);
-
-        sharedPreferences.edit().putBoolean(key, keyValue).apply();
+        sharedPreferences.edit().putBoolean(validateAndCleanKey(key), keyValue).apply();
     }
 
     /**
@@ -67,10 +61,7 @@ public class PersistentHashTable {
      */
     public String get(@NonNull String key, String defaultValue) {
 
-        // Check preconditions
-        checkNonEmptyKeyPrecondition(key);
-
-        return sharedPreferences.getString(key, defaultValue);
+        return sharedPreferences.getString(validateAndCleanKey(key), defaultValue);
     }
 
     /**
@@ -81,10 +72,7 @@ public class PersistentHashTable {
      */
     public void put(@NonNull String key, String keyValue) {
 
-        // Check preconditions
-        checkNonEmptyKeyPrecondition(key);
-
-        sharedPreferences.edit().putString(key, keyValue).apply();
+        sharedPreferences.edit().putString(validateAndCleanKey(key), keyValue.trim()).apply();
     }
 
     /**
@@ -96,10 +84,7 @@ public class PersistentHashTable {
      */
     public Long get(@NonNull String key, Long defaultValue) {
 
-        // Check preconditions
-        checkNonEmptyKeyPrecondition(key);
-
-        return sharedPreferences.getLong(key, defaultValue);
+        return sharedPreferences.getLong(validateAndCleanKey(key), defaultValue);
     }
 
     /**
@@ -110,10 +95,7 @@ public class PersistentHashTable {
      */
     public void put(@NonNull String key, Long keyValue) {
 
-        // Check preconditions
-        checkNonEmptyKeyPrecondition(key);
-
-        sharedPreferences.edit().putLong(key, keyValue).apply();
+        sharedPreferences.edit().putLong(validateAndCleanKey(key), keyValue).apply();
     }
 
     /**
@@ -125,10 +107,7 @@ public class PersistentHashTable {
      */
     public Integer get(@NonNull String key, Integer defaultValue) {
 
-        // Check preconditions
-        checkNonEmptyKeyPrecondition(key);
-
-        return sharedPreferences.getInt(key, defaultValue);
+        return sharedPreferences.getInt(validateAndCleanKey(key), defaultValue);
     }
 
     /**
@@ -139,10 +118,7 @@ public class PersistentHashTable {
      */
     public void put(@NonNull String key, Integer keyValue) {
 
-        // Check preconditions
-        checkNonEmptyKeyPrecondition(key);
-
-        sharedPreferences.edit().putInt(key, keyValue).apply();
+        sharedPreferences.edit().putInt(validateAndCleanKey(key), keyValue).apply();
     }
 
     /**
@@ -154,10 +130,8 @@ public class PersistentHashTable {
      */
     public Date get(@NonNull String key, Date defaultValue) {
 
-        // Check preconditions
-        checkNonEmptyKeyPrecondition(key);
-
-        return new Date(sharedPreferences.getLong(key, defaultValue.getTime()));
+        return new Date(sharedPreferences.getLong(validateAndCleanKey(key), defaultValue.getTime
+                ()));
     }
 
     /**
@@ -168,10 +142,7 @@ public class PersistentHashTable {
      */
     public void put(@NonNull String key, Date keyValue) {
 
-        // Check preconditions
-        checkNonEmptyKeyPrecondition(key);
-
-        sharedPreferences.edit().putLong(key, keyValue.getTime()).apply();
+        sharedPreferences.edit().putLong(validateAndCleanKey(key), keyValue.getTime()).apply();
     }
 
     /**
@@ -191,23 +162,23 @@ public class PersistentHashTable {
 
             // Add each supported item
             if (contentValue instanceof Boolean) {
-                editor.putBoolean(key, (Boolean) contentValue);
+                editor.putBoolean(validateAndCleanKey(key), (Boolean) contentValue);
                 continue;
             }
             if (contentValue instanceof String) {
-                editor.putString(key, (String) contentValue);
+                editor.putString(validateAndCleanKey(key), ((String) contentValue).trim());
                 continue;
             }
             if (contentValue instanceof Long) {
-                editor.putLong(key, (Long) contentValue);
+                editor.putLong(validateAndCleanKey(key), (Long) contentValue);
                 continue;
             }
             if (contentValue instanceof Date) {
-                editor.putLong(key, ((Date) contentValue).getTime());
+                editor.putLong(validateAndCleanKey(key), ((Date) contentValue).getTime());
                 continue;
             }
             if (contentValue instanceof Integer) {
-                editor.putInt(key, (Integer) contentValue);
+                editor.putInt(validateAndCleanKey(key), (Integer) contentValue);
                 continue;
             }
 
@@ -261,13 +232,20 @@ public class PersistentHashTable {
     }
 
     /**
-     * Checks if the given key is not empty
+     * Checks if the given key is not empty and returns a clean {@link String} key that shared
+     * preferences is able to save
      *
      * @param key {@link String} to validate
+     * @return {@link String} with cleaned key that shared preferences is able to save
      */
-    private void checkNonEmptyKeyPrecondition(String key) {
+    private String validateAndCleanKey(String key) {
 
-        Preconditions.checkArgument(!TextUtils.isEmpty(key), "Empty key is not supported");
+        // Remove empty spaces and break lines from beginning and end of lines
+        // SharedPreferences has a bug -> http://bit.ly/1ooQ7wE
+        String keyToUse = key.trim();
+        Preconditions.checkArgument(!TextUtils.isEmpty(keyToUse), String.format("%s key is not " +
+                "supported", key));
+        return keyToUse;
     }
 
 }
