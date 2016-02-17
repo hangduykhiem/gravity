@@ -161,6 +161,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
      * @param newFragment         {@link Fragment} that will replace the previous one
      * @param fragmentContainerId layout id to place the fragment
      * @param addToBackStack      True if wanted to add to BackStack false otherwise
+     * @param animate             True if you want to animate the change
      */
     protected void switchFragment(int fragmentContainerId, Fragment newFragment, boolean
             addToBackStack, boolean animate) {
