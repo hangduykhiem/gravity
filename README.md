@@ -55,4 +55,8 @@ Nowadays Android Studio includes SDK, no need for external installation. SDK man
 
 ## CI
 
-TBD. Check if feasible to upload library to a private maven repo?
+Jenkins is used as CI system. Every time jenkins detects a change in repository following actions are triggered:
+
+- Pull changes from repository
+- gradle test -> Executes all the unit tests for debug build type. Included those in the core library
+- Post result (success or failure) to Fleek Android hipchat channel
