@@ -121,18 +121,19 @@ public class SecurityUtils {
      */
     public static String encryptKey(String textToEncrypt) {
 
-        return toBase64(MD5.createDigest(textToEncrypt));
+        return MD5.createDigest(textToEncrypt);
     }
 
     /**
      * Transforms the text to Base64 encoded text
      *
      * @param textToTransform {@link String} to transform
+     * @param flags           {@link Integer} with the Base64 flags
      * @return {@link String} encoded in Base64
      */
-    private static String toBase64(String textToTransform) {
+    public static String toBase64(String textToTransform, int flags) {
 
-        return Base64.encodeToString(textToTransform.getBytes(), Base64.NO_WRAP);
+        return Base64.encodeToString(textToTransform.getBytes(), flags);
     }
 
     /**
