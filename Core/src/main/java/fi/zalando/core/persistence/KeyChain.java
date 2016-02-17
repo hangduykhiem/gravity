@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,8 @@ import timber.log.Timber;
  * @author jduran
  */
 public class KeyChain {
+
+    private static final int BASE64_FLAGS = Base64.NO_WRAP;
 
     private final PersistentHashTable persistentHashTable;
 
@@ -59,9 +62,9 @@ public class KeyChain {
                             persistentHashTable.put(SecurityUtils.generateRandomKey(),
                                     SecurityUtils.generateRandomKey());
                         } else {
-                            persistentHashTable.put(SecurityUtils.encryptKey(SecurityUtils
-                                    .generateRandomString()), SecurityUtils.generateRandomKey
-                                    ());
+                            persistentHashTable.put(SecurityUtils.toBase64(SecurityUtils
+                                    .encryptKey(SecurityUtils.generateRandomString()),
+                                    BASE64_FLAGS), SecurityUtils.generateRandomKey());
                         }
                     }
                 } catch (Exception ignore) {
@@ -85,7 +88,7 @@ public class KeyChain {
         String encryptedValue;
 
         // If doesn't exist, means that it wasn't saved beforehand
-        encryptedKey = SecurityUtils.encryptKey(key);
+        encryptedKey = SecurityUtils.toBase64(SecurityUtils.encryptKey(key), BASE64_FLAGS);
         encryptionPasswordUsed = persistentHashTable.get(encryptedKey, "");
         if (!TextUtils.isEmpty(encryptionPasswordUsed)) {
             encryptedValue = persistentHashTable.get(encryptionPasswordUsed, "");
@@ -151,7 +154,7 @@ public class KeyChain {
 
         Pair<String, String> encryptedKeyValue;
 
-        String encryptedKey = SecurityUtils.encryptKey(key);
+        String encryptedKey = SecurityUtils.toBase64(SecurityUtils.encryptKey(key), BASE64_FLAGS);
         try {
             // Encrypt the keyValue and save the used key from the tuple
             encryptedKeyValue = SecurityUtils.encrypt(value);

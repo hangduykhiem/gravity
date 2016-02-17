@@ -2,6 +2,7 @@ package fi.zalando.core.utils;
 
 import android.os.Build;
 import android.support.v4.util.Pair;
+import android.util.Base64;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -89,6 +90,30 @@ public class SecurityUtilsTest {
 
         // Check that we can decrypt it using the same key
         assertEquals(encryptedText, encryptedText2);
+    }
+
+    @Test
+    public void testToBase64() {
+
+        String textToEncrypt = "Password to use";
+
+        String encryptedText = SecurityUtils.toBase64(textToEncrypt, Base64.DEFAULT);
+        String encryptedText2 = SecurityUtils.toBase64(textToEncrypt, Base64.DEFAULT);
+
+        // Check that both encryptions are equal
+        assertEquals(encryptedText, encryptedText2);
+        // Check that we can decrypt it with base64
+        assertEquals(new String(Base64.decode(encryptedText, Base64.DEFAULT)), textToEncrypt);
+        assertEquals(new String(Base64.decode(encryptedText2, Base64.DEFAULT)), textToEncrypt);
+
+        encryptedText = SecurityUtils.toBase64(textToEncrypt, Base64.NO_WRAP);
+        encryptedText2 = SecurityUtils.toBase64(textToEncrypt, Base64.NO_WRAP);
+
+        // Check that both encryptions are equal
+        assertEquals(encryptedText, encryptedText2);
+        // Check that we can decrypt it with base64
+        assertEquals(new String(Base64.decode(encryptedText, Base64.DEFAULT)), textToEncrypt);
+        assertEquals(new String(Base64.decode(encryptedText2, Base64.DEFAULT)), textToEncrypt);
     }
 
 }
