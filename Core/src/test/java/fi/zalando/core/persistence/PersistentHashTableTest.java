@@ -54,6 +54,8 @@ public class PersistentHashTableTest {
 
         // Check if it is properly saved, providing as default a different value as saved one
         assertTrue(persistentHashTable.get(key, false));
+        // Check that given a key with break lines at the end gives same result
+        assertTrue(persistentHashTable.get(" " + key + "\n", false));
     }
 
     @Test
@@ -69,6 +71,11 @@ public class PersistentHashTableTest {
 
         // Check if it is properly saved, providing as default a different value as saved one
         assertEquals(persistentHashTable.get(key, "anotherString"), "shouldBeEqual");
+        // Check that given a key with break lines at the end gives same result
+        assertEquals(persistentHashTable.get(" " + key + "\n", "anotherString"), "shouldBeEqual");
+        // Neither allow to save values at the end of the value string
+        assertEquals(persistentHashTable.get(" " + key + "\n", "anotherString"), (" " +
+                "shouldBeEqual\n").trim());
     }
 
     @Test
@@ -84,6 +91,8 @@ public class PersistentHashTableTest {
 
         // Check if it is properly saved, providing as default a different value as saved one
         assertEquals(persistentHashTable.get(key, (long) 2).longValue(), (long) 1);
+        // Check that given a key with break lines at the end gives same result
+        assertEquals(persistentHashTable.get(" " + key + "\n", (long) 2).longValue(), (long) 1);
     }
 
     @Test
@@ -99,6 +108,8 @@ public class PersistentHashTableTest {
 
         // Check if it is properly saved, providing as default a different value as saved one
         assertEquals(persistentHashTable.get(key, 2).intValue(), 1);
+        // Check that given a key with break lines at the end gives same result
+        assertEquals(persistentHashTable.get(" " + key + "\n", 2).intValue(), 1);
     }
 
     @Test
@@ -115,6 +126,8 @@ public class PersistentHashTableTest {
 
         // Check if it is properly saved, providing as default a different value as saved one
         assertEquals(persistentHashTable.get(key, new Date(0)), dateToSave);
+        // Check that given a key with break lines at the end gives same result
+        assertEquals(persistentHashTable.get(" " + key + "\n", new Date(0)), dateToSave);
     }
 
     @SuppressWarnings("all")
@@ -159,6 +172,12 @@ public class PersistentHashTableTest {
         assertEquals(persistentHashTable.get(integerKey, Integer.MAX_VALUE).intValue(),
                 integerValue);
         assertEquals(persistentHashTable.get(dateKey, new Date(0)), dateValue);
+
+        // Check that given a key with break lines at the end gives same result
+        assertEquals(persistentHashTable.get(" " + stringKey + "\n", "anotherString"), stringValue);
+        // Neither allow to save values at the end of the value string
+        assertEquals(persistentHashTable.get(" " + stringKey + "\n", "anotherString"), (" "
+                + stringValue + "\n").trim());
     }
 
     @Test
