@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
+import fi.zalando.core.utils.UIUtils;
+import rx.Observable;
+import rx.subjects.BehaviorSubject;
 
 /**
  * Base fragment to wrap all together some utility methods for fragments
@@ -19,6 +22,11 @@ import fi.zalando.core.ui.view.BaseView;
  * Created by jduran on 03/12/15.
  */
 public abstract class BaseFragment extends Fragment implements BaseView {
+
+    /**
+     * Internal private objects
+     */
+    private final BehaviorSubject<Void> onViewReadyObservable = BehaviorSubject.create();
 
     /**
      * Lifecycle method
@@ -50,6 +58,10 @@ public abstract class BaseFragment extends Fragment implements BaseView {
         getPresenter().setView(this);
         // init objects
         getPresenter().initialise(savedInstanceState);
+        // Notify the Observable when the UI is ready:
+        if (getView() != null) {
+            UIUtils.runOnGlobalLayout(getView(), () -> onViewReadyObservable.onNext(null));
+        }
     }
 
     /**
@@ -135,4 +147,8 @@ public abstract class BaseFragment extends Fragment implements BaseView {
         return isAdded() && !getActivity().isFinishing();
     }
 
+    @Override
+    public Observable<Void> getOnViewReady() {
+        return onViewReadyObservable;
+    }
 }

@@ -16,6 +16,9 @@ import fi.zalando.core.R;
 import fi.zalando.core.ui.animator.ToolbarAnimator;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
+import fi.zalando.core.utils.UIUtils;
+import rx.Observable;
+import rx.subjects.BehaviorSubject;
 
 /**
  * Abstract activity that holds common methods usable by all the {@link android.app.Activity} on the
@@ -29,6 +32,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
      * Internal private objects
      */
     private FragmentManager fragmentManager;
+    private final BehaviorSubject<Void> onViewReadyObservable = BehaviorSubject.create();
 
     /**
      * Protected objects
@@ -59,6 +63,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         getPresenter().setView(this);
         // Init Presenter
         getPresenter().initialise(savedInstanceState);
+        // Notify the Observable when the UI is ready:
+        UIUtils.runOnGlobalLayout(getWindow().getDecorView().getRootView(), () ->
+                onViewReadyObservable.onNext(null));
     }
 
     /**
@@ -161,6 +168,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
      * @param newFragment         {@link Fragment} that will replace the previous one
      * @param fragmentContainerId layout id to place the fragment
      * @param addToBackStack      True if wanted to add to BackStack false otherwise
+     * @param animate             True if you want to animate the change
      */
     protected void switchFragment(int fragmentContainerId, Fragment newFragment, boolean
             addToBackStack, boolean animate) {
@@ -188,5 +196,10 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
             }
             ft.commit();
         }
+    }
+
+    @Override
+    public Observable<Void> getOnViewReady() {
+        return onViewReadyObservable;
     }
 }
