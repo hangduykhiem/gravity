@@ -30,7 +30,9 @@ dependencies {
 
     // Android support libraries
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile('com.android.support:recyclerview-v7:23.1.1') {
+        exclude module: 'support-v4'
+    }
 
     // Google Play Services
     compile 'com.google.android.gms:play-services-location:8.4.0'
@@ -42,8 +44,10 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
 
     // RxJava and RxAndroid libraries
-    compile 'io.reactivex:rxandroid:1.0.1'
-    compile 'io.reactivex:rxjava:1.0.16'
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile('io.reactivex:rxandroid:1.1.0') {
+        exclude module: 'rxjava'
+    }
 
     // Realm database
     compile 'io.realm:realm-android:0.87.4'
@@ -66,9 +70,13 @@ dependencies {
     // Retrofit Library
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
     // GSON converter for retrofit
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
+    compile('com.squareup.retrofit2:converter-gson:2.0.0-beta3') {
+        exclude module: 'retrofit'
+    }
     // RXJava adapter for retrofit
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta3'
+    compile('com.squareup.retrofit2:adapter-rxjava:2.0.0-beta3') {
+        exclude module: 'retrofit'
+    }
 
     // Add test dependencies
     testCompile 'junit:junit:4.12'
