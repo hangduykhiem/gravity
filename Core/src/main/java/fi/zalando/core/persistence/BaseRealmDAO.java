@@ -2,22 +2,22 @@ package fi.zalando.core.persistence;
 
 import java.util.List;
 
+import fi.zalando.core.data.model.BaseRealmObject;
 import fi.zalando.core.utils.Preconditions;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmFieldType;
-import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.internal.Table;
 import rx.Observable;
-import rx.functions.Action0;
+import rx.Subscriber;
 
 /**
  * BaseDAO for storing and retrieving models into a Realm Database.
  *
  * Created by jduran on 17/02/16.
  */
-public abstract class BaseRealmDAO<T extends RealmObject> {
+public abstract class BaseRealmDAO<T extends BaseRealmObject> {
 
     private final RealmConfiguration realmConfiguration;
     private final Class<T> clazz;
@@ -56,7 +56,7 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
         // Clear the table related with the class
         realm.clear(clazz);
         // Close the instance
-        realm.close();
+        closeRealm(realm);
     }
 
     /**
@@ -81,7 +81,8 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
 
     /**
      * Provides an {@link Observable} that loads asynchronously a {@link List} with all the {@link
-     * T} items in the database
+     * T} items in the database. It does never return a null list. If nothing exists, it will return
+     * an empty List
      *
      * @return {@link Observable} to load all items in database
      */
@@ -90,8 +91,16 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
         // When this was implemented, realm 0.87 was not closing automatically if using their
         // built-in observables when unsubscribing observable
 
-        Realm realm = getRealmInstance();
-        return Observable.just(realm.where(clazz).findAll()).compose(applyAutoClose(realm));
+        return Observable.create(new Observable.OnSubscribe<List<T>>() {
+            @Override
+            public void call(Subscriber<? super List<T>> subscriber) {
+                Realm realm = getRealmInstance();
+                subscriber.onNext(realm.copyFromRealm(realm.where(clazz).findAll()));
+                closeRealm(realm);
+                // finish subscription
+                subscriber.onCompleted();
+            }
+        });
     }
 
     /**
@@ -102,16 +111,33 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
      */
     public Observable<T> loadById(String id) {
 
-        Realm realm = getRealmInstance();
-        // Check that the type contains a valid primary key, launch exception if not
-        checkCorrectPrimaryKey(realm);
-        // Check that the primary key type is a number
-        Preconditions.checkArgument(getPrimaryKeyType(realm).equals(RealmFieldType.STRING),
-                String.format("%s does not have a String as primary key", clazz.getSimpleName()));
-        // Make the query, since findall returns a list. Only return first one. Since it has a
-        // primary key, we are sure there is only one
-        return Observable.from(realm.where(clazz).equalTo(getPrimaryKeyFieldName(realm), id)
-                .findAll()).firstOrDefault(null).compose(applyAutoClose(realm));
+        // When this was implemented, realm 0.87 was not closing automatically if using their
+        // built-in observables when unsubscribing observable
+        return Observable.create(new Observable.OnSubscribe<T>() {
+            @Override
+            public void call(Subscriber<? super T> subscriber) {
+
+                Realm realm = getRealmInstance();
+                // Check that the type contains a valid primary key, launch exception if not
+                checkCorrectPrimaryKey(realm);
+                // Check that the primary key type is a number
+                Preconditions.checkArgument(getPrimaryKeyType(realm).equals(RealmFieldType.STRING),
+                        String.format("%s does not have a String as primary key", clazz
+                                .getSimpleName()));
+
+                // Make the query, since findall returns a list. Only return first one.
+                // Since it has a primary key, we are sure there is only one
+                List<T> queryResults = realm.copyFromRealm(realm.where(clazz).equalTo
+                        (getPrimaryKeyFieldName(realm), id).findAll());
+                if (!queryResults.isEmpty()) {
+                    subscriber.onNext(queryResults.get(0));
+                } else {
+                    subscriber.onNext(null);
+                }
+                closeRealm(realm);
+                subscriber.onCompleted();
+            }
+        });
     }
 
     /**
@@ -122,16 +148,33 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
      */
     public Observable<T> loadById(long id) {
 
-        Realm realm = getRealmInstance();
-        // Check that the type contains a valid primary key, launch exception if not
-        checkCorrectPrimaryKey(realm);
-        // Check that the primary key type is a number
-        Preconditions.checkArgument(getPrimaryKeyType(realm).equals(RealmFieldType.INTEGER),
-                String.format("%s does not have a numeric primary key", clazz.getSimpleName()));
-        // Make the query, since findall returns a list. Only return first one. Since it has a
-        // primary key, we are sure there is only one
-        return Observable.from(realm.where(clazz).equalTo(getPrimaryKeyFieldName(realm), id)
-                .findAll()).firstOrDefault(null).compose(applyAutoClose(realm));
+        // When this was implemented, realm 0.87 was not closing automatically if using their
+        // built-in observables when unsubscribing observable
+        return Observable.create(new Observable.OnSubscribe<T>() {
+            @Override
+            public void call(Subscriber<? super T> subscriber) {
+
+                Realm realm = getRealmInstance();
+                // Check that the type contains a valid primary key, launch exception if not
+                checkCorrectPrimaryKey(realm);
+                // Check that the primary key type is a number
+                Preconditions.checkArgument(getPrimaryKeyType(realm).equals(RealmFieldType.INTEGER),
+                        String.format("%s does not have a numeric primary key", clazz
+                                .getSimpleName()));
+
+                // Make the query, since findall returns a list. Only return first one.
+                // Since it has a primary key, we are sure there is only one
+                List<T> queryResults = realm.copyFromRealm(realm.where(clazz).equalTo
+                        (getPrimaryKeyFieldName(realm), id).findAll());
+                if (!queryResults.isEmpty()) {
+                    subscriber.onNext(queryResults.get(0));
+                } else {
+                    subscriber.onNext(null);
+                }
+                closeRealm(realm);
+                subscriber.onCompleted();
+            }
+        });
     }
 
     /**
@@ -142,6 +185,9 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
      * @param modelToSave {@link T} model to save
      */
     public void save(T modelToSave) {
+
+        // Set current time as saved time
+        modelToSave.setSavedDate(System.currentTimeMillis());
 
         // Create the realm instance
         final Realm realm = getRealmInstance();
@@ -169,6 +215,12 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
      */
     public void save(Iterable<T> modelsToSave) {
 
+        // Change saved time to all the items
+        long currentTimeMillis = System.currentTimeMillis();
+        for (T modelToSave : modelsToSave) {
+            modelToSave.setSavedDate(currentTimeMillis);
+        }
+
         // Create the realm instance
         final Realm realm = getRealmInstance();
         // Init the transaction and copy the model to database
@@ -184,19 +236,6 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
         realm.commitTransaction();
         // Close the instance
         closeRealm(realm);
-    }
-
-    /**
-     * Creates a {@link rx.Observable.Transformer} to apply an auto close logic to an {@link
-     * Observable}
-     *
-     * @param realm {@link Realm} instance to auto close
-     * @param <U>   {@link U} with the content of the observable
-     * @return {@link rx.Observable.Transformer} to apply realm auto close feature to observable
-     */
-    protected <U> Observable.Transformer<U, U> applyAutoClose(Realm realm) {
-
-        return uObservable -> uObservable.doOnUnsubscribe((Action0) () -> closeRealm(realm));
     }
 
     /**
