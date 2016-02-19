@@ -2,11 +2,11 @@ package fi.zalando.core.persistence;
 
 import java.util.List;
 
-import fi.zalando.core.data.model.BaseRealmObject;
 import fi.zalando.core.utils.Preconditions;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmFieldType;
+import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.internal.Table;
 import rx.Observable;
@@ -17,7 +17,7 @@ import rx.Subscriber;
  *
  * Created by jduran on 17/02/16.
  */
-public abstract class BaseRealmDAO<T extends BaseRealmObject> {
+public abstract class BaseRealmDAO<T extends RealmObject> {
 
     private final RealmConfiguration realmConfiguration;
     private final Class<T> clazz;
@@ -186,9 +186,6 @@ public abstract class BaseRealmDAO<T extends BaseRealmObject> {
      */
     public void save(T modelToSave) {
 
-        // Set current time as saved time
-        modelToSave.setSavedDate(System.currentTimeMillis());
-
         // Create the realm instance
         final Realm realm = getRealmInstance();
         // Init the transaction and copy the model to database
@@ -214,12 +211,6 @@ public abstract class BaseRealmDAO<T extends BaseRealmObject> {
      * @param modelsToSave {@link List} of {@link T} models to save
      */
     public void save(Iterable<T> modelsToSave) {
-
-        // Change saved time to all the items
-        long currentTimeMillis = System.currentTimeMillis();
-        for (T modelToSave : modelsToSave) {
-            modelToSave.setSavedDate(currentTimeMillis);
-        }
 
         // Create the realm instance
         final Realm realm = getRealmInstance();
