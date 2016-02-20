@@ -1,7 +1,9 @@
 package fi.zalando.core.persistence;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import fi.zalando.core.data.model.Dateable;
 import fi.zalando.core.utils.Preconditions;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -13,11 +15,12 @@ import rx.Observable;
 import rx.Subscriber;
 
 /**
- * BaseDAO for storing and retrieving models into a Realm Database.
+ * BaseDAO for storing and retrieving models into a Realm Database. Note! {@link Dateable} is
+ * compulsory for {@link T} model since Realm does not support abstract objects.
  *
  * Created by jduran on 17/02/16.
  */
-public abstract class BaseRealmDAO<T extends RealmObject> {
+public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
 
     private final RealmConfiguration realmConfiguration;
     private final Class<T> clazz;
@@ -190,6 +193,8 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
         final Realm realm = getRealmInstance();
         // Init the transaction and copy the model to database
         realm.beginTransaction();
+        // Set current date as saved date
+        modelToSave.setSavedDate(System.currentTimeMillis());
         // Check if we need to save it or update
         // It depends if it has primary key or not
         if (hasPrimaryKey(realm)) {
@@ -216,6 +221,11 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
         final Realm realm = getRealmInstance();
         // Init the transaction and copy the model to database
         realm.beginTransaction();
+        // Set current date as saved date to all items to save
+        long currentTimeMillis = System.currentTimeMillis();
+        for (T modelToSave : modelsToSave) {
+            modelToSave.setSavedDate(currentTimeMillis);
+        }
         // Check if we need to save it or update
         // It depends if it has primary key or not
         if (realm.getTable(clazz).hasPrimaryKey()) {
@@ -227,6 +237,20 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
         realm.commitTransaction();
         // Close the instance
         closeRealm(realm);
+    }
+
+    /**
+     * Utility method to check if the object is expired according to given parameters
+     *
+     * @param modelToCheck {@link T} model to check if it is expired
+     * @param liveTime     {@link Long} with the live time
+     * @param timeUnit     {@link TimeUnit} of the given live time
+     * @return {@link Boolean} indicating if the object is expired
+     */
+    public boolean hasExpired(T modelToCheck, long liveTime, TimeUnit timeUnit) {
+
+        return modelToCheck.getSavedDate() + timeUnit.toMillis(liveTime) <= System
+                .currentTimeMillis();
     }
 
     /**
