@@ -247,7 +247,7 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
      * @param timeUnit     {@link TimeUnit} of the given live time
      * @return {@link Boolean} indicating if the object is expired
      */
-    public boolean hasExpired(T modelToCheck, long liveTime, TimeUnit timeUnit) {
+    public final boolean hasExpired(T modelToCheck, long liveTime, TimeUnit timeUnit) {
 
         return modelToCheck.getSavedDate() + timeUnit.toMillis(liveTime) <= System
                 .currentTimeMillis();
