@@ -249,8 +249,9 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
      */
     public final boolean hasExpired(T modelToCheck, long liveTime, TimeUnit timeUnit) {
 
-        return modelToCheck.getSavedDate() + timeUnit.toMillis(liveTime) <= System
-                .currentTimeMillis();
+        // If saved date is 0L, means that it has never been saved. Fresh data, so non expired
+        return modelToCheck.getSavedDate() != 0L && modelToCheck.getSavedDate() + timeUnit
+                .toMillis(liveTime) <= System.currentTimeMillis();
     }
 
     /**
