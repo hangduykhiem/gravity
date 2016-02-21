@@ -8,7 +8,8 @@ package fi.zalando.core.data.model;
 public interface Dateable {
 
     /**
-     * Provides a {@link Long} value with the time in milliseconds since epoc when it was saved
+     * Provides a {@link Long} value with the time in milliseconds since epoc when it was saved.
+     * Null means that it has never been saved.
      *
      * @return {@link Long} value with the time in milliseconds since epoc
      */
