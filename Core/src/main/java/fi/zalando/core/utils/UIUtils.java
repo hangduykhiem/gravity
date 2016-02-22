@@ -20,12 +20,12 @@ public class UIUtils {
     }
 
     /**
-     * Runs the given {@link Runnable} in the UI thread once the layout is complete.
-     * It registers a {@link ViewTreeObserver.OnGlobalLayoutListener} to the given {@link View},
-     * runs the Runnable, and finally unregisters the said listener. This method needs to be called
-     * before the layout is finished, e.g. in onCreate.
+     * Runs the given {@link Runnable} in the UI thread once the layout is complete. It registers a
+     * {@link ViewTreeObserver.OnGlobalLayoutListener} to the given {@link View}, runs the Runnable,
+     * and finally unregisters the said listener. This method needs to be called before the layout
+     * is finished, e.g. in onCreate.
      *
-     * @param view View or Layout whose view hierarchy onGlobalLayout to monitor.
+     * @param view     View or Layout whose view hierarchy onGlobalLayout to monitor.
      * @param runnable Runnable to be run once the layout is finished.
      */
     public static void runOnGlobalLayout(@NonNull View view, @NonNull Runnable runnable) {
@@ -39,10 +39,11 @@ public class UIUtils {
                         //Run the runnable:
                         runnable.run();
                         //Unregister the listener so that the runnable is only run once:
-                        if (Build.VERSION.SDK_INT < 16) {
-                            view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                        } else {
+                        if (PlatformUtils.isNewerOrEqualSDKVersion(Build.VERSION_CODES
+                                .JELLY_BEAN)) {
                             view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        } else {
+                            view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                         }
                     }
                 }

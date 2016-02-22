@@ -7,11 +7,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Patterns;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fi.zalando.core.utils.Preconditions;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.CallAdapter;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
@@ -39,17 +41,18 @@ public final class RestApiFactory {
      * @param baseUrl       {@link String} with the base URL
      * @param interceptors  {@link List} of {@link Interceptor} to add to the rest api
      * @param gson          {@link Gson} to use for serialising. Null to use default one.
+     * @param logs          {@link Boolean} indicating if logs are required
      * @param <T>           {@link Class} with the definition of the rest interface
      * @return {@link T} with the implementation of the Rest interface
      */
     public static <T> T createApi(Class<T> restInterface, @NonNull String baseUrl, @Nullable
-    List<Interceptor> interceptors, @Nullable Gson gson) {
+    List<Interceptor> interceptors, @Nullable Gson gson, boolean logs) {
 
         Timber.d("getRestApi: " + baseUrl + " interface: " + restInterface.getName() + " " +
                 "gson: " + gson);
 
         return setupRetrofit(baseUrl, interceptors, RxJavaCallAdapterFactory.create(), gson !=
-                null ? gson : new GsonBuilder().create()).create(restInterface);
+                null ? gson : new GsonBuilder().create(), logs).create(restInterface);
     }
 
     /**
@@ -57,15 +60,16 @@ public final class RestApiFactory {
      *
      * @param restInterface {@link T} with the rest interface definition
      * @param baseUrl       {@link String} with the base URL
+     * @param logs          {@link Boolean} indicating if logs are required
      * @param <T>           {@link Class} with the definition of the rest interface
      * @return {@link T} with the implementation of the Rest interface
      */
-    public static <T> T createApi(Class<T> restInterface, @NonNull String baseUrl) {
+    public static <T> T createApi(Class<T> restInterface, @NonNull String baseUrl, boolean logs) {
 
         Timber.d("getRestApi: " + baseUrl + " interface: " + restInterface.getName());
 
         return setupRetrofit(baseUrl, null, RxJavaCallAdapterFactory.create(), new GsonBuilder()
-                .create()).create(restInterface);
+                .create(), logs).create(restInterface);
     }
 
     /**
@@ -74,21 +78,33 @@ public final class RestApiFactory {
      * @param url                  {@link String} with the Base Url
      * @param callAdapterFactory   {@link retrofit2.CallAdapter.Factory}
      * @param gsonConverterFactory {@link Gson} converter to use for serialising
+     * @param logs                 {@link Boolean} indicating if logs are required
      * @return {@link Retrofit} object with the given settings
      */
     private static Retrofit setupRetrofit(@NonNull String url, @Nullable List<Interceptor>
             interceptors, @NonNull CallAdapter.Factory callAdapterFactory, @NonNull Gson
-                                                  gsonConverterFactory) {
+                                                  gsonConverterFactory, boolean logs) {
 
         Preconditions.checkArgument(Patterns.WEB_URL.matcher(url).matches(), "Base URL is invalid");
         Timber.d("setupRetrofit: " + url);
 
         // Add the interceptors if they exist
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+
+        // Add a Log interceptor if debug mode
+        List<Interceptor> interceptorList = new ArrayList<>();
+        if (logs) {
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            interceptorList.add(loggingInterceptor);
+        }
+        // Add param interceptors
         if (interceptors != null && !interceptors.isEmpty()) {
-            for (int i = 0; i < interceptors.size(); i++) {
-                okHttpClientBuilder.addInterceptor(interceptors.get(i));
-            }
+            interceptorList.addAll(interceptors);
+        }
+        // Add all of them to the okHttpBuilder
+        for (int i = 0; i < interceptorList.size(); i++) {
+            okHttpClientBuilder.addInterceptor(interceptorList.get(i));
         }
 
         // Finally create the client

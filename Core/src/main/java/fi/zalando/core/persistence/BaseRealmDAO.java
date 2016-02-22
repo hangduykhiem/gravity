@@ -1,7 +1,9 @@
 package fi.zalando.core.persistence;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import fi.zalando.core.data.model.Dateable;
 import fi.zalando.core.utils.Preconditions;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -13,11 +15,12 @@ import rx.Observable;
 import rx.Subscriber;
 
 /**
- * BaseDAO for storing and retrieving models into a Realm Database.
+ * BaseDAO for storing and retrieving models into a Realm Database. Note! {@link Dateable} is
+ * compulsory for {@link T} model since Realm does not support abstract objects.
  *
  * Created by jduran on 17/02/16.
  */
-public abstract class BaseRealmDAO<T extends RealmObject> {
+public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
 
     private final RealmConfiguration realmConfiguration;
     private final Class<T> clazz;
@@ -29,11 +32,6 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
 
         this.realmConfiguration = realmConfiguration;
         this.clazz = clazz;
-
-        // Check that the generic type that is going to be used contains a valid primary key
-        Realm realm = getRealmInstance();
-        checkCorrectPrimaryKey(realm);
-        closeRealm(realm);
     }
 
     /**
@@ -50,11 +48,14 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
      * Clears completely the table for {@link T} class
      */
     public void clear() {
-
         // Create the realm instance
         final Realm realm = getRealmInstance();
+        // start transaction
+        realm.beginTransaction();
         // Clear the table related with the class
         realm.clear(clazz);
+        // Close transactions
+        realm.commitTransaction();
         // Close the instance
         closeRealm(realm);
     }
@@ -76,6 +77,27 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
         realm.commitTransaction();
 
         // Close the instance
+        closeRealm(realm);
+    }
+
+    /**
+     * Deletes all the given {@link T} models from {@link Realm} database
+     *
+     * @param modelsToDelete {@link Iterable} with all the models to delete
+     */
+    public void delete(Iterable<T> modelsToDelete) {
+
+        // Create the realm instance
+        final Realm realm = getRealmInstance();
+        // Init the transaction and delete the models
+        realm.beginTransaction();
+        // Iterate over realm
+        for (T modelToDelete : modelsToDelete) {
+            modelToDelete.removeFromRealm();
+        }
+        // commit the changes
+        realm.commitTransaction();
+        // close the instance
         closeRealm(realm);
     }
 
@@ -190,6 +212,8 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
         final Realm realm = getRealmInstance();
         // Init the transaction and copy the model to database
         realm.beginTransaction();
+        // Set current date as saved date
+        modelToSave.setSavedDate(System.currentTimeMillis());
         // Check if we need to save it or update
         // It depends if it has primary key or not
         if (hasPrimaryKey(realm)) {
@@ -216,9 +240,14 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
         final Realm realm = getRealmInstance();
         // Init the transaction and copy the model to database
         realm.beginTransaction();
+        // Set current date as saved date to all items to save
+        long currentTimeMillis = System.currentTimeMillis();
+        for (T modelToSave : modelsToSave) {
+            modelToSave.setSavedDate(currentTimeMillis);
+        }
         // Check if we need to save it or update
         // It depends if it has primary key or not
-        if (realm.getTable(clazz).hasPrimaryKey()) {
+        if (hasPrimaryKey(realm)) {
             realm.copyToRealmOrUpdate(modelsToSave);
         } else {
             realm.copyToRealm(modelsToSave);
@@ -230,11 +259,26 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
     }
 
     /**
+     * Utility method to check if the object is expired according to given parameters
+     *
+     * @param modelToCheck {@link T} model to check if it is expired
+     * @param liveTime     {@link Long} with the live time
+     * @param timeUnit     {@link TimeUnit} of the given live time
+     * @return {@link Boolean} indicating if the object is expired
+     */
+    public final boolean hasExpired(T modelToCheck, long liveTime, TimeUnit timeUnit) {
+
+        // If saved date is 0L, means that it has never been saved. Fresh data, so non expired
+        return modelToCheck.getSavedDate() != 0L && modelToCheck.getSavedDate() + timeUnit
+                .toMillis(liveTime) <= System.currentTimeMillis();
+    }
+
+    /**
      * Closes the given {@link Realm} instance if it is still open
      *
      * @param instanceToClose {@link Realm} instance to close
      */
-    protected void closeRealm(Realm instanceToClose) {
+    private void closeRealm(Realm instanceToClose) {
 
         if (!instanceToClose.isClosed()) {
             instanceToClose.close();
@@ -261,7 +305,7 @@ public abstract class BaseRealmDAO<T extends RealmObject> {
      *
      * @param realm {@link Boolean} with the check result
      */
-    private boolean hasPrimaryKey(Realm realm) {
+    protected boolean hasPrimaryKey(Realm realm) {
 
         return realm.getTable(clazz).hasPrimaryKey();
     }
