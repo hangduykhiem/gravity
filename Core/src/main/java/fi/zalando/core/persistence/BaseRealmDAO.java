@@ -53,11 +53,14 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
      * Clears completely the table for {@link T} class
      */
     public void clear() {
-
         // Create the realm instance
         final Realm realm = getRealmInstance();
+        // start transaction
+        realm.beginTransaction();
         // Clear the table related with the class
         realm.clear(clazz);
+        // Close transactions
+        realm.commitTransaction();
         // Close the instance
         closeRealm(realm);
     }
