@@ -7,11 +7,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Patterns;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import fi.zalando.core.BuildConfig;
 import fi.zalando.core.utils.Preconditions;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.CallAdapter;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
@@ -85,10 +88,21 @@ public final class RestApiFactory {
 
         // Add the interceptors if they exist
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+
+        // Add a Log interceptor if debug mode
+        List<Interceptor> interceptorList = new ArrayList<>();
+        if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            interceptorList.add(loggingInterceptor);
+        }
+        // Add param interceptors
         if (interceptors != null && !interceptors.isEmpty()) {
-            for (int i = 0; i < interceptors.size(); i++) {
-                okHttpClientBuilder.addInterceptor(interceptors.get(i));
-            }
+            interceptorList.addAll(interceptors);
+        }
+        // Add all of them to the okHttpBuilder
+        for (int i = 0; i < interceptorList.size(); i++) {
+            okHttpClientBuilder.addInterceptor(interceptorList.get(i));
         }
 
         // Finally create the client
