@@ -32,11 +32,6 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
 
         this.realmConfiguration = realmConfiguration;
         this.clazz = clazz;
-
-        // Check that the generic type that is going to be used contains a valid primary key
-        Realm realm = getRealmInstance();
-        checkCorrectPrimaryKey(realm);
-        closeRealm(realm);
     }
 
     /**
@@ -82,6 +77,27 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
         realm.commitTransaction();
 
         // Close the instance
+        closeRealm(realm);
+    }
+
+    /**
+     * Deletes all the given {@link T} models from {@link Realm} database
+     *
+     * @param modelsToDelete {@link Iterable} with all the models to delete
+     */
+    public void delete(Iterable<T> modelsToDelete) {
+
+        // Create the realm instance
+        final Realm realm = getRealmInstance();
+        // Init the transaction and delete the models
+        realm.beginTransaction();
+        // Iterate over realm
+        for (T modelToDelete : modelsToDelete) {
+            modelToDelete.removeFromRealm();
+        }
+        // commit the changes
+        realm.commitTransaction();
+        // close the instance
         closeRealm(realm);
     }
 
@@ -231,7 +247,7 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
         }
         // Check if we need to save it or update
         // It depends if it has primary key or not
-        if (realm.getTable(clazz).hasPrimaryKey()) {
+        if (hasPrimaryKey(realm)) {
             realm.copyToRealmOrUpdate(modelsToSave);
         } else {
             realm.copyToRealm(modelsToSave);
@@ -262,7 +278,7 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
      *
      * @param instanceToClose {@link Realm} instance to close
      */
-    protected void closeRealm(Realm instanceToClose) {
+    private void closeRealm(Realm instanceToClose) {
 
         if (!instanceToClose.isClosed()) {
             instanceToClose.close();
@@ -289,7 +305,7 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
      *
      * @param realm {@link Boolean} with the check result
      */
-    private boolean hasPrimaryKey(Realm realm) {
+    protected boolean hasPrimaryKey(Realm realm) {
 
         return realm.getTable(clazz).hasPrimaryKey();
     }
