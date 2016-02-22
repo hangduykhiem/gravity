@@ -41,7 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     @Inject
     protected Lazy<ToolbarAnimator> toolbarAnimator;
     @Inject
-    protected Lazy<? extends Navigator> navigator;
+    protected Lazy<Navigator> navigator;
 
     /**
      * Lifecycle method
