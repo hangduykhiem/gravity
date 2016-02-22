@@ -8,15 +8,15 @@ package fi.zalando.core.data.model;
 public interface Dateable {
 
     /**
-     * Provides a {@link Long} value with the time in milliseconds since epoc when it was saved.
+     * Provides a {@link Long} value with the time in milliseconds since epoch when it was saved.
      * Null means that it has never been saved.
      *
-     * @return {@link Long} value with the time in milliseconds since epoc
+     * @return {@link Long} value with the time in milliseconds since epoch
      */
     public long getSavedDate();
 
     /**
-     * Sets the time in milliseconds since epoc of when the model was saved
+     * Sets the time in milliseconds since epoch of when the model was saved
      *
      * @param savedDate {@link Long} with the time when it was saved
      */
