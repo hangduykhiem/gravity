@@ -10,11 +10,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import fi.zalando.core.persistence.mocks.MockedRealmObject;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -60,6 +63,8 @@ public class BaseRealmDAOTest {
         // Make request
         baseRealmDAO.clear();
         // Verify methods are called
+        verify(realm, times(1)).beginTransaction();
+        verify(realm, times(1)).commitTransaction();
         verify(realm, times(1)).clear(eq(MockedRealmObject.class));
         verify(realm, times(1)).close();
     }
@@ -263,5 +268,37 @@ public class BaseRealmDAOTest {
         verify(realm, times(1)).copyToRealm(eq(mockedRealmObjectList));
         verify(realm, times(1)).close();
     }
+
+    @Test
+    public void testHasExpired() {
+
+        // Need to extend base class, not allowed to have abstract instances
+        BaseRealmDAO<MockedRealmObject> baseRealmDAO = spy(new BaseRealmDAO<MockedRealmObject>
+                (realmConfiguration, MockedRealmObject.class) {
+            @Override
+            public Realm getRealmInstance() {
+
+                return realm;
+            }
+
+            @Override
+            protected boolean hasPrimaryKey(Realm realm) {
+                return false;
+            }
+        });
+
+        MockedRealmObject mockedRealmObject = new MockedRealmObject();
+        // not expired
+        mockedRealmObject.setSavedDate(System.currentTimeMillis());
+        assertFalse(baseRealmDAO.hasExpired(mockedRealmObject, 1, TimeUnit.DAYS));
+
+        // expired
+        mockedRealmObject.setSavedDate(System.currentTimeMillis() - 2);
+        assertTrue(baseRealmDAO.hasExpired(mockedRealmObject, 1, TimeUnit.MILLISECONDS));
+    }
+
+    /*
+    Load All, Load By Id is not possible to test without a proper mock from Realm
+     */
 
 }
