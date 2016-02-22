@@ -10,7 +10,6 @@ import android.util.Patterns;
 import java.util.ArrayList;
 import java.util.List;
 
-import fi.zalando.core.BuildConfig;
 import fi.zalando.core.utils.Preconditions;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -42,17 +41,18 @@ public final class RestApiFactory {
      * @param baseUrl       {@link String} with the base URL
      * @param interceptors  {@link List} of {@link Interceptor} to add to the rest api
      * @param gson          {@link Gson} to use for serialising. Null to use default one.
+     * @param logs          {@link Boolean} indicating if logs are required
      * @param <T>           {@link Class} with the definition of the rest interface
      * @return {@link T} with the implementation of the Rest interface
      */
     public static <T> T createApi(Class<T> restInterface, @NonNull String baseUrl, @Nullable
-    List<Interceptor> interceptors, @Nullable Gson gson) {
+    List<Interceptor> interceptors, @Nullable Gson gson, boolean logs) {
 
         Timber.d("getRestApi: " + baseUrl + " interface: " + restInterface.getName() + " " +
                 "gson: " + gson);
 
         return setupRetrofit(baseUrl, interceptors, RxJavaCallAdapterFactory.create(), gson !=
-                null ? gson : new GsonBuilder().create()).create(restInterface);
+                null ? gson : new GsonBuilder().create(), logs).create(restInterface);
     }
 
     /**
@@ -60,15 +60,16 @@ public final class RestApiFactory {
      *
      * @param restInterface {@link T} with the rest interface definition
      * @param baseUrl       {@link String} with the base URL
+     * @param logs          {@link Boolean} indicating if logs are required
      * @param <T>           {@link Class} with the definition of the rest interface
      * @return {@link T} with the implementation of the Rest interface
      */
-    public static <T> T createApi(Class<T> restInterface, @NonNull String baseUrl) {
+    public static <T> T createApi(Class<T> restInterface, @NonNull String baseUrl, boolean logs) {
 
         Timber.d("getRestApi: " + baseUrl + " interface: " + restInterface.getName());
 
         return setupRetrofit(baseUrl, null, RxJavaCallAdapterFactory.create(), new GsonBuilder()
-                .create()).create(restInterface);
+                .create(), logs).create(restInterface);
     }
 
     /**
@@ -77,11 +78,12 @@ public final class RestApiFactory {
      * @param url                  {@link String} with the Base Url
      * @param callAdapterFactory   {@link retrofit2.CallAdapter.Factory}
      * @param gsonConverterFactory {@link Gson} converter to use for serialising
+     * @param logs                 {@link Boolean} indicating if logs are required
      * @return {@link Retrofit} object with the given settings
      */
     private static Retrofit setupRetrofit(@NonNull String url, @Nullable List<Interceptor>
             interceptors, @NonNull CallAdapter.Factory callAdapterFactory, @NonNull Gson
-                                                  gsonConverterFactory) {
+                                                  gsonConverterFactory, boolean logs) {
 
         Preconditions.checkArgument(Patterns.WEB_URL.matcher(url).matches(), "Base URL is invalid");
         Timber.d("setupRetrofit: " + url);
@@ -91,7 +93,7 @@ public final class RestApiFactory {
 
         // Add a Log interceptor if debug mode
         List<Interceptor> interceptorList = new ArrayList<>();
-        if (BuildConfig.DEBUG) {
+        if (logs) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             interceptorList.add(loggingInterceptor);
