@@ -57,7 +57,7 @@ public abstract class BaseFragment extends Fragment implements BaseView {
         // Set the view to the presenter
         getPresenter().setView(this);
         // init objects
-        getPresenter().initialise(savedInstanceState);
+        getPresenter().initialise(getArguments() != null ? getArguments() : savedInstanceState);
         // Notify the Observable when the UI is ready:
         if (getView() != null) {
             UIUtils.runOnGlobalLayout(getView(), () -> onViewReadyObservable.onNext(null));
