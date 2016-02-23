@@ -3,8 +3,11 @@ package fi.zalando.core.utils;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.CheckBox;
+import android.widget.EditText;
 
 /**
  * Utility class to help with UI related tasks
@@ -48,5 +51,27 @@ public class UIUtils {
                     }
                 }
         );
+    }
+
+    /**
+     * Updates the status of the password visibility of the given {@link EditText} to match the
+     * given {@link CheckBox}.
+     *
+     * @param passwordEditText {@link EditText} whose transformation method to update
+     * @param showPasswordCheckBox {@link CheckBox} whose status determines the method.
+     */
+    public static void updatePasswordTransformation(EditText passwordEditText, CheckBox
+            showPasswordCheckBox) {
+        //Save the selection start and end, as these will reset when changing the transformation:
+        final int selectionStart = passwordEditText.getSelectionStart();
+        final int selectionEnd = passwordEditText.getSelectionEnd();
+        //Update transformation method:
+        if (showPasswordCheckBox.isChecked()) {
+            passwordEditText.setTransformationMethod(null);
+        } else {
+            passwordEditText.setTransformationMethod(new PasswordTransformationMethod());
+        }
+        //Restore original selection:
+        passwordEditText.setSelection(selectionStart, selectionEnd);
     }
 }
