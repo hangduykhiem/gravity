@@ -33,4 +33,24 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
         return items.size();
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onBindViewHolder(BaseViewHolder holder, int position) {
+
+        holder.bindData(items.get(position));
+    }
+
+    /**
+     * Clears and updates the adapters item list with the given items, and calls
+     * notifyDataSetChanged to refresh the UI.
+     *
+     * @param items List of items to be added to the adapter.
+     */
+    public void setItems(@NonNull final List<T> items) {
+
+        this.items.clear();
+        this.items.addAll(items);
+        notifyDataSetChanged();
+    }
+
 }
