@@ -9,11 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import javax.inject.Inject;
-
 import butterknife.ButterKnife;
-import dagger.Lazy;
-import fi.zalando.core.ui.Navigator;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
 import fi.zalando.core.utils.UIUtils;
@@ -26,8 +22,6 @@ import rx.subjects.BehaviorSubject;
  * Created by jduran on 03/12/15.
  */
 public abstract class BaseFragment extends Fragment implements BaseView {
-
-    @Inject protected Lazy<Navigator> navigator;
 
     /**
      * Internal private objects
