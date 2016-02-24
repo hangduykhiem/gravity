@@ -24,6 +24,11 @@ import rx.subjects.BehaviorSubject;
 public abstract class BaseFragment extends Fragment implements BaseView {
 
     /**
+     * Flag to tell the UI tests that an error within the Fragment happened. Has to be set manually,
+     * but is automatically cleared when a Fragment is created.
+     */
+    public static boolean FLAG_ERROR_HAPPENED = false;
+    /**
      * Internal private objects
      */
     private final BehaviorSubject<Void> onViewReadyObservable = BehaviorSubject.create();
@@ -34,7 +39,8 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        // Reset the error flag:
+        FLAG_ERROR_HAPPENED = false;
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(getSubFragmentLayoutId(), container, false);
         // Inject fragment views
@@ -151,5 +157,4 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     public Observable<Void> getOnViewReady() {
         return onViewReadyObservable;
     }
-
 }
