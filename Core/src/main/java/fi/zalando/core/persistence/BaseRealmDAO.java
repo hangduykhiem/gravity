@@ -36,6 +36,7 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
     private final RealmConfiguration realmConfiguration;
     private final Class<T> clazz;
     private final EventBus eventBus;
+    private final RealmEvent<T> defaultRealmEvent;
 
     /**
      * Constructor that provides the {@link Realm} database
@@ -46,6 +47,7 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
         this.realmConfiguration = realmConfiguration;
         this.clazz = clazz;
         this.eventBus = eventBus;
+        this.defaultRealmEvent = new RealmEvent<T>();
     }
 
     /**
@@ -74,7 +76,7 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
         // Close the instance
         closeRealm(realm);
         // Send a general message
-        eventBus.post(new RealmEvent<T>());
+        eventBus.post(defaultRealmEvent);
     }
 
     /**
@@ -97,8 +99,8 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
         // Close the instance
         closeRealm(realm);
         // Send the event
-        eventBus.post(hasPrimaryKey ? new RealmEvent<>(findRealmId(modelToDelete)) : new
-                RealmEvent<>());
+        eventBus.post(hasPrimaryKey ? new RealmEvent<>(findRealmId(modelToDelete)) :
+                defaultRealmEvent);
     }
 
     /**
@@ -131,7 +133,7 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
             }
         } else {
             // If no contains primary send a general event
-            eventBus.post(new RealmEvent<>());
+            eventBus.post(defaultRealmEvent);
         }
     }
 
@@ -279,7 +281,8 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
         // Close the instance
         closeRealm(realm);
         // Send the event
-        eventBus.post(hasPrimaryKey ? new RealmEvent<>(findRealmId(modelToSave)) : new RealmEvent<>());
+        eventBus.post(hasPrimaryKey ? new RealmEvent<>(findRealmId(modelToSave)) :
+                defaultRealmEvent);
     }
 
     /**
@@ -322,7 +325,7 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
             }
         } else {
             // If no contains primary send a general event
-            eventBus.post(new RealmEvent<>());
+            eventBus.post(defaultRealmEvent);
         }
     }
 
