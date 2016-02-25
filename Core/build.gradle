@@ -52,6 +52,9 @@ dependencies {
     // Realm database
     compile 'io.realm:realm-android:0.87.4'
 
+    // Event bus broadcasting messages
+    compile 'org.greenrobot:eventbus:3.0.0'
+
     // Retrolambda library
     retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.0.6'
 
