@@ -12,7 +12,7 @@ import fi.zalando.core.utils.EqualUtils;
 public class RealmEvent<E> {
 
     @Nullable
-    private final String id;
+    private final Object id;
 
     /**
      * General constructor
@@ -27,7 +27,7 @@ public class RealmEvent<E> {
      *
      * @param id {@link Object} with the id
      */
-    public RealmEvent(@Nullable String id) {
+    public RealmEvent(@Nullable Object id) {
 
         this.id = id;
     }
@@ -38,7 +38,7 @@ public class RealmEvent<E> {
      * @param id {@link Object} with the ID you care about
      * @return {@link Boolean} indicating if observable should reQuery realm
      */
-    public boolean requiresUpdate(String id) {
+    public boolean requiresUpdate(Object id) {
 
         return this.id == null || this.id.equals(id);
     }
@@ -49,7 +49,7 @@ public class RealmEvent<E> {
      * @return {@link String} with the id
      */
     @Nullable
-    public String getId() {
+    public Object getId() {
         return id;
     }
 

@@ -1,13 +1,17 @@
 package fi.zalando.core.persistence;
 
+import android.support.annotation.Nullable;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import fi.zalando.core.data.model.Dateable;
-import fi.zalando.core.data.model.Identifiable;
+import fi.zalando.core.data.model.annotation.RealmId;
 import fi.zalando.core.persistence.event.RealmEvent;
 import fi.zalando.core.utils.Preconditions;
 import io.realm.Realm;
@@ -23,12 +27,11 @@ import timber.log.Timber;
 
 /**
  * BaseDAO for storing and retrieving models into a Realm Database. Note! {@link Dateable} is
- * compulsory for {@link T} model since Realm does not support abstract objects. {@link
- * Identifiable} is needed to abstracting fetching ids of models.
+ * compulsory for {@link T} model since Realm does not support abstract objects.
  *
  * Created by jduran on 17/02/16.
  */
-public abstract class BaseRealmDAO<T extends RealmObject & Dateable & Identifiable> {
+public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
 
     private final RealmConfiguration realmConfiguration;
     private final Class<T> clazz;
@@ -90,11 +93,12 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable & Identifiab
         modelToDelete.removeFromRealm();
         realm.commitTransaction();
         // Check if the model has primary for sending the event later
-        boolean hasPrimaryKey = hasPrimaryKey(realm);
+        boolean hasPrimaryKey = hasPrimaryKeyAndRealmId(realm);
         // Close the instance
         closeRealm(realm);
         // Send the event
-        eventBus.post(hasPrimaryKey ? new RealmEvent<>(modelToDelete.getId()) : new RealmEvent<>());
+        eventBus.post(hasPrimaryKey ? new RealmEvent<>(findRealmId(modelToDelete)) : new
+                RealmEvent<>());
     }
 
     /**
@@ -115,7 +119,7 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable & Identifiab
         // commit the changes
         realm.commitTransaction();
         // Check if the model has primary key
-        boolean hasPrimaryKey = hasPrimaryKey(realm);
+        boolean hasPrimaryKey = hasPrimaryKeyAndRealmId(realm);
         // Close the instance
         closeRealm(realm);
 
@@ -123,7 +127,7 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable & Identifiab
         if (hasPrimaryKey) {
             // If contains primary send an event per saved id
             for (T modelToDelete : modelsToDelete) {
-                eventBus.post(new RealmEvent<>(modelToDelete.getId()));
+                eventBus.post(new RealmEvent<>(findRealmId(modelToDelete)));
             }
         } else {
             // If no contains primary send a general event
@@ -271,11 +275,11 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable & Identifiab
         // Finalise the transaction
         realm.commitTransaction();
         // Check if the model has primary key
-        boolean hasPrimaryKey = hasPrimaryKey(realm);
+        boolean hasPrimaryKey = hasPrimaryKeyAndRealmId(realm);
         // Close the instance
         closeRealm(realm);
         // Send the event
-        eventBus.post(hasPrimaryKey ? new RealmEvent<>(modelToSave.getId()) : new RealmEvent<>());
+        eventBus.post(hasPrimaryKey ? new RealmEvent<>(findRealmId(modelToSave)) : new RealmEvent<>());
     }
 
     /**
@@ -306,7 +310,7 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable & Identifiab
         // Finalise the transaction
         realm.commitTransaction();
         // Check if the model has primary key
-        boolean hasPrimaryKey = hasPrimaryKey(realm);
+        boolean hasPrimaryKey = hasPrimaryKeyAndRealmId(realm);
         // Close the instance
         closeRealm(realm);
 
@@ -314,7 +318,7 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable & Identifiab
         if (hasPrimaryKey) {
             // If contains primary send an event per saved id
             for (T modelToSave : modelsToSave) {
-                eventBus.post(new RealmEvent<>(modelToSave.getId()));
+                eventBus.post(new RealmEvent<>(findRealmId(modelToSave)));
             }
         } else {
             // If no contains primary send a general event
@@ -357,10 +361,11 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable & Identifiab
         // If primary key is provided check it is valid
         if (hasPrimaryKey(realm)) {
             // Check that the type contains a valid primary key
-            Preconditions.checkState(hasPrimaryKey(realm), String.format("%s class does not " +
-                    "have a @PrimaryKey", clazz.getSimpleName()));
             Preconditions.checkState(hasValidPrimaryKeyType(realm), String.format("%s class " +
                     "@PrimaryKey type is not supported", clazz.getSimpleName()));
+            // Check that it contains a @RealmId annotation
+            Preconditions.checkState(hasRealmId(), String.format("%s class does not " +
+                    "have a @RealmId", clazz.getSimpleName()));
         }
     }
 
@@ -375,6 +380,16 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable & Identifiab
     }
 
     /**
+     * Checks if {@link T} has a primary key and realmId
+     *
+     * @param realm {@link Boolean} with the check result
+     */
+    protected boolean hasPrimaryKeyAndRealmId(Realm realm) {
+
+        return hasPrimaryKey(realm) && hasRealmId();
+    }
+
+    /**
      * Checks if {@link T} has a valid primary key
      *
      * @param realm {@link Boolean} with the check result
@@ -384,7 +399,8 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable & Identifiab
         // Parse class primary key RealmFieldType
         RealmFieldType realmFieldType = getPrimaryKeyType(realm);
         // This DAO will only support string based primary keys
-        return realmFieldType.equals(RealmFieldType.STRING);
+        return realmFieldType.equals(RealmFieldType.STRING) || realmFieldType.equals
+                (RealmFieldType.INTEGER);
     }
 
     /**
@@ -413,6 +429,44 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable & Identifiab
         Table typeTable = realm.getTable(clazz);
         // Parse class primary key RealmFieldType
         return typeTable.getColumnType(typeTable.getPrimaryKey());
+    }
+
+    /**
+     * Finds the realm id of the given model using java reflection
+     *
+     * @param modelToAnalyse {@link T} with the model to analyse
+     * @return {@link Object} with the id annotated with {@link RealmId}
+     */
+    @Nullable
+    public Object findRealmId(T modelToAnalyse) {
+
+        try {
+            for (Method method : clazz.getMethods()) {
+                if (method.isAnnotationPresent(RealmId.class)) {
+                    return method.invoke(modelToAnalyse);
+                }
+            }
+        } catch (IllegalAccessException e) {
+            Timber.e(e, "findRealmId IllegalAccessException");
+        } catch (InvocationTargetException e) {
+            Timber.e(e, "findRealmId InvocationTargetException");
+        }
+        return null;
+    }
+
+    /**
+     * Checks using java reflection if current {@link T} contains {@link RealmId} annotation
+     *
+     * @return {@link Boolean} with the check result
+     */
+    public boolean hasRealmId() {
+
+        for (Method method : clazz.getMethods()) {
+            if (method.isAnnotationPresent(RealmId.class)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

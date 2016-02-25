@@ -18,6 +18,7 @@ import fi.zalando.core.persistence.mocks.MockedRealmObject;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.anyLong;
@@ -78,6 +79,8 @@ public class BaseRealmDAOTest {
     @Test
     public void testDeleteSingleModelWithPrimaryKey() {
 
+        String mockedId = "ID";
+
         // Need to extend base class, not allowed to have abstract instances
         BaseRealmDAO<MockedRealmObject> baseRealmDAO = spy(new BaseRealmDAO<MockedRealmObject>
                 (realmConfiguration, MockedRealmObject.class, eventBus) {
@@ -94,7 +97,7 @@ public class BaseRealmDAOTest {
         });
 
         MockedRealmObject mockedRealmObject = spy(new MockedRealmObject());
-        mockedRealmObject.setId("ID");
+        mockedRealmObject.setId(mockedId);
 
         // Do not execute real realm method
         doNothing().when(mockedRealmObject).removeFromRealm();
@@ -106,7 +109,7 @@ public class BaseRealmDAOTest {
         verify(realm, times(1)).commitTransaction();
         verify(mockedRealmObject, times(1)).removeFromRealm();
         verify(realm, times(1)).close();
-        verify(eventBus, times(1)).post(eq(new RealmEvent("ID")));
+        verify(eventBus, times(1)).post(eq(new RealmEvent(mockedId)));
     }
 
     @Test
@@ -145,6 +148,9 @@ public class BaseRealmDAOTest {
     @Test
     public void testDeleteIterableWithPrimaryKey() {
 
+        String mockedId1 = "ID1";
+        String mockedId2 = "ID2";
+
         // Need to extend base class, not allowed to have abstract instances
         BaseRealmDAO<MockedRealmObject> baseRealmDAO = spy(new BaseRealmDAO<MockedRealmObject>
                 (realmConfiguration, MockedRealmObject.class, eventBus) {
@@ -163,9 +169,9 @@ public class BaseRealmDAOTest {
 
         // Prepare mocked models
         MockedRealmObject mockedRealmObject = spy(new MockedRealmObject());
-        mockedRealmObject.setId("ID1");
+        mockedRealmObject.setId(mockedId1);
         MockedRealmObject mockedRealmObject2 = spy(new MockedRealmObject());
-        mockedRealmObject2.setId("ID2");
+        mockedRealmObject2.setId(mockedId2);
 
         List<MockedRealmObject> mockedRealmObjectList = new ArrayList<>();
         mockedRealmObjectList.add(mockedRealmObject);
@@ -184,8 +190,8 @@ public class BaseRealmDAOTest {
         verify(mockedRealmObject2, times(1)).removeFromRealm();
         verify(realm, times(1)).close();
         // Verify event bus
-        verify(eventBus, times(1)).post(new RealmEvent<>("ID1"));
-        verify(eventBus, times(1)).post(new RealmEvent<>("ID2"));
+        verify(eventBus, times(1)).post(new RealmEvent<>(mockedId1));
+        verify(eventBus, times(1)).post(new RealmEvent<>(mockedId2));
     }
 
     @Test
@@ -234,6 +240,8 @@ public class BaseRealmDAOTest {
     @Test
     public void saveSingleModelWithPrimaryKey() throws Exception {
 
+        String mockedId = "ID";
+
         // Need to extend base class, not allowed to have abstract instances
         BaseRealmDAO<MockedRealmObject> baseRealmDAO = spy(new BaseRealmDAO<MockedRealmObject>
                 (realmConfiguration, MockedRealmObject.class, eventBus) {
@@ -254,7 +262,7 @@ public class BaseRealmDAOTest {
         });
 
         MockedRealmObject mockedRealmObject = spy(new MockedRealmObject());
-        mockedRealmObject.setId("ID");
+        mockedRealmObject.setId(mockedId);
 
         // Make test request
         baseRealmDAO.save(mockedRealmObject);
@@ -265,7 +273,7 @@ public class BaseRealmDAOTest {
         verify(mockedRealmObject, times(1)).setSavedDate(anyLong());
         verify(realm, times(1)).copyToRealmOrUpdate(eq(mockedRealmObject));
         verify(realm, times(1)).close();
-        verify(eventBus, times(1)).post(eq(new RealmEvent<>("ID")));
+        verify(eventBus, times(1)).post(eq(new RealmEvent<>(mockedId)));
     }
 
     @Test
@@ -303,6 +311,9 @@ public class BaseRealmDAOTest {
     @Test
     public void saveMultipleModelsWithPrimaryKey() throws Exception {
 
+        String mockedId1 = "ID1";
+        String mockedId2 = "ID2";
+
         // Need to extend base class, not allowed to have abstract instances
         BaseRealmDAO<MockedRealmObject> baseRealmDAO = spy(new BaseRealmDAO<MockedRealmObject>
                 (realmConfiguration, MockedRealmObject.class, eventBus) {
@@ -320,9 +331,9 @@ public class BaseRealmDAOTest {
         });
 
         MockedRealmObject mockedRealmObject = spy(new MockedRealmObject());
-        mockedRealmObject.setId("ID1");
+        mockedRealmObject.setId(mockedId1);
         MockedRealmObject mockedRealmObject2 = spy(new MockedRealmObject());
-        mockedRealmObject2.setId("ID2");
+        mockedRealmObject2.setId(mockedId2);
 
         List<MockedRealmObject> mockedRealmObjectList = new ArrayList<>();
         mockedRealmObjectList.add(mockedRealmObject);
@@ -339,8 +350,8 @@ public class BaseRealmDAOTest {
         verify(realm, times(1)).copyToRealmOrUpdate(eq(mockedRealmObjectList));
         verify(realm, times(1)).close();
         // Verify event bus
-        verify(eventBus, times(1)).post(new RealmEvent<>("ID1"));
-        verify(eventBus, times(1)).post(new RealmEvent<>("ID2"));
+        verify(eventBus, times(1)).post(new RealmEvent<>(mockedId1));
+        verify(eventBus, times(1)).post(new RealmEvent<>(mockedId2));
     }
 
     @Test
@@ -409,6 +420,38 @@ public class BaseRealmDAOTest {
         // expired
         mockedRealmObject.setSavedDate(System.currentTimeMillis() - 2);
         assertTrue(baseRealmDAO.hasExpired(mockedRealmObject, 1, TimeUnit.MILLISECONDS));
+    }
+
+    @Test
+    public void testFindRealmId() {
+
+        String mockedId = "ID";
+
+        // Need to extend base class, not allowed to have abstract instances
+        BaseRealmDAO<MockedRealmObject> baseRealmDAO = spy(new BaseRealmDAO<MockedRealmObject>
+                (realmConfiguration, MockedRealmObject.class, eventBus) {
+        });
+
+        MockedRealmObject mockedRealmObject = new MockedRealmObject();
+        mockedRealmObject.setId(mockedId);
+
+        assertEquals(baseRealmDAO.findRealmId(mockedRealmObject), mockedId);
+    }
+
+    @Test
+    public void testHasRealmId() {
+
+        String mockedId = "ID";
+
+        // Need to extend base class, not allowed to have abstract instances
+        BaseRealmDAO<MockedRealmObject> baseRealmDAO = spy(new BaseRealmDAO<MockedRealmObject>
+                (realmConfiguration, MockedRealmObject.class, eventBus) {
+        });
+
+        MockedRealmObject mockedRealmObject = new MockedRealmObject();
+        mockedRealmObject.setId(mockedId);
+
+        assertTrue(baseRealmDAO.hasRealmId());
     }
 
     /*
