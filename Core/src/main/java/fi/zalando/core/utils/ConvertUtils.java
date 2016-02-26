@@ -1,11 +1,18 @@
 package fi.zalando.core.utils;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 /**
  * Utilities method to convert units.
  *
  * Created by hduykhiem on 29/01/16.
  */
 public class ConvertUtils {
+
+    //Holds a list of country names and their country codes
+    private static Map<String, String> countries;
 
     public enum DistanceUnit {
         /**
@@ -288,7 +295,7 @@ public class ConvertUtils {
     }
 
     /**
-     * Method to round to the nearest two decimal
+     * Rounds a number to set amount of decimals
      *
      * @param numberToRound    double number to be rounded
      * @param amountOfDecimals number of decimals
@@ -300,4 +307,19 @@ public class ConvertUtils {
         return Math.round(numberToRound * constantMultiplier) / constantMultiplier;
     }
 
+    /**
+     * Converts the given country code to legible format.
+     * @param countryCode Country code to convert
+     * @return Country name
+     */
+    public static String getDisplayCountry(String countryCode) {
+        if (countries == null) {
+            countries = new HashMap<>();
+            for (String iso : Locale.getISOCountries()) {
+                Locale l = new Locale("", iso);
+                countries.put(iso, l.getDisplayCountry());
+            }
+        }
+        return countries.get(countryCode);
+    }
 }
