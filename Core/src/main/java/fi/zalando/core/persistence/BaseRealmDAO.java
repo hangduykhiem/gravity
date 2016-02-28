@@ -38,6 +38,9 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
     private final EventBus eventBus;
     private final RealmEvent<T> defaultRealmEvent;
 
+    // Keep a cached observable at least for requests when all items are required
+    private Observable<List<T>> cachedAllLoadedItems;
+
     /**
      * Constructor that provides the {@link Realm} database
      */
@@ -146,43 +149,47 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
      */
     public Observable<List<T>> loadAll() {
 
-        // When this was implemented, realm 0.87 was not closing automatically if using their
-        // built-in observables when unsubscribing observable
+        if (cachedAllLoadedItems == null) {
 
-        return Observable.create(new Observable.OnSubscribe<List<T>>() {
+            // When this was implemented, realm 0.87 was not closing automatically if using their
+            // built-in observables when unsubscribing observable
+            cachedAllLoadedItems = Observable.create(new Observable.OnSubscribe<List<T>>() {
 
-            private Subscriber<? super List<T>> subscriber;
+                private Subscriber<? super List<T>> subscriber;
 
-            @Override
-            public void call(Subscriber<? super List<T>> subscriber) {
+                @Override
+                public void call(Subscriber<? super List<T>> subscriber) {
 
-                this.subscriber = subscriber;
+                    this.subscriber = subscriber;
 
-                // Register an event bus so we will get a message
-                // when there is an update on the table
-                Object objectToRegister = this;
-                eventBus.register(objectToRegister);
-                subscriber.add(Subscriptions.create(() ->
-                        eventBus.unregister(objectToRegister)));
+                    // Register an event bus so we will get a message
+                    // when there is an update on the table
+                    Object objectToRegister = this;
+                    eventBus.register(objectToRegister);
+                    subscriber.add(Subscriptions.create(() ->
+                            eventBus.unregister(objectToRegister)));
 
-                reloadFromRealm();
-            }
+                    reloadFromRealm();
+                }
 
-            @Subscribe
-            @SuppressWarnings("unused")
-            public void onUpdatedEvent(RealmEvent<T> realmEvent) {
+                @Subscribe
+                @SuppressWarnings("unused")
+                public void onUpdatedEvent(RealmEvent<T> realmEvent) {
 
-                Timber.d("Event received: " + realmEvent);
-                reloadFromRealm();
-            }
+                    Timber.d("Event received: " + realmEvent);
+                    reloadFromRealm();
+                }
 
-            private void reloadFromRealm() {
+                private void reloadFromRealm() {
 
-                Realm realm = getRealmInstance();
-                subscriber.onNext(realm.copyFromRealm(realm.where(clazz).findAll()));
-                closeRealm(realm);
-            }
-        });
+                    Realm realm = getRealmInstance();
+                    subscriber.onNext(realm.copyFromRealm(realm.where(clazz).findAll()));
+                    closeRealm(realm);
+                }
+            }).cache();
+        }
+
+        return cachedAllLoadedItems;
     }
 
     /**
