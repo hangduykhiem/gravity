@@ -63,4 +63,11 @@ public class RealmEvent<E> {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+
+        return getClass().getName() + "[" +
+                "id = " + id + "]";
+    }
 }
