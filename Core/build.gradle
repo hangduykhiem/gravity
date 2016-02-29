@@ -1,6 +1,6 @@
-apply plugin: 'com.android.library'
-apply plugin: 'com.neenbedankt.android-apt'
-apply plugin: 'me.tatarka.retrolambda'
+apply plugin: "com.android.library"
+apply plugin: "com.neenbedankt.android-apt"
+apply plugin: "me.tatarka.retrolambda"
 
 android {
     compileSdkVersion 23
@@ -15,83 +15,110 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    packagingOptions {
+        pickFirst 'META-INF/services/javax.annotation.processing.Processor'
+        return null;
+    }
 }
 
 dependencies {
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    // 3rd party library versions
+    final SUPPORT_VERSION = "23.2.0"
+    final GOOGLE_PLAY_SERVICES_VERSION = "8.4.0"
+    final RX_LOCATION_VERSION = "0.8@aar"
+    final BUTTERKNIFE_VERSION = "7.0.1"
+    final RXJAVA_VERSION = "1.1.1"
+    final RXANDROID_VERSION = "1.1.0"
+    final REALM_VERSION = "0.87.5"
+    final EVENT_BUS_VERSION = "3.0.0"
+    final RETROLAMBDA_VERSION = "2.1.0"
+    final DAGGER_VERSION = "2.0.2"
+    final ICEPICK_VERSION = "3.2.0"
+    final TIMBER_VERSION = "4.1.0"
+    final RETROFIT_VERSION = "2.0.0-beta4"
+    final OKHTTP_VERSION = "3.2.0"
+
+
+    compile fileTree(dir: "libs", include: ["*.jar"])
 
     // Android support libraries
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile('com.android.support:recyclerview-v7:23.1.1') {
-        exclude module: 'support-v4'
+    compile "com.android.support:appcompat-v7:$SUPPORT_VERSION"
+    compile("com.android.support:recyclerview-v7:$SUPPORT_VERSION") {
+        exclude module: "support-v4"
     }
 
     // Google Play Services
-    compile 'com.google.android.gms:play-services-location:8.4.0'
+    compile "com.google.android.gms:play-services-location:$GOOGLE_PLAY_SERVICES_VERSION"
 
     // Reactive location library
-    compile 'pl.charmas.android:android-reactive-location:0.8@aar'
+    compile "pl.charmas.android:android-reactive-location:$RX_LOCATION_VERSION"
 
     // Butterknife library to ease the access to inject views in activities and fragments
-    compile 'com.jakewharton:butterknife:7.0.1'
+    compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
 
     // RxJava and RxAndroid libraries
-    compile 'io.reactivex:rxjava:1.1.0'
-    compile('io.reactivex:rxandroid:1.1.0') {
-        exclude module: 'rxjava'
+    compile "io.reactivex:rxjava:$RXJAVA_VERSION"
+    compile("io.reactivex:rxandroid:$RXANDROID_VERSION") {
+        exclude module: "rxjava"
     }
 
     // Realm database
-    compile 'io.realm:realm-android:0.87.5'
+    compile "io.realm:realm-android:$REALM_VERSION"
 
     // Event bus broadcasting messages
-    compile 'org.greenrobot:eventbus:3.0.0'
+    compile "org.greenrobot:eventbus:$EVENT_BUS_VERSION"
 
     // Retrolambda library
-    retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.0.6'
+    retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:$RETROLAMBDA_VERSION"
 
     // Dagger 2 dependency injector requirements
-    apt 'com.google.dagger:dagger-compiler:2.0.2'
-    compile 'com.google.dagger:dagger:2.0.2'
-    provided 'javax.annotation:jsr250-api:1.0'
+    apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+    compile "com.google.dagger:dagger:$DAGGER_VERSION"
+    provided "javax.annotation:jsr250-api:1.0"
 
     // Ice Pick libraries
-    compile 'frankiesardo:icepick:3.1.0'
-    provided 'frankiesardo:icepick-processor:3.1.0'
+    compile "frankiesardo:icepick:$ICEPICK_VERSION"
+    provided "frankiesardo:icepick-processor:$ICEPICK_VERSION"
 
     // Timber logger library
-    compile 'com.jakewharton.timber:timber:4.1.0'
+    compile "com.jakewharton.timber:timber:$TIMBER_VERSION"
 
     // Retrofit Library
-    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
+    compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
     // GSON converter for retrofit
-    compile('com.squareup.retrofit2:converter-gson:2.0.0-beta3') {
-        exclude module: 'retrofit'
+    compile("com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION") {
+        exclude module: "retrofit"
     }
     // RXJava adapter for retrofit
-    compile('com.squareup.retrofit2:adapter-rxjava:2.0.0-beta3') {
-        exclude module: 'retrofit'
+    compile("com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION") {
+        exclude module: "retrofit"
     }
-    compile('com.squareup.okhttp3:logging-interceptor:3.0.1') {
-        exclude module: 'retrofit'
+    compile("com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION") {
+        exclude module: "retrofit"
     }
 
+    // Test library versions
+    final JUNIT_VERSION = "4.12"
+    final ROBOLECTRIC_VERSION = "3.0"
+    final MOCKITO_VERSION = "1.10.19"
+    final POWERMOCK_VERSION = "1.6.2"
+
     // Add test dependencies
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.robolectric:robolectric:3.0'
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile "junit:junit:$JUNIT_VERSION"
+    testCompile "org.robolectric:robolectric:$ROBOLECTRIC_VERSION"
+    testCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
     // Powermock to mock static dependencies
-    testCompile "org.powermock:powermock-module-junit4:1.6.2"
-    testCompile "org.powermock:powermock-module-junit4-rule:1.6.2"
-    testCompile "org.powermock:powermock-api-mockito:1.6.2"
-    testCompile "org.powermock:powermock-classloading-xstream:1.6.2"
+    testCompile "org.powermock:powermock-module-junit4:$POWERMOCK_VERSION"
+    testCompile "org.powermock:powermock-module-junit4-rule:$POWERMOCK_VERSION"
+    testCompile "org.powermock:powermock-api-mockito:$POWERMOCK_VERSION"
+    testCompile "org.powermock:powermock-classloading-xstream:$POWERMOCK_VERSION"
 
 }
