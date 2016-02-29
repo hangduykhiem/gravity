@@ -130,4 +130,17 @@ public class ConvertUtilsTest {
         result2 = ConvertUtils.round(numberToRound2, 3);
         assertEquals(result2, 21415.122);
     }
+
+    @Test
+    public void testGetDisplayCountry(){
+
+        // Test Germany
+        assertEquals(ConvertUtils.getDisplayCountry("DE"), "Germany");
+        // Test Finland
+        assertEquals(ConvertUtils.getDisplayCountry("FI"), "Finland");
+        // Test Spanish
+        assertEquals(ConvertUtils.getDisplayCountry("ES"), "Spain");
+        // Test Vietnam
+        assertEquals(ConvertUtils.getDisplayCountry("VN"), "Vietnam");
+    }
 }
