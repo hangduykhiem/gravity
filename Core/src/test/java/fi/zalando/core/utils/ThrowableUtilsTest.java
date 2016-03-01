@@ -7,8 +7,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.net.HttpURLConnection;
 
+import retrofit2.HttpException;
 import retrofit2.Response;
-import retrofit2.adapter.rxjava.HttpException;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;

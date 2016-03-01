@@ -15,9 +15,9 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.CallAdapter;
+import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.RxJavaCallAdapterFactory;
 import timber.log.Timber;
 
 /**
