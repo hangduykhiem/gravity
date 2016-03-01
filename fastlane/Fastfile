@@ -22,34 +22,20 @@ default_platform :android
 
 platform :android do
   before_all do
-    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+    # Always clear environment
+    gradle(task: 'clean')
   end
 
-  desc "build CI/STAGE"
-  lane :build do
-    gradle(task: ENV["CLEAN_TASK"])
-    gradle(task: ENV["TEST_TASK"])
-    hipchat(from: "MsJenkins", message: "Woohoo!! Android core library successfully built!", channel: "Fleek%20Android", success: true)
-  end
-
-  desc "Runs all the tests"
+  desc "Runs all unit tests"
   lane :test do
-    gradle(task: "test")
+    gradle(task: 'test', flags: '--stacktrace')
+    hipchat(from: "MsJenkins", message: "Android core library successfully Unit Tested!", custom_color: "yellow" , channel: "Fleek%20Android", success: true)
   end
 
-  desc "Submit a new Beta Build to Crashlytics Beta"
-  lane :beta do
-    gradle(task: "assembleRelease")
-    crashlytics
-
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
-  end
-
-  desc "Deploy a new version to the Google Play"
-  lane :deploy do
-    gradle(task: "assembleRelease")
-    supply
+  desc "Runs all instrumentation tests"
+  lane :instrumentationtest do
+    gradle(task: ENV["TEST_INSTRUMENTATION_TASK"], flags: '--stacktrace')
+    hipchat(from: "MsJenkins", message: "Android core library successfully Tested!", channel: "Fleek%20Android", success: true)
   end
 
   # You can define as many lanes as you want
