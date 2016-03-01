@@ -49,7 +49,7 @@ platform :android do
   end
 
   error do |lane, exception|
-    hipchat(from: "MsJenkins", message: exception.message, channel: "Fleek%20Android", success: false)
+    hipchat(from: "MsJenkins", message: exception.message[(exception.message.length - 500)..-1], channel: "Fleek%20Android", success: false)
   end
 end
 
