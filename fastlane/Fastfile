@@ -34,6 +34,7 @@ platform :android do
 
   desc "Runs all instrumentation tests"
   lane :instrumentationtest do
+    gradle(task: 'uninstallAll')
     gradle(task: ENV["TEST_INSTRUMENTATION_TASK"], flags: '--stacktrace')
     hipchat(from: "MsJenkins", message: "Android core library successfully Tested!", channel: "Fleek%20Android", success: true)
   end
