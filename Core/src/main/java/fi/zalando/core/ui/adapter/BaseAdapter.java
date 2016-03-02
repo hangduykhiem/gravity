@@ -41,6 +41,15 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
     }
 
     /**
+     * Removes the item in the given position and updates the UI animating the removal.
+     * @param index item's index
+     */
+    public void removeItem(int index) {
+        items.remove(index);
+        notifyItemRemoved(index);
+    }
+
+    /**
      * Clears and updates the adapters item list with the given items, and calls
      * notifyDataSetChanged to refresh the UI.
      *
