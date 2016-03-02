@@ -36,10 +36,12 @@ platform :android do
   end
 
   desc "Runs all instrumentation tests"
-  lane :instrumentationtest do
+  lane :instrumentationtest do |options|
+
+    $adb_path = options[:adb]
 
     # Wake up the screen
-    sh "adb shell input keyevent KEYCODE_WAKEUP"
+    adb(adb_path: $adb_path, command: 'shell input keyevent KEYCODE_WAKEUP')
 
     # Uninstall previous app
     gradle(task: 'uninstallAll')
@@ -66,11 +68,11 @@ platform :android do
   error do |lane, exception, options|
 
     if options[:type] === "test"
-        hipchat(from: "MsJenkins", message: $environment + ": Android unit test failed... WEAR THE HAT! " + options[:build_url], channel: "Fleek%20Android", success: false)
+        hipchat(from: "MsJenkins", message_format:"html", message: $environment + ": Android unit test failed... WEAR THE HAT! <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
     end
 
     if options[:type] === "instrumentationtest"
-       hipchat(from: "MsJenkins", message: $environment + ": Android instrumentation test failed. .. " +  options[:build_url], channel: "Fleek%20Android", success: false)
+       hipchat(from: "MsJenkins", message_format:'html', message: $environment + ": Android instrumentation test failed... <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
     end
 
   end
