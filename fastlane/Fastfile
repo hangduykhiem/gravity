@@ -72,7 +72,7 @@ platform :android do
     end
 
     if options[:type] === "instrumentationtest"
-       hipchat(from: "MsJenkins", message_format:'html', message: $environment + ": Android instrumentation test failed... <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
+       hipchat(from: "MsJenkins", message_format:'html', message: $environment + ": Android core instrumentation test failed... <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
     end
 
   end
