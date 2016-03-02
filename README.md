@@ -11,7 +11,8 @@ This document describes the setup instructions, tools, libraries, style and nami
 - [Configure a remote for a fork](https://help.github.com/articles/configuring-a-remote-for-a-fork/)
 - Commits your changes to YOUR repos. Every commit should include the JIRA ticket code it is related with. For example, "ZMAL-XYZ: This is a commit" where XYZ is the ticket number.
 - Create a pull request to merge your changes to team repos
-- ONLY a reviewer can merge your changes to the team-level repository
+- ONLY a reviewer can merge your changes to the team-level repository.
+- Three different repositories exist on team-level repository. Development; where under development code resides. Staging; where last built used for staging resides. Master; where last published code is located. 
 
 ## Creating a Pull Request
 
@@ -55,8 +56,25 @@ Nowadays Android Studio includes SDK, no need for external installation. SDK man
 
 ## CI
 
-Jenkins is used as CI system. Every time jenkins detects a change in repository following actions are triggered:
+Jenkins is used as CI system. There are three different main branches, each of them executing different actions on Jenkins.
 
-- Pull changes from repository
+Development Branch:
+
+- Pull changes from Development branch
 - gradle test -> Executes all the unit tests for debug build type. Included those in the core library
-- Post result (success or failure) to Fleek Android hipchat channel
+- gradle connectedAndroidTest -> Executes all the instrumentations tests (requires a device running or connected)
+- Post result (success or failure) to Fleek Android HipChat channel
+
+Staging Branch:
+
+- Pull changes from Staging branch
+- gradle test -> Executes all the unit tests for debug build type. Included those in the core library
+- gradle connectedAndroidTest -> Executes all the instrumentations tests (requires a device running or connected)
+- Post result (success or failure) to Fleek Android HipChat channel
+
+Master Branch:
+
+- Pull changes from Master branch
+- gradle test -> Executes all the unit tests for debug build type. Included those in the core library
+- gradle connectedAndroidTest -> Executes all the instrumentations tests (requires a device running or connected)
+- Post result (success or failure) to Fleek Android HipChat channel

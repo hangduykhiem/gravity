@@ -22,38 +22,59 @@ default_platform :android
 
 platform :android do
   before_all do
+
+    $environment = ENV["ENVIRONMENT"]
+
     # Always clear environment
     gradle(task: 'clean')
+
   end
 
   desc "Runs all unit tests"
   lane :test do
     gradle(task: 'test', flags: '--stacktrace')
-    hipchat(from: "MsJenkins", message: "Android core library successfully Unit Tested!", custom_color: "yellow" , channel: "Fleek%20Android", success: true)
   end
 
   desc "Runs all instrumentation tests"
   lane :instrumentationtest do
+
+    # Wake up the screen
+    sh "adb shell input keyevent KEYCODE_WAKEUP"
+
+    # Uninstall previous app
     gradle(task: 'uninstallAll')
+
+    # Run the tests
     gradle(task: ENV["TEST_INSTRUMENTATION_TASK"], flags: '--stacktrace')
-    hipchat(from: "MsJenkins", message: "Android core library successfully Tested!", channel: "Fleek%20Android", success: true)
+
   end
 
   # You can define as many lanes as you want
 
-  after_all do |lane|
-    # This block is called, only if the executed lane was successful
+  after_all do |lane, options|
 
-    # slack(
-    #   message: "Successfully deployed new App Update."
-    # )
+    if options[:type] === "test"
+        hipchat(from: "MsJenkins", message: $environment + ": Android core library successfully Unit Tested!", custom_color: "yellow" , channel: "Fleek%20Android", success: true)
+    end
+
+    if options[:type] === "instrumentationtest"
+        hipchat(from: "MsJenkins", message: $environment + ": Android core library successfully Tested!", channel: "Fleek%20Android", success: true)
+    end
+
   end
 
-  error do |lane, exception|
-    hipchat(from: "MsJenkins", message: exception.message[(exception.message.length - 500)..-1], channel: "Fleek%20Android", success: false)
+  error do |lane, exception, options|
+
+    if options[:type] === "test"
+        hipchat(from: "MsJenkins", message: $environment + ": Android unit test failed... WEAR THE HAT! " + options[:build_url], channel: "Fleek%20Android", success: false)
+    end
+
+    if options[:type] === "instrumentationtest"
+       hipchat(from: "MsJenkins", message: $environment + ": Android instrumentation test failed. .. " +  options[:build_url], channel: "Fleek%20Android", success: false)
+    end
+
   end
 end
-
 
 # More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/docs/Platforms.md
 # All available actions: https://github.com/fastlane/fastlane/blob/master/docs/Actions.md
