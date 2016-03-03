@@ -41,6 +41,14 @@ public class SubscriptionHelper {
     }
 
     /**
+     * Clears all the subscriptions hosted in the helper
+     */
+    public void clear() {
+
+        subscriptions.clear();
+    }
+
+    /**
      * Checks if the manager has any subscription attached to it
      *
      * @return {@link Boolean} indicating if the manager has subscriptions attached

@@ -1,17 +1,26 @@
 package fi.zalando.core.domain;
 
+import fi.zalando.core.helper.CleaningHelper;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subjects.BehaviorSubject;
-import rx.subjects.Subject;
 
 /**
  * Base class that will host common methods for all the domain service definitions
  *
  * Created by jduran on 30/11/15.
  */
-public abstract class BaseService {
+public abstract class BaseService implements CleaningHelper.Cleanable {
+
+    /**
+     * Constructor to enforce adding itself to {@link CleaningHelper}
+     *
+     * @param cleaningHelper {@link CleaningHelper} to add itself to
+     */
+    protected BaseService(CleaningHelper cleaningHelper) {
+
+        cleaningHelper.addCleanables(this);
+    }
 
     /**
      * Provides an {@link rx.Observable.Transformer} to apply correct schedulers
@@ -25,19 +34,9 @@ public abstract class BaseService {
                 .mainThread());
     }
 
-    /**
-     * Creates a {@link BehaviorSubject} to use within services using the given {@link Observable}
-     * as a reference in order to cache results for faster delivery
-     *
-     * @param observable {@link Observable} to use as reference in the {@link Subject}
-     * @param <T>        {@link T} of the {@link Observable}
-     * @return {@link Subject} that listens and emits the given {@link Observable}
-     */
-    protected <T> Subject<T, T> createObservingSubject(Observable<T> observable) {
-
-        Subject<T, T> behaviorSubject = BehaviorSubject.create();
-        observable.subscribe(behaviorSubject::onNext);
-        return behaviorSubject;
+    @Override
+    public void clean() {
+        // No Operation, override if something to clean is needed
     }
 
 }

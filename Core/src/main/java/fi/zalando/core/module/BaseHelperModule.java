@@ -5,11 +5,14 @@ import android.location.LocationManager;
 
 import pl.charmas.android.reactivelocation.ReactiveLocationProvider;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import fi.zalando.core.data.helper.GooglePlayServicesHelper;
 import fi.zalando.core.data.helper.LocationHelper;
 import fi.zalando.core.domain.helper.SubscriptionHelper;
+import fi.zalando.core.helper.CleaningHelper;
 
 /**
  * Module that provides the implementations of all the injected helpers
@@ -18,6 +21,18 @@ import fi.zalando.core.domain.helper.SubscriptionHelper;
  */
 @Module
 public class BaseHelperModule {
+
+    /**
+     * Provides a {@link CleaningHelper} instance dependency
+     *
+     * @return {@link CleaningHelper} instance
+     */
+    @Provides
+    @Singleton
+    public CleaningHelper provideCleaningHelper() {
+
+        return new CleaningHelper();
+    }
 
     /**
      * Provides a {@link GooglePlayServicesHelper} instance dependency
