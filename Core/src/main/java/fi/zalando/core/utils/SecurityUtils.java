@@ -77,8 +77,7 @@ public class SecurityUtils {
      */
     public static String generateRandomKey() throws GeneralSecurityException {
 
-        return AesCbcWithIntegrity.generateKeyFromPassword(generateRandomString(),
-                generateRandomString()).toString();
+        return AesCbcWithIntegrity.generateKeyFromPassword(generateRandomString()).toString();
     }
 
     /**
@@ -267,12 +266,11 @@ public class SecurityUtils {
          * A function that generates password-based AES & HMAC keys. See generateKeyFromPassword.
          *
          * @param password The password to derive the AES/HMAC keys from
-         * @param salt     A string version of the salt; base64 encoded.
          * @return The AES & HMAC keys.
          */
-        public static SecretKeys generateKeyFromPassword(String password, String salt) throws
+        public static SecretKeys generateKeyFromPassword(String password) throws
                 GeneralSecurityException {
-            return generateKeyFromPassword(password, Base64.decode(salt, BASE64_FLAGS));
+            return generateKeyFromPassword(password, generateSalt());
         }
 
         /**
