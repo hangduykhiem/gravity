@@ -1,5 +1,6 @@
 package fi.zalando.core.persistence;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
@@ -12,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import fi.zalando.core.data.model.Dateable;
 import fi.zalando.core.data.model.annotation.RealmId;
+import fi.zalando.core.helper.CleaningHelper;
 import fi.zalando.core.persistence.event.RealmEvent;
 import fi.zalando.core.utils.Preconditions;
 import io.realm.Realm;
@@ -31,7 +33,8 @@ import timber.log.Timber;
  *
  * Created by jduran on 17/02/16.
  */
-public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
+public abstract class BaseRealmDAO<T extends RealmObject & Dateable> implements CleaningHelper
+        .Cleanable {
 
     private final RealmConfiguration realmConfiguration;
     private final Class<T> clazz;
@@ -58,7 +61,8 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> {
     /**
      * Clears completely the table for {@link T} class
      */
-    public void clear() {
+    @CallSuper
+    public void clean() {
 
         clear(true);
     }
