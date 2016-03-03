@@ -30,19 +30,31 @@ public class SubscriptionHelperTest {
 
         // Check it is empty
         assertFalse(subscriptionHelper.hasSubscriptions());
-
         // Create a sample Subscription, ensure it's never ending
         Subscription sampleSubscription = Observable.never().subscribe();
-
         // Add the subscription
         subscriptionHelper.addSubscription(sampleSubscription);
-
         // Check if it contains something
         assertTrue(subscriptionHelper.hasSubscriptions());
-
         // Unsubscribe all
         subscriptionHelper.unsubscribeAll();
+        // Check it is empty now
+        assertFalse(subscriptionHelper.hasSubscriptions());
+    }
 
+    @Test
+    public void testClear() {
+
+        // Check it is empty
+        assertFalse(subscriptionHelper.hasSubscriptions());
+        // Create a sample Subscription, ensure it's never ending
+        Subscription sampleSubscription = Observable.never().subscribe();
+        // Add the subscription
+        subscriptionHelper.addSubscription(sampleSubscription);
+        // Check if it contains something
+        assertTrue(subscriptionHelper.hasSubscriptions());
+        // Clear all
+        subscriptionHelper.clear();
         // Check it is empty now
         assertFalse(subscriptionHelper.hasSubscriptions());
     }
