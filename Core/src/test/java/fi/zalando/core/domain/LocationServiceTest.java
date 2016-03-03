@@ -5,17 +5,18 @@ import com.google.android.gms.location.LocationRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.concurrent.TimeUnit;
 
 import fi.zalando.core.data.LocationRepository;
+import fi.zalando.core.helper.CleaningHelper;
 import fi.zalando.core.test.TestUtils;
 import rx.Observable;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -31,12 +32,15 @@ public class LocationServiceTest {
 
     @Mock
     private LocationRepository locationRepository;
+    @Mock
+    private CleaningHelper cleaningHelper;
 
     @Before
     public void setUp() {
 
-        locationRepository = mock(LocationRepository.class);
-        locationService = spy(new LocationService(locationRepository));
+        MockitoAnnotations.initMocks(this);
+
+        locationService = spy(new LocationService(locationRepository, cleaningHelper));
         TestUtils.setupMockedDomainService(locationService);
     }
 

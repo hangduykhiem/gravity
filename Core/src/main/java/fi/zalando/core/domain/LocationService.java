@@ -8,6 +8,7 @@ import android.location.Location;
 import java.util.concurrent.TimeUnit;
 
 import fi.zalando.core.data.LocationRepository;
+import fi.zalando.core.helper.CleaningHelper;
 import rx.Observable;
 
 /**
@@ -22,10 +23,12 @@ public class LocationService extends BaseService {
     /**
      * Constructor
      *
-     * @param locationRepository initialize the {@link LocationRepository}
+     * @param locationRepository {@link LocationRepository} dependency
+     * @param cleaningHelper     {@link CleaningHelper} dependency
      */
-    public LocationService(LocationRepository locationRepository) {
+    public LocationService(LocationRepository locationRepository, CleaningHelper cleaningHelper) {
 
+        super(cleaningHelper);
         this.locationRepository = locationRepository;
     }
 
