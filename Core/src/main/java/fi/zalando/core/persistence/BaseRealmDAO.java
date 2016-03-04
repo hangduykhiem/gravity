@@ -65,6 +65,8 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> implements 
     public void clean() {
 
         clear(true);
+        // Remove the cached observable
+        cachedAllLoadedItems = null;
     }
 
     /**
