@@ -15,6 +15,10 @@ import fi.zalando.core.ui.adapter.viewholder.BaseViewHolder;
  */
 public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends RecyclerView.Adapter<U> {
 
+    /**
+     * Mod count used by UI tests to check for changes in this adapter.
+     */
+    public transient int modCountUITest = 0;
     protected List<T> items;
 
     /**
@@ -23,7 +27,7 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
      * @param items {@link List} of {@link T} to render in the list
      */
     protected BaseAdapter(@NonNull List<T> items) {
-
+        modCountUITest = 0;
         this.items = items;
     }
 
@@ -45,8 +49,20 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
      * @param index item's index
      */
     public void removeItem(int index) {
+        modCountUITest++;
         items.remove(index);
         notifyItemRemoved(index);
+    }
+
+    /**
+     * Inserts the given item in the given location and updates the UI with animation.
+     * @param item Item to add
+     * @param location Position to add the item in
+     */
+    public void addItem(T item, int location) {
+        modCountUITest++;
+        items.add(location, item);
+        notifyItemInserted(location);
     }
 
     /**
@@ -56,7 +72,7 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
      * @param items List of items to be added to the adapter.
      */
     public void setItems(@NonNull final List<T> items) {
-
+        modCountUITest++;
         this.items.clear();
         this.items.addAll(items);
         notifyDataSetChanged();
