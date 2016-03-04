@@ -320,6 +320,6 @@ public class ConvertUtils {
                 countries.put(iso, l.getDisplayCountry());
             }
         }
-        return countries.get(countryCode);
+        return countries.get(countryCode.toUpperCase());
     }
 }
