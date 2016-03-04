@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import butterknife.ButterKnife;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
@@ -27,7 +29,7 @@ public abstract class BaseFragment extends Fragment implements BaseView {
      * Flag to tell the UI tests that an error within the Fragment happened. Has to be set manually,
      * but is automatically cleared when a Fragment is created.
      */
-    public static boolean FLAG_ERROR_HAPPENED = false;
+    public static AtomicBoolean UI_TEST_FLAG_ERROR_HAPPENED = new AtomicBoolean(false);
     /**
      * Internal private objects
      */
@@ -40,7 +42,7 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Reset the error flag:
-        FLAG_ERROR_HAPPENED = false;
+        UI_TEST_FLAG_ERROR_HAPPENED.set(false);
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(getSubFragmentLayoutId(), container, false);
         // Inject fragment views
