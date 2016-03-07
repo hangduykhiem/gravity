@@ -20,11 +20,6 @@ import fi.zalando.core.persistence.mocks.ValidWithoutPrimaryKeyRealmModel;
 import fi.zalando.core.persistence.mocks.WrongPrimaryKeyRealmModel;
 import fi.zalando.core.persistence.mocks.WrongRealmIdRealmModel;
 import io.realm.RealmConfiguration;
-import rx.Observer;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 /**
  * Test class for {@link BaseRealmDAO}
@@ -291,27 +286,6 @@ public class BaseRealmDAOTest extends ApplicationTestCase<Application> {
         // now verify it is expired
         assertTrue(validRealmModelDAO.hasExpired(loadedValidRealmModel, 100, TimeUnit
                 .MILLISECONDS));
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testReloadIfDataChanges() {
-
-        // Mock id
-        String id = "StringId";
-
-        ValidRealmModelDAO validRealmModelDAO = new ValidRealmModelDAO(realmConfiguration,
-                ValidRealmModel.class, EventBus.getDefault());
-        // Clean it first
-        validRealmModelDAO.clean();
-        // add an item
-        validRealmModelDAO.save(new ValidRealmModel(id));
-        // Mock observer
-        Observer mockedObserver = mock(Observer.class);
-        // now load it again
-        validRealmModelDAO.loadById(id).subscribe(mockedObserver);
-        // verify it is loaded
-        verify(mockedObserver).onNext(any(ValidRealmModel.class));
     }
 
     private class WrongRealmIdRealmModelDAO extends BaseRealmDAO<WrongRealmIdRealmModel> {
