@@ -76,6 +76,8 @@ public class BaseRealmDAOTest extends ApplicationTestCase<Application> {
         ValidWithoutPrimaryKeyRealmModelDAO validWithoutPrimaryKeyRealmModelDAO = new
                 ValidWithoutPrimaryKeyRealmModelDAO(realmConfiguration,
                 ValidWithoutPrimaryKeyRealmModel.class, EventBus.getDefault());
+        // Clean it first
+        validWithoutPrimaryKeyRealmModelDAO.clean();
         // should be empty
         assertTrue(validWithoutPrimaryKeyRealmModelDAO.isEmpty());
         // add an item
