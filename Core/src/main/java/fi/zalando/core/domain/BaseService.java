@@ -34,9 +34,12 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
                 .mainThread());
     }
 
+    /**
+     * Executes the cleaning tasks. Override if needed
+     */
     @Override
     public void clean() {
-        // No Operation, override if something to clean is needed
+
     }
 
 }
