@@ -121,7 +121,7 @@ dependencies {
     testCompile "org.powermock:powermock-module-junit4-rule:$POWERMOCK_VERSION"
     testCompile "org.powermock:powermock-api-mockito:$POWERMOCK_VERSION"
     testCompile "org.powermock:powermock-classloading-xstream:$POWERMOCK_VERSION"
-
+    // add instrumentation test support
     androidTestCompile "com.android.support.test:runner:$SUPPORT_TEST_RUNNER_VERSION"
     androidTestCompile "com.android.support.test:rules:$SUPPORT_TEST_RUNNER_VERSION"
 }
