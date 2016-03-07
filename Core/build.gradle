@@ -110,6 +110,7 @@ dependencies {
     final ROBOLECTRIC_VERSION = "3.0"
     final MOCKITO_VERSION = "1.10.19"
     final POWERMOCK_VERSION = "1.6.2"
+    final SUPPORT_TEST_RUNNER_VERSION = "0.4.1"
 
     // Add test dependencies
     testCompile "junit:junit:$JUNIT_VERSION"
@@ -121,4 +122,6 @@ dependencies {
     testCompile "org.powermock:powermock-api-mockito:$POWERMOCK_VERSION"
     testCompile "org.powermock:powermock-classloading-xstream:$POWERMOCK_VERSION"
 
+    androidTestCompile "com.android.support.test:runner:$SUPPORT_TEST_RUNNER_VERSION"
+    androidTestCompile "com.android.support.test:rules:$SUPPORT_TEST_RUNNER_VERSION"
 }
