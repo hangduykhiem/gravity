@@ -16,6 +16,14 @@
 
 # This is the minimum version number required.
 # Update this, if you use features of a newer version
+
+# Usage examples:
+# fastlane --verbose --env ci test build_url:$BUILD_URL build_number:$BUILD_NUMBER adb:$ADB_PATH
+# Runs test action for CI environment, with injected build_url from jenkins providing also the ADB path
+#
+# fastlane --verbose --env ci instrumentationtest build_url:$BUILD_URL build_number:$BUILD_NUMBER adb:$ADB_PATH
+# Runs instrumentation tests action for CI environment, with injected build_url from jenkins providing also the ADB path
+
 fastlane_version "1.64.0"
 
 default_platform :android
@@ -51,27 +59,31 @@ platform :android do
 
   end
 
-  # You can define as many lanes as you want
-
   after_all do |lane, options|
 
-    if options[:type] === "test"
+    if lane === "test"
         hipchat(from: "MsJenkins", message: $environment + ": Android core library successfully Unit Tested!", custom_color: "yellow" , channel: "Fleek%20Android", success: true)
     end
 
-    if options[:type] === "instrumentationtest"
+    if lane === "instrumentationtest"
+
+        $build_number = options[:build_number]
+
         hipchat(from: "MsJenkins", message: $environment + ": Android core library successfully Tested!", channel: "Fleek%20Android", success: true)
+        # TODO Add tag to git
+
+        say "Android Core Library `#{$environment}` Build #{$build_number} Successful"
     end
 
   end
 
   error do |lane, exception, options|
 
-    if options[:type] === "test"
+    if lane === "test"
         hipchat(from: "MsJenkins", message_format:"html", message: $environment + ": Android core unit test failed... WEAR THE HAT! <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
     end
 
-    if options[:type] === "instrumentationtest"
+    if lane === "instrumentationtest"
        hipchat(from: "MsJenkins", message_format:'html', message: $environment + ": Android core instrumentation test failed... <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
     end
 
