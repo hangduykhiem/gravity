@@ -59,11 +59,6 @@ platform :android do
 
   end
 
-  lane :testest do |lane|
-
-
-  end
-
   after_all do |lane, options|
 
     $build_number = options[:build_number]
@@ -83,6 +78,7 @@ platform :android do
 
         # Say built was successful
         say "Android Core Library `#{$environment}` Build #{$build_number} Successful"
+
     end
 
   end
