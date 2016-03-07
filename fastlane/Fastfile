@@ -59,19 +59,29 @@ platform :android do
 
   end
 
+  lane :testest do |lane|
+
+
+  end
+
   after_all do |lane, options|
 
-    if lane === "test"
-        hipchat(from: "MsJenkins", message: $environment + ": Android core library successfully Unit Tested!", custom_color: "yellow" , channel: "Fleek%20Android", success: true)
+    $build_number = options[:build_number]
+
+    if lane.to_s == "test"
+        hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core library successfully Unit Tested!", custom_color: "yellow" , channel: "Fleek%20Android", success: true)
     end
 
-    if lane === "instrumentationtest"
+    if lane.to_s == "instrumentationtest"
 
-        $build_number = options[:build_number]
+        # Send message to hipchat
+        hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core library successfully Tested!", channel: "Fleek%20Android", success: true)
 
-        hipchat(from: "MsJenkins", message: $environment + ": Android core library successfully Tested!", channel: "Fleek%20Android", success: true)
-        # TODO Add tag to git
+        # Adds tag to git
+        add_git_tag(tag: "#{$environment}-#{$build_number}")
+        push_git_tags # push tag
 
+        # Say built was successful
         say "Android Core Library `#{$environment}` Build #{$build_number} Successful"
     end
 
@@ -79,11 +89,11 @@ platform :android do
 
   error do |lane, exception, options|
 
-    if lane === "test"
+    if lane.to_s == "test"
         hipchat(from: "MsJenkins", message_format:"html", message: $environment + ": Android core unit test failed... WEAR THE HAT! <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
     end
 
-    if lane === "instrumentationtest"
+    if lane.to_s == "instrumentationtest"
        hipchat(from: "MsJenkins", message_format:'html', message: $environment + ": Android core instrumentation test failed... <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
     end
 
