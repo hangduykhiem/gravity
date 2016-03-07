@@ -93,6 +93,8 @@ public class BaseRealmDAOTest extends ApplicationTestCase<Application> {
 
         ValidRealmModelDAO validRealmModelDAO = new ValidRealmModelDAO(realmConfiguration,
                 ValidRealmModel.class, EventBus.getDefault());
+        // Clean it first
+        validRealmModelDAO.clean();
         // Just created, should be empty
         assertTrue(validRealmModelDAO.isEmpty());
         // add an item
