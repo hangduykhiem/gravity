@@ -41,9 +41,6 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> implements 
     private final EventBus eventBus;
     private final RealmEvent<T> defaultRealmEvent;
 
-    // Keep a cached observable at least for requests when all items are required
-    private Observable<List<T>> cachedAllLoadedItems;
-
     /**
      * Constructor that provides the {@link Realm} database
      */
@@ -65,8 +62,6 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> implements 
     public void clean() {
 
         clear(true);
-        // Remove the cached observable
-        cachedAllLoadedItems = null;
     }
 
     /**
@@ -206,41 +201,36 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> implements 
      */
     public Observable<List<T>> loadAll() {
 
-        if (cachedAllLoadedItems == null) {
+        // When this was implemented, realm 0.87 was not closing automatically if using their
+        // built-in observables when unsubscribing observable
+        return Observable.create(new Observable.OnSubscribe<List<T>>() {
 
-            // When this was implemented, realm 0.87 was not closing automatically if using their
-            // built-in observables when unsubscribing observable
-            cachedAllLoadedItems = Observable.create(new Observable.OnSubscribe<List<T>>() {
+            private Subscriber<? super List<T>> subscriber;
 
-                private Subscriber<? super List<T>> subscriber;
+            @Override
+            public void call(Subscriber<? super List<T>> subscriber) {
 
-                @Override
-                public void call(Subscriber<? super List<T>> subscriber) {
+                this.subscriber = subscriber;
 
-                    this.subscriber = subscriber;
+                // Register an event bus so we will get a message
+                // when there is an update on the table
+                Object objectToRegister = this;
+                eventBus.register(objectToRegister);
+                subscriber.add(Subscriptions.create(() ->
+                        eventBus.unregister(objectToRegister)));
 
-                    // Register an event bus so we will get a message
-                    // when there is an update on the table
-                    Object objectToRegister = this;
-                    eventBus.register(objectToRegister);
-                    subscriber.add(Subscriptions.create(() ->
-                            eventBus.unregister(objectToRegister)));
+                subscriber.onNext(getAll());
+            }
 
-                    subscriber.onNext(getAll());
-                }
+            @Subscribe
+            @SuppressWarnings("unused")
+            public void onUpdatedEvent(RealmEvent<T> realmEvent) {
 
-                @Subscribe
-                @SuppressWarnings("unused")
-                public void onUpdatedEvent(RealmEvent<T> realmEvent) {
+                Timber.d("Event received: " + realmEvent);
+                subscriber.onNext(getAll());
+            }
 
-                    Timber.d("Event received: " + realmEvent);
-                    subscriber.onNext(getAll());
-                }
-
-            }).cache();
-        }
-
-        return cachedAllLoadedItems;
+        });
     }
 
     /**
