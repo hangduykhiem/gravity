@@ -2,11 +2,15 @@ package fi.zalando.core.helper;
 
 import android.support.annotation.NonNull;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import fi.zalando.core.utils.Preconditions;
+import timber.log.Timber;
 
 /**
  * Class responsible of cleaning objects
@@ -16,6 +20,7 @@ import fi.zalando.core.utils.Preconditions;
 public class CleaningHelper {
 
     private final List<Cleanable> cleanables;
+    private static EventBus eventBus = EventBus.getDefault();
 
     /**
      * Interface that defines methods that classes that require some cleaning tasks need to
@@ -36,6 +41,8 @@ public class CleaningHelper {
     public CleaningHelper() {
 
         cleanables = new ArrayList<>();
+
+        initEventBus();
     }
 
     /**
@@ -48,6 +55,18 @@ public class CleaningHelper {
 
         cleanables = new ArrayList<>();
         addCleanables(cleanableObjects);
+
+        initEventBus();
+    }
+
+    /**
+     * Initialises event bus instance to listen for global cleaning events
+     */
+    private void initEventBus() {
+
+        if (!eventBus.isRegistered(this)) {
+            eventBus.register(this);
+        }
     }
 
     /**
@@ -69,6 +88,29 @@ public class CleaningHelper {
         for (Cleanable cleanable : cleanables) {
             cleanable.clean();
         }
+    }
+
+    @Subscribe
+    @SuppressWarnings("unused")
+    public void onForceCleanEvent(CleaningEvent cleaningEvent) {
+
+        Timber.d("Force clean event received");
+        clean();
+    }
+
+    /**
+     * Forces to clean all registered {@link Cleanable}s of the app
+     */
+    public static void forceClean() {
+
+        eventBus.post(new CleaningEvent());
+    }
+
+    /**
+     * Cleaning event class
+     */
+    private static class CleaningEvent {
+
     }
 
 }
