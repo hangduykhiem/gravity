@@ -310,20 +310,10 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> implements 
     }
 
     /**
-     * Replaces the {@link T} item stored in the DAO with the given one
-     *
-     * @param modelToReplace {@link T} models to store replacing the current one
-     */
-    public void replace(T modelToReplace) {
-
-        clear(false);
-        save(modelToReplace);
-    }
-
-    /**
      * Saves (create or update) the given {@link T} model in the persistent storage. If the purpose
      * is to update the model, be sure that the {@link PrimaryKey} annotation is present in the
-     * given model. {@link PrimaryKey} annotation is used to identify the model.
+     * given ms in the {@link
+     * Iterable}odel. {@link PrimaryKey} annotation is used to identify the model.
      *
      * @param modelToSave {@link T} model to save
      */
