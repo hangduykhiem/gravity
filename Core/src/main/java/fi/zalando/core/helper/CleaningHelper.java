@@ -20,7 +20,7 @@ import timber.log.Timber;
 public class CleaningHelper {
 
     private final List<Cleanable> cleanables;
-    private static EventBus eventBus = EventBus.getDefault();
+    private static EventBus sEventBus;
 
     /**
      * Interface that defines methods that classes that require some cleaning tasks need to
@@ -37,12 +37,14 @@ public class CleaningHelper {
 
     /**
      * Constructor
+     *
+     * @param eventBus {@link EventBus} instance
      */
-    public CleaningHelper() {
+    public CleaningHelper(EventBus eventBus) {
 
         cleanables = new ArrayList<>();
 
-        initEventBus();
+        initEventBus(eventBus);
     }
 
     /**
@@ -51,21 +53,29 @@ public class CleaningHelper {
      * @param cleanableObjects {@link Cleanable} array that adds the cleanable directly to the
      *                         helper
      */
-    public CleaningHelper(@NonNull Cleanable... cleanableObjects) {
+    public CleaningHelper(EventBus eventBus, @NonNull Cleanable... cleanableObjects) {
 
         cleanables = new ArrayList<>();
         addCleanables(cleanableObjects);
 
-        initEventBus();
+        initEventBus(eventBus);
     }
 
     /**
      * Initialises event bus instance to listen for global cleaning events
+     *
+     * @param eventBus {@link EventBus} instance to initialise
      */
-    private void initEventBus() {
+    private void initEventBus(EventBus eventBus) {
 
-        if (!eventBus.isRegistered(this)) {
-            eventBus.register(this);
+        // First, unregister previous instance if exists
+        if (sEventBus != null && sEventBus.isRegistered(this)) {
+            sEventBus.unregister(this);
+        }
+
+        sEventBus = eventBus;
+        if (!sEventBus.isRegistered(this)) {
+            sEventBus.register(this);
         }
     }
 
@@ -103,7 +113,7 @@ public class CleaningHelper {
      */
     public static void forceClean() {
 
-        eventBus.post(new CleaningEvent());
+        sEventBus.post(new CleaningEvent());
     }
 
     /**

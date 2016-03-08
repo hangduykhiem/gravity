@@ -1,5 +1,6 @@
 package fi.zalando.core.helper;
 
+import org.greenrobot.eventbus.EventBus;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -18,6 +19,8 @@ public class CleaningHelperTest {
     public CleaningHelper.Cleanable cleanable1;
     @Mock
     public CleaningHelper.Cleanable cleanable2;
+    @Mock
+    public EventBus eventBus;
 
     private CleaningHelper cleaningHelper;
 
@@ -30,7 +33,7 @@ public class CleaningHelperTest {
         cleanables[0] = cleanable1;
         cleanables[1] = cleanable2;
 
-        cleaningHelper = new CleaningHelper();
+        cleaningHelper = new CleaningHelper(eventBus);
         cleaningHelper.addCleanables(cleanables);
     }
 
