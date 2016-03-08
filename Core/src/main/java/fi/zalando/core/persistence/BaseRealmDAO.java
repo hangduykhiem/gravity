@@ -417,12 +417,14 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> implements 
     private void checkCorrectModel() {
 
         Realm realm = getRealmInstance();
-        // Check that the type contains a valid primary key, launch exception if not
-        checkCorrectPrimaryKey(realm);
-        // Check that the primary key type is a number
-        Preconditions.checkArgument(getPrimaryKeyType(realm).equals(RealmFieldType.STRING) ||
-                getPrimaryKeyType(realm).equals(RealmFieldType.INTEGER), String.format("%s does " +
-                "not have a String or Long as primary key", clazz.getSimpleName()));
+        if (hasPrimaryKey(realm)) {
+            // Check that the type contains a valid primary key, launch exception if not
+            checkCorrectPrimaryKey(realm);
+            // Check that the primary key type is a number
+            Preconditions.checkArgument(getPrimaryKeyType(realm).equals(RealmFieldType.STRING) ||
+                    getPrimaryKeyType(realm).equals(RealmFieldType.INTEGER), String.format("%s " +
+                    "does not have a String or Long as primary key", clazz.getSimpleName()));
+        }
         closeRealm(realm);
     }
 
@@ -431,15 +433,12 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> implements 
      */
     private void checkCorrectPrimaryKey(Realm realm) {
 
-        // If primary key is provided check it is valid
-        if (hasPrimaryKey(realm)) {
-            // Check that the type contains a valid primary key
-            Preconditions.checkState(hasValidPrimaryKeyType(realm), String.format("%s class " +
-                    "@PrimaryKey type is not supported", clazz.getSimpleName()));
-            // Check that it contains a @RealmId annotation
-            Preconditions.checkState(hasRealmId(), String.format("%s class does not " +
-                    "have a @RealmId", clazz.getSimpleName()));
-        }
+        // Check that the type contains a valid primary key
+        Preconditions.checkState(hasValidPrimaryKeyType(realm), String.format("%s class " +
+                "@PrimaryKey type is not supported", clazz.getSimpleName()));
+        // Check that it contains a @RealmId annotation
+        Preconditions.checkState(hasRealmId(), String.format("%s class does not " +
+                "have a @RealmId", clazz.getSimpleName()));
     }
 
     /**
