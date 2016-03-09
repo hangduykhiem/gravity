@@ -51,10 +51,12 @@ public abstract class BaseRepository {
 
                             if (++retryCount < maxRetries) {
 
+                                // apply the exponential backoff
+                                retryDelayMillis *= retryCount;
+
                                 // When this Observable calls onNext, the original
                                 // Observable will be retried (i.e. re-subscribed).
-                                return Observable.timer(retryCount * retryDelayMillis, TimeUnit
-                                        .MILLISECONDS);
+                                return Observable.timer(retryDelayMillis, TimeUnit.MILLISECONDS);
                             }
 
                             // Max retries hit. Just pass the error along.
