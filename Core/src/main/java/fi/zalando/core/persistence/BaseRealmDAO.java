@@ -323,8 +323,7 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> implements 
     /**
      * Saves (create or update) the given {@link T} model in the persistent storage. If the purpose
      * is to update the model, be sure that the {@link PrimaryKey} annotation is present in the
-     * given ms in the {@link Iterable} model. {@link PrimaryKey} annotation is used to identify
-     * the model.
+     * given model. {@link PrimaryKey} annotation is used to identify the model.
      *
      * @param modelToSave {@link T} model to save
      */
