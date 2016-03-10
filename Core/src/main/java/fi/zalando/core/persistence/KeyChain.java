@@ -9,7 +9,6 @@ import android.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import fi.zalando.core.utils.SecurityUtils;
 import rx.Observable;
@@ -45,32 +44,6 @@ public class KeyChain {
 
         // switch to an own storage in the persistent storage
         persistentHashTable.switchStorage(KeyChain.class.getName());
-
-        // Check if the keychain has been initialised, it will just add random data to make
-        // reading the items more complicated
-        if (persistentHashTable.isEmpty()) {
-            // Takes some time to create the fake data, doing it in a background thread
-            new Thread(() -> {
-                // Create a map to store about 100 elements to the persistent hash table to make
-                // search of key more difficult to hack
-                Random random = new Random(System.currentTimeMillis());
-                int amountOfItems = random.nextInt(100);
-                try {
-                    for (int i = 0; i <= amountOfItems; i++) {
-                        // Add randomly key encrypts or value encrypts
-                        if (random.nextBoolean()) {
-                            persistentHashTable.put(SecurityUtils.generateRandomKey(),
-                                    SecurityUtils.generateRandomKey());
-                        } else {
-                            persistentHashTable.put(SecurityUtils.toBase64(SecurityUtils
-                                    .encryptKey(SecurityUtils.generateRandomString()),
-                                    BASE64_FLAGS), SecurityUtils.generateRandomKey());
-                        }
-                    }
-                } catch (Exception ignore) {
-                }
-            }).start();
-        }
     }
 
     /**
