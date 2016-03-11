@@ -4,20 +4,19 @@ import android.support.annotation.Nullable;
 
 import fi.zalando.core.data.model.Dateable;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
- * Mock object to test {@link fi.zalando.core.persistence.BaseRealmDAO}
+ * Mock object with wrong primary key
  *
  * Created by jduran on 07/03/16.
  */
 @SuppressWarnings("unused")
-public class ValidWithoutPrimaryKeyRealmModel extends RealmObject implements Dateable {
+public class MockWrongPrimaryKeyRealmModel extends RealmObject implements Dateable {
 
+    @PrimaryKey
+    private short id;
     private long savedDate;
-
-    public ValidWithoutPrimaryKeyRealmModel() {
-
-    }
 
     @Nullable
     public Long getSavedDate() {
@@ -31,4 +30,11 @@ public class ValidWithoutPrimaryKeyRealmModel extends RealmObject implements Dat
         this.savedDate = savedDate;
     }
 
+    public short getId() {
+        return id;
+    }
+
+    public void setId(short id) {
+        this.id = id;
+    }
 }

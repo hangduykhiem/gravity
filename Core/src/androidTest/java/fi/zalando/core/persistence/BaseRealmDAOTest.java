@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import fi.zalando.core.persistence.mocks.ValidRealmModel;
-import fi.zalando.core.persistence.mocks.ValidWithoutPrimaryKeyRealmModel;
-import fi.zalando.core.persistence.mocks.WrongPrimaryKeyRealmModel;
-import fi.zalando.core.persistence.mocks.WrongRealmIdRealmModel;
+import fi.zalando.core.persistence.mocks.MockValidRealmModel;
+import fi.zalando.core.persistence.mocks.MockValidWithoutPrimaryKeyRealmModel;
+import fi.zalando.core.persistence.mocks.MockWrongPrimaryKeyRealmModel;
+import fi.zalando.core.persistence.mocks.MockWrongRealmIdRealmModel;
 import io.realm.RealmConfiguration;
 
 /**
@@ -50,7 +50,7 @@ public class BaseRealmDAOTest extends ApplicationTestCase<Application> {
         // The check is done in the constructor, so WrongPrimaryKeyRealmModelDAO
         // should crash right away
         try {
-            new WrongPrimaryKeyRealmModelDAO(realmConfiguration, WrongPrimaryKeyRealmModel.class,
+            new WrongPrimaryKeyRealmModelDAO(realmConfiguration, MockWrongPrimaryKeyRealmModel.class,
                     EventBus.getDefault());
         } catch (IllegalStateException exception) {
             assertTrue(exception.getMessage().contains("WrongPrimaryKeyRealmModel"));
@@ -63,7 +63,7 @@ public class BaseRealmDAOTest extends ApplicationTestCase<Application> {
         // The check is done in the constructor, so WrongPrimaryKeyRealmModelDAO
         // should crash right away
         try {
-            new WrongRealmIdRealmModelDAO(realmConfiguration, WrongRealmIdRealmModel.class,
+            new WrongRealmIdRealmModelDAO(realmConfiguration, MockWrongRealmIdRealmModel.class,
                     EventBus.getDefault());
         } catch (IllegalStateException exception) {
             assertTrue(exception.getMessage().contains("@RealmId"));
@@ -75,17 +75,17 @@ public class BaseRealmDAOTest extends ApplicationTestCase<Application> {
 
         ValidWithoutPrimaryKeyRealmModelDAO validWithoutPrimaryKeyRealmModelDAO = new
                 ValidWithoutPrimaryKeyRealmModelDAO(realmConfiguration,
-                ValidWithoutPrimaryKeyRealmModel.class, EventBus.getDefault());
+                MockValidWithoutPrimaryKeyRealmModel.class, EventBus.getDefault());
         // Clean it first
         validWithoutPrimaryKeyRealmModelDAO.clean();
         // should be empty
         assertTrue(validWithoutPrimaryKeyRealmModelDAO.isEmpty());
         // add an item
-        validWithoutPrimaryKeyRealmModelDAO.save(new ValidWithoutPrimaryKeyRealmModel());
+        validWithoutPrimaryKeyRealmModelDAO.save(new MockValidWithoutPrimaryKeyRealmModel());
         // check it was inserted
         assertEquals(validWithoutPrimaryKeyRealmModelDAO.count(), 1);
         // add an item
-        validWithoutPrimaryKeyRealmModelDAO.save(new ValidWithoutPrimaryKeyRealmModel());
+        validWithoutPrimaryKeyRealmModelDAO.save(new MockValidWithoutPrimaryKeyRealmModel());
         // check it was inserted
         assertEquals(validWithoutPrimaryKeyRealmModelDAO.count(), 2);
     }
@@ -94,13 +94,13 @@ public class BaseRealmDAOTest extends ApplicationTestCase<Application> {
     public void testIsEmpty() {
 
         ValidRealmModelDAO validRealmModelDAO = new ValidRealmModelDAO(realmConfiguration,
-                ValidRealmModel.class, EventBus.getDefault());
+                MockValidRealmModel.class, EventBus.getDefault());
         // Clean it first
         validRealmModelDAO.clean();
         // Just created, should be empty
         assertTrue(validRealmModelDAO.isEmpty());
         // add an item
-        validRealmModelDAO.save(new ValidRealmModel("StringId"));
+        validRealmModelDAO.save(new MockValidRealmModel("StringId"));
         // now it must have something
         assertFalse(validRealmModelDAO.isEmpty());
     }
@@ -109,13 +109,13 @@ public class BaseRealmDAOTest extends ApplicationTestCase<Application> {
     public void testClean() {
 
         ValidRealmModelDAO validRealmModelDAO = new ValidRealmModelDAO(realmConfiguration,
-                ValidRealmModel.class, EventBus.getDefault());
+                MockValidRealmModel.class, EventBus.getDefault());
         // Clean it first
         validRealmModelDAO.clean();
         // Just created, should be empty
         assertTrue(validRealmModelDAO.isEmpty());
         // add an item
-        validRealmModelDAO.save(new ValidRealmModel("StringId"));
+        validRealmModelDAO.save(new MockValidRealmModel("StringId"));
         // now it must have something
         assertFalse(validRealmModelDAO.isEmpty());
         // now clean it again
@@ -128,13 +128,13 @@ public class BaseRealmDAOTest extends ApplicationTestCase<Application> {
     public void testCount() {
 
         ValidRealmModelDAO validRealmModelDAO = new ValidRealmModelDAO(realmConfiguration,
-                ValidRealmModel.class, EventBus.getDefault());
+                MockValidRealmModel.class, EventBus.getDefault());
         // Clean it first
         validRealmModelDAO.clean();
         // Just created, should be empty
         assertEquals(validRealmModelDAO.count(), 0);
         // add an item
-        validRealmModelDAO.save(new ValidRealmModel("StringId"));
+        validRealmModelDAO.save(new MockValidRealmModel("StringId"));
         // now it must have something
         assertEquals(validRealmModelDAO.count(), 1);
     }
@@ -146,13 +146,13 @@ public class BaseRealmDAOTest extends ApplicationTestCase<Application> {
         String id = "StringId";
 
         ValidRealmModelDAO validRealmModelDAO = new ValidRealmModelDAO(realmConfiguration,
-                ValidRealmModel.class, EventBus.getDefault());
+                MockValidRealmModel.class, EventBus.getDefault());
         // Clean it first
         validRealmModelDAO.clean();
         // Just created, should be empty
         assertEquals(validRealmModelDAO.count(), 0);
         // add an item
-        validRealmModelDAO.save(new ValidRealmModel(id));
+        validRealmModelDAO.save(new MockValidRealmModel(id));
         // now it must have something
         assertEquals(validRealmModelDAO.count(), 1);
         // delete using the created id
@@ -168,19 +168,19 @@ public class BaseRealmDAOTest extends ApplicationTestCase<Application> {
         String id = "StringId";
 
         ValidRealmModelDAO validRealmModelDAO = new ValidRealmModelDAO(realmConfiguration,
-                ValidRealmModel.class, EventBus.getDefault());
+                MockValidRealmModel.class, EventBus.getDefault());
         // Clean it first
         validRealmModelDAO.clean();
         // Just created, should be empty
         assertEquals(validRealmModelDAO.count(), 0);
         // add an item
-        validRealmModelDAO.save(new ValidRealmModel(id));
+        validRealmModelDAO.save(new MockValidRealmModel(id));
         // now it must have something
         assertEquals(validRealmModelDAO.count(), 1);
         // now load it and see that the items is the same
         assertEquals(validRealmModelDAO.loadById(id).toBlocking().first().getId(), id);
         // Test also if we save it again, size should be one since the object has same id
-        validRealmModelDAO.save(new ValidRealmModel(id));
+        validRealmModelDAO.save(new MockValidRealmModel(id));
         // now it must have something
         assertEquals(validRealmModelDAO.count(), 1);
     }
@@ -193,33 +193,33 @@ public class BaseRealmDAOTest extends ApplicationTestCase<Application> {
         String id2 = "StringId2";
 
         ValidRealmModelDAO validRealmModelDAO = new ValidRealmModelDAO(realmConfiguration,
-                ValidRealmModel.class, EventBus.getDefault());
+                MockValidRealmModel.class, EventBus.getDefault());
         // Clean it first
         validRealmModelDAO.clean();
         // Just created, should be empty
         assertEquals(validRealmModelDAO.count(), 0);
         // Create a list to add later the items
-        List<ValidRealmModel> itemsToAdd = new ArrayList<>();
-        itemsToAdd.add(new ValidRealmModel(id));
-        itemsToAdd.add(new ValidRealmModel(id2));
+        List<MockValidRealmModel> itemsToAdd = new ArrayList<>();
+        itemsToAdd.add(new MockValidRealmModel(id));
+        itemsToAdd.add(new MockValidRealmModel(id2));
         // save the items
         validRealmModelDAO.save(itemsToAdd);
         // size must be 2
         assertEquals(validRealmModelDAO.count(), 2);
         // now, add items with same id to see if the size is still two
         for (int i = 0; i < 100; i++) {
-            itemsToAdd.add(new ValidRealmModel(id));
-            itemsToAdd.add(new ValidRealmModel(id2));
+            itemsToAdd.add(new MockValidRealmModel(id));
+            itemsToAdd.add(new MockValidRealmModel(id2));
         }
         // save the items
         validRealmModelDAO.save(itemsToAdd);
         // size still must be 2
         assertEquals(validRealmModelDAO.count(), 2);
         // Load all
-        List<ValidRealmModel> allItems = validRealmModelDAO.loadAll().toBlocking().first();
+        List<MockValidRealmModel> allItems = validRealmModelDAO.loadAll().toBlocking().first();
         // now check that the items are there
-        for (ValidRealmModel validRealmModel : allItems) {
-            assertTrue(validRealmModel.getId().equals(id) || validRealmModel.getId().equals(id2));
+        for (MockValidRealmModel mockValidRealmModel : allItems) {
+            assertTrue(mockValidRealmModel.getId().equals(id) || mockValidRealmModel.getId().equals(id2));
         }
     }
 
@@ -230,28 +230,28 @@ public class BaseRealmDAOTest extends ApplicationTestCase<Application> {
         String id = "StringId";
 
         ValidRealmModelDAO validRealmModelDAO = new ValidRealmModelDAO(realmConfiguration,
-                ValidRealmModel.class, EventBus.getDefault());
+                MockValidRealmModel.class, EventBus.getDefault());
         // Clean it first
         validRealmModelDAO.clean();
         // Just created, should be empty
         assertEquals(validRealmModelDAO.count(), 0);
         // add an item
-        validRealmModelDAO.save(new ValidRealmModel(id));
+        validRealmModelDAO.save(new MockValidRealmModel(id));
         // now it must have something
         assertEquals(validRealmModelDAO.count(), 1);
         // now load it and see that the items is the same
         assertEquals(validRealmModelDAO.loadById(id).toBlocking().first().getId(), id);
         // Test also if we save it again, size should be one since the object has same id
-        validRealmModelDAO.save(new ValidRealmModel(id));
+        validRealmModelDAO.save(new MockValidRealmModel(id));
         // now it must have something
         assertEquals(validRealmModelDAO.count(), 1);
         // Mock more ids
         String anotherId = "StringIdAnother";
         String anotherId2 = "StringIdAnother2";
         // Create a list to replace
-        List<ValidRealmModel> itemsToReplace = new ArrayList<>();
-        itemsToReplace.add(new ValidRealmModel(anotherId));
-        itemsToReplace.add(new ValidRealmModel(anotherId2));
+        List<MockValidRealmModel> itemsToReplace = new ArrayList<>();
+        itemsToReplace.add(new MockValidRealmModel(anotherId));
+        itemsToReplace.add(new MockValidRealmModel(anotherId2));
         // Replace the items
         validRealmModelDAO.replace(itemsToReplace);
         // size should be the same as the list
@@ -259,12 +259,12 @@ public class BaseRealmDAOTest extends ApplicationTestCase<Application> {
         // Check that new ids are there, but not the old one
 
         // Load all
-        List<ValidRealmModel> allItems = validRealmModelDAO.loadAll().toBlocking().first();
+        List<MockValidRealmModel> allItems = validRealmModelDAO.loadAll().toBlocking().first();
         // now check that the items are there
-        for (ValidRealmModel validRealmModel : allItems) {
-            assertTrue(validRealmModel.getId().equals(anotherId) || validRealmModel.getId()
+        for (MockValidRealmModel mockValidRealmModel : allItems) {
+            assertTrue(mockValidRealmModel.getId().equals(anotherId) || mockValidRealmModel.getId()
                     .equals(anotherId2));
-            assertTrue(!validRealmModel.getId().equals(id));
+            assertTrue(!mockValidRealmModel.getId().equals(id));
         }
     }
 
@@ -275,56 +275,56 @@ public class BaseRealmDAOTest extends ApplicationTestCase<Application> {
         String id = "StringId";
 
         ValidRealmModelDAO validRealmModelDAO = new ValidRealmModelDAO(realmConfiguration,
-                ValidRealmModel.class, EventBus.getDefault());
+                MockValidRealmModel.class, EventBus.getDefault());
         // Clean it first
         validRealmModelDAO.clean();
         // add an item
-        validRealmModelDAO.save(new ValidRealmModel(id));
+        validRealmModelDAO.save(new MockValidRealmModel(id));
         // now load it again
-        ValidRealmModel loadedValidRealmModel = validRealmModelDAO.loadById(id).toBlocking()
+        MockValidRealmModel loadedMockValidRealmModel = validRealmModelDAO.loadById(id).toBlocking()
                 .first();
         // now verify it is not expired
-        assertFalse(validRealmModelDAO.hasExpired(loadedValidRealmModel, 1, TimeUnit.DAYS));
+        assertFalse(validRealmModelDAO.hasExpired(loadedMockValidRealmModel, 1, TimeUnit.DAYS));
         // wait for some milliseconds
         SystemClock.sleep(101);
         // now verify it is expired
-        assertTrue(validRealmModelDAO.hasExpired(loadedValidRealmModel, 100, TimeUnit
+        assertTrue(validRealmModelDAO.hasExpired(loadedMockValidRealmModel, 100, TimeUnit
                 .MILLISECONDS));
     }
 
-    private class WrongRealmIdRealmModelDAO extends BaseRealmDAO<WrongRealmIdRealmModel> {
+    private class WrongRealmIdRealmModelDAO extends BaseRealmDAO<MockWrongRealmIdRealmModel> {
 
         protected WrongRealmIdRealmModelDAO(RealmConfiguration realmConfiguration,
-                                            Class<WrongRealmIdRealmModel> clazz, EventBus
+                                            Class<MockWrongRealmIdRealmModel> clazz, EventBus
                                                     eventBus) {
             super(realmConfiguration, clazz, eventBus);
         }
     }
 
-    private class WrongPrimaryKeyRealmModelDAO extends BaseRealmDAO<WrongPrimaryKeyRealmModel> {
+    private class WrongPrimaryKeyRealmModelDAO extends BaseRealmDAO<MockWrongPrimaryKeyRealmModel> {
 
         protected WrongPrimaryKeyRealmModelDAO(RealmConfiguration realmConfiguration,
-                                               Class<WrongPrimaryKeyRealmModel> clazz, EventBus
+                                               Class<MockWrongPrimaryKeyRealmModel> clazz, EventBus
                                                        eventBus) {
             super(realmConfiguration, clazz, eventBus);
         }
     }
 
     private class ValidWithoutPrimaryKeyRealmModelDAO extends
-            BaseRealmDAO<ValidWithoutPrimaryKeyRealmModel> {
+            BaseRealmDAO<MockValidWithoutPrimaryKeyRealmModel> {
 
         protected ValidWithoutPrimaryKeyRealmModelDAO(RealmConfiguration realmConfiguration,
-                                                      Class<ValidWithoutPrimaryKeyRealmModel>
+                                                      Class<MockValidWithoutPrimaryKeyRealmModel>
                                                               clazz, EventBus eventBus) {
 
             super(realmConfiguration, clazz, eventBus);
         }
     }
 
-    private class ValidRealmModelDAO extends BaseRealmDAO<ValidRealmModel> {
+    private class ValidRealmModelDAO extends BaseRealmDAO<MockValidRealmModel> {
 
         protected ValidRealmModelDAO(RealmConfiguration realmConfiguration,
-                                     Class<ValidRealmModel> clazz, EventBus eventBus) {
+                                     Class<MockValidRealmModel> clazz, EventBus eventBus) {
 
             super(realmConfiguration, clazz, eventBus);
         }
