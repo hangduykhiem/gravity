@@ -37,7 +37,6 @@ dependencies {
     final BUTTERKNIFE_VERSION = "7.0.1"
     final RXJAVA_VERSION = "1.1.1"
     final RXANDROID_VERSION = "1.1.0"
-    final REALM_VERSION = "0.87.5"
     final EVENT_BUS_VERSION = "3.0.0"
     final RETROLAMBDA_VERSION = "2.1.0"
     final DAGGER_VERSION = "2.0.2"
@@ -69,9 +68,6 @@ dependencies {
     compile("io.reactivex:rxandroid:$RXANDROID_VERSION") {
         exclude module: "rxjava"
     }
-
-    // Realm database
-    compile "io.realm:realm-android:$REALM_VERSION"
 
     // Event bus broadcasting messages
     compile "org.greenrobot:eventbus:$EVENT_BUS_VERSION"
@@ -110,7 +106,6 @@ dependencies {
     final ROBOLECTRIC_VERSION = "3.0"
     final MOCKITO_VERSION = "1.10.19"
     final POWERMOCK_VERSION = "1.6.2"
-    final SUPPORT_TEST_RUNNER_VERSION = "0.4.1"
 
     // Add test dependencies
     testCompile "junit:junit:$JUNIT_VERSION"
@@ -121,7 +116,4 @@ dependencies {
     testCompile "org.powermock:powermock-module-junit4-rule:$POWERMOCK_VERSION"
     testCompile "org.powermock:powermock-api-mockito:$POWERMOCK_VERSION"
     testCompile "org.powermock:powermock-classloading-xstream:$POWERMOCK_VERSION"
-    // add instrumentation test support
-    androidTestCompile "com.android.support.test:runner:$SUPPORT_TEST_RUNNER_VERSION"
-    androidTestCompile "com.android.support.test:rules:$SUPPORT_TEST_RUNNER_VERSION"
 }
