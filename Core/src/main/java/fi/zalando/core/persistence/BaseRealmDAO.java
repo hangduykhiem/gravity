@@ -408,7 +408,7 @@ public abstract class BaseRealmDAO<T extends RealmObject & Dateable> implements 
     public final boolean hasExpired(T modelToCheck, long liveTime, TimeUnit timeUnit) {
 
         // If saved date is 0L, means that it has never been saved. Fresh data, so non expired
-        return modelToCheck.getSavedDate() != null && modelToCheck.getSavedDate() + timeUnit
+        return modelToCheck.getSavedDate() != 0L && modelToCheck.getSavedDate() + timeUnit
                 .toMillis(liveTime) <= System.currentTimeMillis();
     }
 

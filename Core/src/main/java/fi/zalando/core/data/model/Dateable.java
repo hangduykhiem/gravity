@@ -1,7 +1,5 @@
 package fi.zalando.core.data.model;
 
-import android.support.annotation.Nullable;
-
 /**
  * Interface to define methods of a model that can expire.
  *
@@ -15,8 +13,7 @@ public interface Dateable {
      *
      * @return {@link Long} value with the time in milliseconds since epoch
      */
-    @Nullable
-    public Long getSavedDate();
+    public long getSavedDate();
 
     /**
      * Sets the time in milliseconds since epoch of when the model was saved
