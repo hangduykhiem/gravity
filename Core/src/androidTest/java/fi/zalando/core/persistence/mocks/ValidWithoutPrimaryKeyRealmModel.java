@@ -1,7 +1,5 @@
 package fi.zalando.core.persistence.mocks;
 
-import android.support.annotation.Nullable;
-
 import fi.zalando.core.data.model.Dateable;
 import io.realm.RealmObject;
 
@@ -19,8 +17,8 @@ public class ValidWithoutPrimaryKeyRealmModel extends RealmObject implements Dat
 
     }
 
-    @Nullable
-    public Long getSavedDate() {
+    @Override
+    public long getSavedDate() {
 
         return savedDate;
     }
