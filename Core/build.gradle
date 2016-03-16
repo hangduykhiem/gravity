@@ -42,7 +42,7 @@ dependencies {
     final DAGGER_VERSION = "2.0.2"
     final ICEPICK_VERSION = "3.2.0"
     final TIMBER_VERSION = "4.1.0"
-    final RETROFIT_VERSION = "2.0.0-beta4"
+    final RETROFIT_VERSION = "2.0.0"
     final OKHTTP_VERSION = "3.2.0"
 
 
