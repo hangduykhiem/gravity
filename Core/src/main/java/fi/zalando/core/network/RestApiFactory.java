@@ -18,6 +18,7 @@ import retrofit2.CallAdapter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
@@ -51,8 +52,9 @@ public final class RestApiFactory {
         Timber.d("getRestApi: " + baseUrl + " interface: " + restInterface.getName() + " " +
                 "gson: " + gson);
 
-        return setupRetrofit(baseUrl, interceptors, RxJavaCallAdapterFactory.create(), gson !=
-                null ? gson : new GsonBuilder().create(), logs).create(restInterface);
+        return setupRetrofit(baseUrl, interceptors, RxJavaCallAdapterFactory.createWithScheduler
+                (Schedulers.io()), gson != null ? gson : new GsonBuilder().create(), logs).create
+                (restInterface);
     }
 
     /**
@@ -68,8 +70,8 @@ public final class RestApiFactory {
 
         Timber.d("getRestApi: " + baseUrl + " interface: " + restInterface.getName());
 
-        return setupRetrofit(baseUrl, null, RxJavaCallAdapterFactory.create(), new GsonBuilder()
-                .create(), logs).create(restInterface);
+        return setupRetrofit(baseUrl, null, RxJavaCallAdapterFactory.createWithScheduler
+                (Schedulers.io()), new GsonBuilder().create(), logs).create(restInterface);
     }
 
     /**
