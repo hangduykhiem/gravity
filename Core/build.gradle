@@ -39,9 +39,9 @@ dependencies {
     final RXANDROID_VERSION = "1.1.0"
     final EVENT_BUS_VERSION = "3.0.0"
     final RETROLAMBDA_VERSION = "2.1.0"
-    final DAGGER_VERSION = "2.0.2"
+    final DAGGER_VERSION = "2.1"
     final ICEPICK_VERSION = "3.2.0"
-    final TIMBER_VERSION = "4.1.0"
+    final TIMBER_VERSION = "4.1.1"
     final RETROFIT_VERSION = "2.0.0"
     final OKHTTP_VERSION = "3.2.0"
 
