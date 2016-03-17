@@ -66,6 +66,18 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
     }
 
     /**
+     * Adds the given items and updates the UI with animation.
+     * @param itemsToAdd Items to add
+     */
+    public void addItems(List<T> itemsToAdd) {
+        modCountUITest++;
+        int count = itemsToAdd.size();
+        int originalSize = items.size();
+        items.addAll(itemsToAdd);
+        notifyItemRangeInserted(originalSize, count);
+    }
+
+    /**
      * Clears and updates the adapters item list with the given items, and calls
      * notifyDataSetChanged to refresh the UI.
      *
