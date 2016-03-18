@@ -57,6 +57,9 @@ public class Patterns {
                     + "\\-\\.\\+\\!\\*\\'\\(\\)\\,\\_])|(?:\\%[a-fA-F0-9]{2}))*)?"
                     + "(?:\\b|$)"); // and finally, a word boundary or end of
 
+    /**
+     * Regular expression pattern to match email Addresses
+     */
     public static final Pattern EMAIL_ADDRESS
             = Pattern.compile(
             "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
