@@ -5,12 +5,12 @@ import com.google.gson.GsonBuilder;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Patterns;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import fi.zalando.core.utils.Preconditions;
+import fi.zalando.core.utils.ValidationUtils;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -87,7 +87,7 @@ public final class RestApiFactory {
             interceptors, @NonNull CallAdapter.Factory callAdapterFactory, @NonNull Gson
                                                   gsonConverterFactory, boolean logs) {
 
-        Preconditions.checkArgument(Patterns.WEB_URL.matcher(url).matches(), "Base URL is invalid");
+        Preconditions.checkArgument(ValidationUtils.isValidURL(url), "Base URL is invalid");
         Timber.d("setupRetrofit: " + url);
 
         // Add the interceptors if they exist
