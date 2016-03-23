@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import fi.zalando.core.utils.EqualUtils;
+
 /**
  * Generic Tree structured class
  *
@@ -28,36 +30,90 @@ public class Tree<T> {
         return root;
     }
 
-    private static class Node<T> {
-
-        private final T data;
-        @Nullable
-        private final Node<T> parent;
-        private final List<Node<T>> children;
-
-        private Node(T data, @Nullable Node<T> parent, List<Node<T>> children) {
-
-            this.data = data;
-            this.parent = parent;
-            this.children = children != null ? children : new ArrayList<>();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
-
-        public T getData() {
-            return data;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
         }
+        Tree<?> tree = (Tree<?>) o;
+        return EqualUtils.areEqual(root, tree.root);
+    }
 
-        @Nullable
-        public Node<T> getParent() {
-            return parent;
+    @Override
+    public int hashCode() {
+        return root.hashCode();
+    }
+}
+
+/**
+ * Class that holds the nodes of the trees.
+ *
+ * @param <T> {@link T} generic type
+ */
+class Node<T> {
+
+    private final T data;
+    @Nullable
+    private final Node<T> parent;
+    private final List<Node<T>> children;
+
+    /**
+     * Constructor
+     *
+     * @param data     {@link T} with the data
+     * @param parent   {@link Node} parent, null if is root
+     * @param children {@link List} with all the {@link Node} children
+     */
+    protected Node(T data, @Nullable Node<T> parent, List<Node<T>> children) {
+
+        this.data = data;
+        this.parent = parent;
+        this.children = children != null ? children : new ArrayList<>();
+    }
+
+    public void addChildren(Node<T> childrenNode) {
+        children.add(childrenNode);
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    @Nullable
+    public Node<T> getParent() {
+        return parent;
+    }
+
+    public List<Node<T>> getChildren() {
+        return children;
+    }
+
+    public boolean isALeaf() {
+        return children.isEmpty();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
-
-        public List<Node<T>> getChildren() {
-            return children;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
         }
+        Node<?> node = (Node<?>) o;
+        return EqualUtils.areEqual(data, node.data) &&
+                EqualUtils.areEqual(parent, node.parent) &&
+                EqualUtils.areEqual(children, node.children);
+    }
 
-        public void addChildren(Node<T> childrenNode) {
-
-            children.add(childrenNode);
-        }
+    @Override
+    public int hashCode() {
+        int result = data.hashCode();
+        result = 31 * result + (parent != null ? parent.hashCode() : 0);
+        result = 31 * result + children.hashCode();
+        return result;
     }
 }
