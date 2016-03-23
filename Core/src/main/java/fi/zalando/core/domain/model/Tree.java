@@ -23,7 +23,7 @@ public class Tree<T> {
      */
     public Tree(T rootData) {
 
-        root = new Node<>(rootData, null, new ArrayList<>());
+        root = new Node<>(rootData, new ArrayList<>());
     }
 
     public Node<T> getRoot() {
@@ -46,74 +46,84 @@ public class Tree<T> {
     public int hashCode() {
         return root.hashCode();
     }
-}
-
-/**
- * Class that holds the nodes of the trees.
- *
- * @param <T> {@link T} generic type
- */
-class Node<T> {
-
-    private final T data;
-    @Nullable
-    private final Node<T> parent;
-    private final List<Node<T>> children;
 
     /**
-     * Constructor
+     * Class that holds the nodes of the trees.
      *
-     * @param data     {@link T} with the data
-     * @param parent   {@link Node} parent, null if is root
-     * @param children {@link List} with all the {@link Node} children
+     * @param <T> {@link T} generic type
      */
-    protected Node(T data, @Nullable Node<T> parent, List<Node<T>> children) {
+    public static class Node<T> {
 
-        this.data = data;
-        this.parent = parent;
-        this.children = children != null ? children : new ArrayList<>();
-    }
+        private final T data;
+        @Nullable
+        // Transient needed in case it is serialised as string,
+        // serializer does not end in an endless loop
+        private transient Node<T> parent;
+        private final List<Node<T>> children;
 
-    public void addChildren(Node<T> childrenNode) {
-        children.add(childrenNode);
-    }
+        /**
+         * Constructor
+         *
+         * @param data     {@link T} with the data
+         * @param children {@link List} with all the {@link Node} children
+         */
+        public Node(T data, @Nullable List<Node<T>> children) {
 
-    public T getData() {
-        return data;
-    }
-
-    @Nullable
-    public Node<T> getParent() {
-        return parent;
-    }
-
-    public List<Node<T>> getChildren() {
-        return children;
-    }
-
-    public boolean isALeaf() {
-        return children.isEmpty();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
+            this.data = data;
+            this.children = children != null ? children : new ArrayList<>();
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Node<?> node = (Node<?>) o;
-        return EqualUtils.areEqual(data, node.data) &&
-                EqualUtils.areEqual(parent, node.parent) &&
-                EqualUtils.areEqual(children, node.children);
-    }
 
-    @Override
-    public int hashCode() {
-        int result = data.hashCode();
-        result = 31 * result + (parent != null ? parent.hashCode() : 0);
-        result = 31 * result + children.hashCode();
-        return result;
+        public void addChildren(Node<T> childrenNode) {
+
+            // Set current node as parent of the new node before adding to the children list
+            childrenNode.setParent(this);
+            children.add(childrenNode);
+        }
+
+        public T getData() {
+            return data;
+        }
+
+        @Nullable
+        public Node<T> getParent() {
+            return parent;
+        }
+
+        public void setParent(@Nullable Node<T> parent) {
+            this.parent = parent;
+        }
+
+        public List<Node<T>> getChildren() {
+            return children;
+        }
+
+        public boolean isALeaf() {
+            return children.isEmpty();
+        }
+
+        // NOTE: Don't use parent for equality/hashcode comparison, or the tree will end in an
+        // endless loop!
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            Node<?> node = (Node<?>) o;
+            return EqualUtils.areEqual(data, node.data) &&
+//                    EqualUtils.areEqual(parent, node.parent) &&
+                    EqualUtils.areEqual(children, node.children);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = data.hashCode();
+//            result = 31 * result + (parent != null ? parent.hashCode() : 0);
+            result = 31 * result + children.hashCode();
+            return result;
+        }
     }
 }
