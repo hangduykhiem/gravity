@@ -26,6 +26,10 @@ public class Tree<T> {
         root = new Node<>(rootData, new ArrayList<>());
     }
 
+    public Tree(Node<T> root){
+        this.root = root;
+    }
+
     public Node<T> getRoot() {
         return root;
     }
