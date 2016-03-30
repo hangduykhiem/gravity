@@ -26,6 +26,11 @@ public class Tree<T> {
         root = new Node<>(rootData, new ArrayList<>());
     }
 
+    /**
+     * Constructor that start the tree with a pre-made root
+     *
+     * @param root {@link Node<T>} pre-made root
+     */
     public Tree(Node<T> root){
         this.root = root;
     }
