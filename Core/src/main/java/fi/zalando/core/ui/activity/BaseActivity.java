@@ -1,6 +1,7 @@
 package fi.zalando.core.ui.activity;
 
 import android.os.Bundle;
+import android.support.annotation.AnimRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -190,6 +191,40 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
                 } else {
                     ft.setCustomAnimations(R.anim.fragment_alphain, R.anim.fragment_alphaout);
                 }
+            }
+
+            ft.replace(fragmentContainerId, newFragment, ((Object) newFragment).getClass()
+                    .getSimpleName());
+            if (addToBackStack) {
+                ft.addToBackStack(((Object) newFragment).getClass().getSimpleName());
+            }
+            ft.commit();
+        }
+    }
+
+    /**
+     * Replaces the fragment container with the given fragment
+     *
+     * @param newFragment         {@link Fragment} that will replace the previous one
+     * @param fragmentContainerId layout id to place the fragment
+     * @param addToBackStack      True if wanted to add to BackStack false otherwise
+     * @param enterAnimation      Entry animation resource id
+     * @param exitAnimation       Exit animation resource id
+     */
+    protected void switchFragment(int fragmentContainerId, Fragment newFragment, boolean
+            addToBackStack, @AnimRes int enterAnimation, @AnimRes int exitAnimation) {
+
+        String tag = ((Object) newFragment).getClass().getSimpleName();
+        // check if the fragment does not exist to add it now to the fragment container
+        if (fragmentManager.findFragmentByTag(tag) == null) {
+
+            final FragmentTransaction ft = fragmentManager.beginTransaction();
+
+            if (addToBackStack) {
+                ft.setCustomAnimations(enterAnimation, exitAnimation, enterAnimation,
+                        exitAnimation);
+            } else {
+                ft.setCustomAnimations(enterAnimation, exitAnimation);
             }
 
             ft.replace(fragmentContainerId, newFragment, ((Object) newFragment).getClass()
