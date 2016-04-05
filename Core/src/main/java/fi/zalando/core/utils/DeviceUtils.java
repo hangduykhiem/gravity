@@ -72,7 +72,7 @@ public class DeviceUtils {
      * @return {@link Point} with the device screen native resolution
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public static Point screenResolution(Context context) {
+    public static Point getScreenResolution(Context context) {
 
         // TargetApi is needed To remove warning about using getRealSize prior to API 17
 
@@ -81,6 +81,16 @@ public class DeviceUtils {
         Point screenResolution = new Point();
         windowManager.getDefaultDisplay().getRealSize(screenResolution);
         return screenResolution;
+    }
+
+    /**
+     * Returns the aspect ratio (screen width / screen height)
+     * @param context {@link Context}
+     * @return aspect ratio
+     */
+    public static float getAspectRatio(Context context) {
+        Point p = getScreenResolution(context);
+        return (float)p.x / (float)p.y;
     }
 
     /**

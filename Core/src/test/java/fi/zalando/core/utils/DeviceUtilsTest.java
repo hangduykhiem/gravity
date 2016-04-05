@@ -122,7 +122,7 @@ public class DeviceUtilsTest {
     @Test
     public void testDeviceScreenResolution() {
 
-        Point testSize = DeviceUtils.screenResolution(RuntimeEnvironment.application);
+        Point testSize = DeviceUtils.getScreenResolution(RuntimeEnvironment.application);
         // Check that is not null
         assertNotNull(testSize);
         // Check that size is actually bigger than 0
