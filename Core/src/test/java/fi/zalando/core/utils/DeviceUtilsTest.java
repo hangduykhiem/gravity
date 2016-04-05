@@ -131,6 +131,14 @@ public class DeviceUtilsTest {
     }
 
     @Test
+    public void testAspectRatio() {
+
+        float aspectRatio = DeviceUtils.getAspectRatio(RuntimeEnvironment.application);
+        // Check that aspect ratio is actually bigger than 0
+        assertTrue(aspectRatio > 0);
+    }
+
+    @Test
     public void testPxToDp() throws Exception {
 
         float testValue = 100f;
