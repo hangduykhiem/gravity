@@ -15,7 +15,6 @@ import butterknife.ButterKnife;
 import dagger.Lazy;
 import fi.zalando.core.R;
 import fi.zalando.core.ui.Navigator;
-import fi.zalando.core.ui.animator.ToolbarAnimator;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
 import fi.zalando.core.utils.UIUtils;
@@ -39,8 +38,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     /**
      * Protected objects
      */
-    @Inject
-    protected Lazy<ToolbarAnimator> toolbarAnimator;
     @Inject
     protected Lazy<Navigator> navigator;
 

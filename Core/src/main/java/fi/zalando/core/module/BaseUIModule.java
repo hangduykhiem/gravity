@@ -3,8 +3,6 @@ package fi.zalando.core.module;
 import dagger.Module;
 import dagger.Provides;
 import fi.zalando.core.domain.helper.SubscriptionHelper;
-import fi.zalando.core.ui.animator.ToolbarAnimator;
-import fi.zalando.core.ui.animator.impl.ToolbarAnimatorImpl;
 import fi.zalando.core.ui.presenter.StubPresenter;
 
 /**
@@ -14,12 +12,6 @@ import fi.zalando.core.ui.presenter.StubPresenter;
  */
 @Module
 public class BaseUIModule {
-
-    @Provides
-    public ToolbarAnimator provideToolbarAnimator() {
-
-        return new ToolbarAnimatorImpl();
-    }
 
     /**
      * Provides a {@link StubPresenter} instance dependency
