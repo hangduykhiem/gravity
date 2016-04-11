@@ -114,4 +114,15 @@ public class DeviceUtils {
     public static float dpToPx(final Context context, final float dp) {
         return dp * context.getResources().getDisplayMetrics().density;
     }
+
+    /**
+     * Convert the given sp amount to pixels.
+     *
+     * @param context Context
+     * @param sp      Sps
+     * @return Converted amount in pixels
+     */
+    public static float spToPx(final Context context, final float sp) {
+        return sp * context.getResources().getDisplayMetrics().scaledDensity;
+    }
 }
