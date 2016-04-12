@@ -120,7 +120,7 @@ public class DeviceUtils {
      *
      * @param context Context
      * @param px      Pixels
-     * @return Converted amount in pixels
+     * @return Converted amount in sp
      */
     public static float pxToSp(final Context context, final float px) {
         return px / context.getResources().getDisplayMetrics().scaledDensity;
