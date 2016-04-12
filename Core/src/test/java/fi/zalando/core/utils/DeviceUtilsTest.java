@@ -161,4 +161,28 @@ public class DeviceUtilsTest {
         // Check that the result is valid:
         assertTrue(result == testValue / density);
     }
+
+    @Test
+    public void testPxToSp() throws Exception {
+
+        float testValue = 100f;
+        float scaledDensity = RuntimeEnvironment.application.getResources().getDisplayMetrics().scaledDensity;
+        // Check that scaledDensity is valid:
+        assertTrue(scaledDensity > 0);
+        float result = DeviceUtils.spToPx(RuntimeEnvironment.application, testValue);
+        // Check that the result is valid:
+        assertTrue(result == testValue * scaledDensity);
+    }
+
+    @Test
+    public void testSpToPx() throws Exception {
+
+        float testValue = 100f;
+        float scaledDensity = RuntimeEnvironment.application.getResources().getDisplayMetrics().scaledDensity;
+        // Check that scaledDensity is valid:
+        assertTrue(scaledDensity > 0);
+        float result = DeviceUtils.pxToSp(RuntimeEnvironment.application, testValue);
+        // Check that the result is valid:
+        assertTrue(result == testValue / scaledDensity);
+    }
 }
