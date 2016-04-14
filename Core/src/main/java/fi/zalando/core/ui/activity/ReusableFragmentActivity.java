@@ -23,7 +23,8 @@ import fi.zalando.core.ui.view.ReusableFragmentActivityView;
 import fi.zalando.core.utils.PlatformUtils;
 import timber.log.Timber;
 
-/*
+/**
+ * An empty, reusable Activity to host Fragments.
  * Created by vraisanen on 14.4.2016.
  */
 public class ReusableFragmentActivity extends BaseActivity implements
