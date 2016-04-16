@@ -73,16 +73,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
      * Lifecycle method
      */
     @Override
-    public void onPause() {
-
-        super.onPause();
-        getPresenter().pause();
-    }
-
-    /**
-     * Lifecycle method
-     */
-    @Override
     protected void onResume() {
 
         super.onResume();
