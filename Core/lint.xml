@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="HardcodedText" severity="error"/>
+    <issue id="UnusedResources" severity="error"/>
+    <issue id="InvalidPackage" severity="ignore"/>
+    <!-- Don't warn about available alpha versions -->
+    <issue id="GradleDependency">
+        <ignore regexp="is available: .*[alpha|beta]"/>
+    </issue>
+</lint>
