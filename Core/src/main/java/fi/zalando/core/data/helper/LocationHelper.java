@@ -11,7 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-import fi.zalando.core.data.model.transformer.LocationDataTransformerFactory;
+import fi.zalando.core.data.entity.transformer.LocationDataTransformerFactory;
 import fi.zalando.core.exception.PermissionSecurityException;
 import fi.zalando.core.exception.ServiceDisabledException;
 import fi.zalando.core.utils.DeviceUtils;
