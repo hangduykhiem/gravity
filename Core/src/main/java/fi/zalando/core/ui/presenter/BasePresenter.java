@@ -45,15 +45,6 @@ public abstract class BasePresenter<T extends BaseView> {
     }
 
     /**
-     * Release the {@link BasePresenter}
-     */
-    @CallSuper
-    public void destroy() {
-
-        subscriptionHelper.unsubscribeAll();
-    }
-
-    /**
      * Initialises the presenter. Linked to Activity onCreate() and Fragment onActivityCreated
      * lifecycle methods
      *
@@ -82,12 +73,6 @@ public abstract class BasePresenter<T extends BaseView> {
     }
 
     /**
-     * Gets called when the Fragment/Activity is paused.
-     */
-    @CallSuper
-    public void pause() {}
-
-    /**
      * Gets a callback when the Fragment/Activity where the presenter is linked appears on the
      * screen
      */
@@ -97,6 +82,15 @@ public abstract class BasePresenter<T extends BaseView> {
         Preconditions.checkState(isViewSet, "Call setView before resuming presenter");
         Preconditions.checkState(isPresenterInitialised, "Call initialise before resuming " +
                 "presenter");
+    }
+
+    /**
+     * Release the {@link BasePresenter}
+     */
+    @CallSuper
+    public void destroy() {
+
+        subscriptionHelper.unsubscribeAll();
     }
 
     /**
