@@ -1,4 +1,4 @@
-package fi.zalando.core.domain.model;
+package fi.zalando.core.domain.entity;
 
 import android.support.annotation.Nullable;
 

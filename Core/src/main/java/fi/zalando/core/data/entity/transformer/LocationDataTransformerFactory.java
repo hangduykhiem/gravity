@@ -1,4 +1,4 @@
-package fi.zalando.core.data.model.transformer;
+package fi.zalando.core.data.entity.transformer;
 
 import com.google.android.gms.maps.model.LatLng;
 

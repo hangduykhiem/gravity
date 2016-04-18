@@ -8,7 +8,7 @@ import android.location.Location;
 import pl.charmas.android.reactivelocation.ReactiveLocationProvider;
 
 import fi.zalando.core.data.helper.LocationHelper;
-import fi.zalando.core.data.model.transformer.LocationDataTransformerFactory;
+import fi.zalando.core.data.entity.transformer.LocationDataTransformerFactory;
 import fi.zalando.core.utils.Preconditions;
 import rx.Observable;
 
