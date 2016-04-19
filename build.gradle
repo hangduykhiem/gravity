@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
 
-        final GRADLE_VERSION = "2.0.0"
+        final GRADLE_VERSION = "2.1.0-beta3"
         final APT_VERSION = "1.8"
         final RETROLAMBDA_VERSION = "3.2.5"
         final LOMBOK_VERSION = "0.2.3.a2"
