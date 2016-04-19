@@ -31,7 +31,7 @@ android {
 dependencies {
 
     // 3rd party library versions
-    final SUPPORT_VERSION = "23.2.1"
+    final SUPPORT_VERSION = "23.3.0"
     final GOOGLE_PLAY_SERVICES_VERSION = "8.4.0"
     final RX_LOCATION_VERSION = "0.8@aar"
     final BUTTERKNIFE_VERSION = "7.0.1"
