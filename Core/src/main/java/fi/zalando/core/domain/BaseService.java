@@ -47,7 +47,7 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
     protected <T> Subject<T, T> createObservingSubject(Observable<T> observable) {
 
         Subject<T, T> behaviorSubject = BehaviorSubject.create();
-        observable.subscribe(behaviorSubject::onNext);
+        observable.subscribe(behaviorSubject::onNext, behaviorSubject::onError);
         return behaviorSubject;
     }
 
