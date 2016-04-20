@@ -83,8 +83,8 @@ public class ReusableFragmentActivity extends BaseActivity implements
         //Launch the Activity:
         ActivityCompat.startActivity(launchActivity, reusableFragmentActivityIntent, PlatformUtils
                 .isNewerOrEqualSDKVersion(Build.VERSION_CODES.JELLY_BEAN) ? ActivityOptions
-                .makeCustomAnimation(launchActivity, R.anim.fragment_slidein_left, R.anim
-                        .fragment_slideout_left).toBundle() : null);
+                .makeCustomAnimation(launchActivity, R.anim.activity_slidein_left, R.anim
+                        .activity_slideout_left).toBundle() : null);
     }
 
     /**
