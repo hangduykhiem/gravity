@@ -74,9 +74,8 @@ platform :android do
 
         # Adds tag to git
         add_git_tag(tag: "#{$environment}-#{$build_number}")
-        # push_git_tags # push tag
-        sh "git push --tags"
-
+        # Jenkins will push it if everything worked
+        
         # Say built was successful
         say "Android Core Library `#{$environment}` Build #{$build_number} Successful"
 
