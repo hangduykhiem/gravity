@@ -38,10 +38,10 @@ platform :android do
 
   end
 
-    desc "Runs Lint"
-    lane :lint do
-      gradle(task: 'lint')
-    end
+  desc "Runs Lint"
+  lane :lint do
+    gradle(task: 'lint')
+  end
 
   desc "Runs all unit tests"
   lane :test do
