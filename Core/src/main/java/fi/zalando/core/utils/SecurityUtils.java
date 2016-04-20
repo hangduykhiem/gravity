@@ -36,6 +36,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import timber.log.Timber;
+
 /**
  * Utility class used to provide security related functionalities
  *
@@ -531,12 +533,15 @@ public class SecurityUtils {
 
             @Override
             public boolean equals(Object obj) {
-                if (this == obj)
+                if (this == obj) {
                     return true;
-                if (obj == null)
+                }
+                if (obj == null) {
                     return false;
-                if (getClass() != obj.getClass())
+                }
+                if (getClass() != obj.getClass()) {
                     return false;
+                }
                 SecretKeys other = (SecretKeys) obj;
                 return integrityKey.equals(other.integrityKey) && confidentialityKey.equals(other
                         .confidentialityKey);
@@ -656,12 +661,15 @@ public class SecurityUtils {
 
             @Override
             public boolean equals(Object obj) {
-                if (this == obj)
+                if (this == obj) {
                     return true;
-                if (obj == null)
+                }
+                if (obj == null) {
                     return false;
-                if (getClass() != obj.getClass())
+                }
+                if (getClass() != obj.getClass()) {
                     return false;
+                }
                 CipherTextIvMac other = (CipherTextIvMac) obj;
                 return Arrays.equals(cipherText, other.cipherText) && Arrays.equals(iv, other.iv)
                         && Arrays.equals(mac, other.mac);
@@ -904,8 +912,7 @@ public class SecurityUtils {
                     } catch (IOException e) {
                         // On a small fraction of devices /dev/urandom is not
                         // writable Log and ignore.
-                        Log.w(PrngFixes.class.getSimpleName(), "Failed to mix seed into "
-                                + URANDOM_FILE);
+                        Timber.w("Failed to mix seed into %s", URANDOM_FILE);
                     } finally {
                         mSeeded = true;
                     }

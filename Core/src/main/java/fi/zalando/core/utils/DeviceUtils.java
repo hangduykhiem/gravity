@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.view.WindowManager;
 
+import java.util.Locale;
+
 import timber.log.Timber;
 
 /**
@@ -37,13 +39,13 @@ public class DeviceUtils {
                     .TELEPHONY_SERVICE);
             final String simCountry = tm.getSimCountryIso();
             if (simCountry != null && simCountry.length() == 2) { // SIM country code is available
-                return simCountry.toLowerCase();
+                return simCountry.toLowerCase(Locale.getDefault());
             } else if (tm.getPhoneType() != TelephonyManager.PHONE_TYPE_CDMA) { // device is not
                 // 3G (would be unreliable)
                 String networkCountry = tm.getNetworkCountryIso();
                 if (networkCountry != null && networkCountry.length() == 2) { // network country
                     // code is available
-                    return networkCountry.toLowerCase();
+                    return networkCountry.toLowerCase(Locale.getDefault());
                 }
             }
         } catch (Exception e) {

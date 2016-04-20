@@ -49,8 +49,7 @@ public final class RestApiFactory {
     public static <T> T createApi(Class<T> restInterface, @NonNull String baseUrl, @Nullable
     List<Interceptor> interceptors, @Nullable Gson gson, boolean logs) {
 
-        Timber.d("getRestApi: " + baseUrl + " interface: " + restInterface.getName() + " " +
-                "gson: " + gson);
+        Timber.d("getRestApi: %s interface: %s gson: %s", baseUrl, restInterface.getName(), gson);
 
         return setupRetrofit(baseUrl, interceptors, RxJavaCallAdapterFactory.createWithScheduler
                 (Schedulers.io()), gson != null ? gson : new GsonBuilder().create(), logs).create
@@ -68,7 +67,7 @@ public final class RestApiFactory {
      */
     public static <T> T createApi(Class<T> restInterface, @NonNull String baseUrl, boolean logs) {
 
-        Timber.d("getRestApi: " + baseUrl + " interface: " + restInterface.getName());
+        Timber.d("getRestApi: %s interface: %s", baseUrl, restInterface.getName());
 
         return setupRetrofit(baseUrl, null, RxJavaCallAdapterFactory.createWithScheduler
                 (Schedulers.io()), new GsonBuilder().create(), logs).create(restInterface);
@@ -88,7 +87,7 @@ public final class RestApiFactory {
                                                   gsonConverterFactory, boolean logs) {
 
         Preconditions.checkArgument(ValidationUtils.isValidURL(url), "Base URL is invalid");
-        Timber.d("setupRetrofit: " + url);
+        Timber.d("setupRetrofit: %s", url);
 
         // Add the interceptors if they exist
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
