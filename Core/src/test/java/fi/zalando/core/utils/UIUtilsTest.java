@@ -27,6 +27,7 @@ import static org.powermock.api.mockito.PowerMockito.doReturn;
 @PrepareForTest(PlatformUtils.class)
 public class UIUtilsTest {
 
+    @SuppressWarnings("deprecation")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Test
     public void testRunOnGlobalLayout() throws Exception {

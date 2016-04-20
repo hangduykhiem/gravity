@@ -196,7 +196,7 @@ public class PersistentHashTable {
      */
     public void reset() {
 
-        Timber.w("reset: " + (TextUtils.isEmpty(persistentHashTableId) ? "Default" :
+        Timber.w("reset: %s", (TextUtils.isEmpty(persistentHashTableId) ? "Default" :
                 persistentHashTableId));
 
         sharedPreferences.edit().clear().apply();
@@ -224,7 +224,7 @@ public class PersistentHashTable {
         Preconditions.checkArgument(!TextUtils.isEmpty(persistentHashTableId), "Provided " +
                 "HashTableId is empty");
 
-        Timber.w("switchStorage: " + persistentHashTableId);
+        Timber.w("switchStorage: %s", persistentHashTableId);
 
         this.persistentHashTableId = persistentHashTableId;
         sharedPreferences = context.getSharedPreferences(this.persistentHashTableId, Context

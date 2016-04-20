@@ -35,7 +35,7 @@ public class SubscriptionHelper {
         // Check preconditions
         Preconditions.checkNotNull(subscription);
 
-        Timber.d("addSubscription " + subscription.toString());
+        Timber.d("addSubscription %s", subscription);
 
         subscriptions.add(subscription);
     }

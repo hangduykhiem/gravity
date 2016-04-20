@@ -18,6 +18,9 @@
 # Update this, if you use features of a newer version
 
 # Usage examples:
+# fastlane --verbose --env ci lint build_url:$BUILD_URL build_number:$BUILD_NUMBER adb:$ADB_PATH
+# Runs lint for CI environment, with injected build_url from jenkins providing also the ADB path
+#
 # fastlane --verbose --env ci test build_url:$BUILD_URL build_number:$BUILD_NUMBER adb:$ADB_PATH
 # Runs test action for CI environment, with injected build_url from jenkins providing also the ADB path
 #
@@ -29,13 +32,14 @@ fastlane_version "1.64.0"
 default_platform :android
 
 platform :android do
+
   before_all do
-
     $environment = ENV["ENVIRONMENT"]
+  end
 
-    # Always clear environment
-    gradle(task: 'clean')
-
+  desc "Runs Lint"
+  lane :lint do
+    gradle(task: 'lint')
   end
 
   desc "Runs all unit tests"
@@ -63,6 +67,11 @@ platform :android do
 
     $build_number = options[:build_number]
 
+    if lane.to_s == "lint"
+        hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core
+        library successfully passed Lint Test!", custom_color: "gray" , channel: "Fleek%20Android", success: true)
+    end
+
     if lane.to_s == "test"
         hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core library successfully Unit Tested!", custom_color: "yellow" , channel: "Fleek%20Android", success: true)
     end
@@ -72,10 +81,6 @@ platform :android do
         # Send message to hipchat
         hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core library successfully Tested!", channel: "Fleek%20Android", success: true)
 
-        # Adds tag to git
-        add_git_tag(tag: "#{$environment}-#{$build_number}")
-        push_git_tags # push tag
-
         # Say built was successful
         say "Android Core Library `#{$environment}` Build #{$build_number} Successful"
 
@@ -84,6 +89,10 @@ platform :android do
   end
 
   error do |lane, exception, options|
+
+    if lane.to_s == "lint"
+        hipchat(from: "MsJenkins", message_format:"html", message: $environment + ": Android core lint test failed... WEAR THE HAT! <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
+    end
 
     if lane.to_s == "test"
         hipchat(from: "MsJenkins", message_format:"html", message: $environment + ": Android core unit test failed... WEAR THE HAT! <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
