@@ -32,13 +32,9 @@ fastlane_version "1.64.0"
 default_platform :android
 
 platform :android do
+
   before_all do
-
     $environment = ENV["ENVIRONMENT"]
-
-    # Always clear environment
-    gradle(task: 'clean')
-
   end
 
   desc "Runs Lint"
@@ -66,14 +62,6 @@ platform :android do
     gradle(task: ENV["TEST_INSTRUMENTATION_TASK"], flags: '--stacktrace')
 
   end
-
-  desc "Writes all needed reports"
-    lane :report do |options|
-
-      # Run the tests
-      gradle(task: lint)
-
-    end
 
   after_all do |lane, options|
 
