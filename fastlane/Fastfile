@@ -18,6 +18,9 @@
 # Update this, if you use features of a newer version
 
 # Usage examples:
+# fastlane --verbose --env ci lint build_url:$BUILD_URL build_number:$BUILD_NUMBER adb:$ADB_PATH
+# Runs lint for CI environment, with injected build_url from jenkins providing also the ADB path
+#
 # fastlane --verbose --env ci test build_url:$BUILD_URL build_number:$BUILD_NUMBER adb:$ADB_PATH
 # Runs test action for CI environment, with injected build_url from jenkins providing also the ADB path
 #
@@ -68,6 +71,11 @@ platform :android do
 
     $build_number = options[:build_number]
 
+    if lane.to_s == "lint"
+        hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core
+        library successfully passed Lint Test!", custom_color: "gray" , channel: "Fleek%20Android", success: true)
+    end
+
     if lane.to_s == "test"
         hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core library successfully Unit Tested!", custom_color: "yellow" , channel: "Fleek%20Android", success: true)
     end
@@ -85,6 +93,10 @@ platform :android do
   end
 
   error do |lane, exception, options|
+
+    if lane.to_s == "test"
+        hipchat(from: "MsJenkins", message_format:"html", message: $environment + ": Android core lint test failed... WEAR THE HAT! <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
+    end
 
     if lane.to_s == "test"
         hipchat(from: "MsJenkins", message_format:"html", message: $environment + ": Android core unit test failed... WEAR THE HAT! <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
