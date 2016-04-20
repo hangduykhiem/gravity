@@ -71,11 +71,7 @@ platform :android do
 
         # Send message to hipchat
         hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core library successfully Tested!", channel: "Fleek%20Android", success: true)
-
-        # Adds tag to git
-        add_git_tag(tag: "#{$environment}-#{$build_number}")
-        push_git_tags # push tag
-
+        
         # Say built was successful
         say "Android Core Library `#{$environment}` Build #{$build_number} Successful"
 
