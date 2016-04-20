@@ -38,6 +38,11 @@ platform :android do
 
   end
 
+    desc "Runs Lint"
+    lane :lint do
+      gradle(task: 'lint')
+    end
+
   desc "Runs all unit tests"
   lane :test do
     gradle(task: 'test', flags: '--stacktrace')
@@ -71,7 +76,7 @@ platform :android do
 
         # Send message to hipchat
         hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core library successfully Tested!", channel: "Fleek%20Android", success: true)
-        
+
         # Say built was successful
         say "Android Core Library `#{$environment}` Build #{$build_number} Successful"
 
