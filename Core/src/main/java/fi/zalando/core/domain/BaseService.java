@@ -44,7 +44,7 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
      * @param <T>        {@link T} of the {@link Observable}
      * @return {@link Subject} that listens and emits the given {@link Observable}
      */
-    protected <T> Subject<T, T> createObservingSubject(Observable<T> observable) {
+    protected <T> Observable<T> createObservingSubject(Observable<T> observable) {
 
         Subject<T, T> behaviorSubject = BehaviorSubject.create();
         observable.subscribe(behaviorSubject::onNext, behaviorSubject::onError);
