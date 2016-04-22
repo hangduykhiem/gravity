@@ -33,6 +33,11 @@ public class ReusableFragmentActivity extends BaseActivity implements
     private static final String TAG_FRAGMENT_NAME = "tag.fragment.name";
     private static final String TAG_FRAGMENT_BUNDLE = "tag.fragment.bundle";
     private static final String TAG_SHOW_TOOLBAR = "tag.toolbar.enable";
+    public static Class activityClass;
+
+    static {
+        activityClass = ReusableFragmentActivity.class;
+    }
 
     StubPresenter stubPresenter;
 
@@ -75,8 +80,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
         }
 
         //Pack the Fragment name and Bundle to the Intent:
-        Intent reusableFragmentActivityIntent = new Intent(launchActivity, ReusableFragmentActivity
-                .class);
+        Intent reusableFragmentActivityIntent = new Intent(launchActivity, activityClass);
         reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_BUNDLE, bundleForFragment);
         reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_NAME, fragmentClass.getName());
         reusableFragmentActivityIntent.putExtra(TAG_SHOW_TOOLBAR, showToolbar);
@@ -103,8 +107,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
         }
 
         //Pack the Fragment name and Bundle to the Intent:
-        Intent reusableFragmentActivityIntent = new Intent(launchActivity, ReusableFragmentActivity
-                .class);
+        Intent reusableFragmentActivityIntent = new Intent(launchActivity, activityClass);
         reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_BUNDLE, bundleForFragment);
         reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_NAME, fragmentClass.getName());
         reusableFragmentActivityIntent.putExtra(TAG_SHOW_TOOLBAR, showToolbar);

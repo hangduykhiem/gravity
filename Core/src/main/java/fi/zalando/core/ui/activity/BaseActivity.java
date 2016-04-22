@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 
 import javax.inject.Inject;
 
@@ -63,6 +62,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         ButterKnife.bind(this);
         // Set the view to the presenter
         getPresenter().setView(this);
+        // Call this in case sub Activities want to do something after onCreate but before initView
+        prePresenterInitialise();
         // Init Presenter
         getPresenter().initialise(savedInstanceState);
         // Notify the Observable when the UI is ready:
@@ -114,6 +115,11 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         super.onSaveInstanceState(outState);
         getPresenter().onSaveInstanceState(outState);
     }
+
+    /**
+     * Called right before Presenter's initialization, but after super.onCreate.
+     */
+    public void prePresenterInitialise() {}
 
     /**
      * Adds the initial fragment to the default fragment container
@@ -233,16 +239,5 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.activity_slidein_right, R.anim.activity_slideout_right);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
