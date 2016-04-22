@@ -68,8 +68,7 @@ platform :android do
     $build_number = options[:build_number]
 
     if lane.to_s == "lint"
-        hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core
-        library successfully passed Lint Test!", custom_color: "gray" , channel: "Fleek%20Android", success: true)
+        hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core library successfully Lint checked!", custom_color: "gray" , channel: "Fleek%20Android", success: true)
     end
 
     if lane.to_s == "test"
