@@ -39,7 +39,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
 
     private static final String TAG_FRAGMENT_NAME = "tag.fragment.name";
     private static final String TAG_FRAGMENT_BUNDLE = "tag.fragment.bundle";
-    private static final String TAG_ACTIVITY_OPTIONS = "tag.toolbar.enable";
+    private static final String TAG_ACTIVITY_OPTIONS = "tag.activity.options";
     public static Class activityClass = ReusableFragmentActivity.class;
 
     StubPresenter stubPresenter;
