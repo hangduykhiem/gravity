@@ -7,12 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import java.lang.reflect.Constructor;
 
@@ -30,14 +32,15 @@ import timber.log.Timber;
 public class ReusableFragmentActivity extends BaseActivity implements
         ReusableFragmentActivityView {
 
+    /**
+     * Set this flag to show toolbar in this Activity.
+     */
+    public static final int FLAG_TOOLBAR = 1;
+
     private static final String TAG_FRAGMENT_NAME = "tag.fragment.name";
     private static final String TAG_FRAGMENT_BUNDLE = "tag.fragment.bundle";
-    private static final String TAG_SHOW_TOOLBAR = "tag.toolbar.enable";
-    public static Class activityClass;
-
-    static {
-        activityClass = ReusableFragmentActivity.class;
-    }
+    private static final String TAG_ACTIVITY_OPTIONS = "tag.toolbar.enable";
+    public static Class activityClass = ReusableFragmentActivity.class;
 
     StubPresenter stubPresenter;
 
@@ -48,7 +51,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
      * @param fragmentClass  Fragment to open inside this new Activity.
      */
     public static void launch(@NonNull Activity launchActivity, @NonNull Class fragmentClass) {
-        launch(launchActivity, fragmentClass, null, true);
+        launch(launchActivity, fragmentClass, null, FLAG_TOOLBAR);
     }
 
     /**
@@ -61,7 +64,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
     @SuppressWarnings("unused")
     public static void launch(@NonNull Activity launchActivity, @NonNull Class fragmentClass,
                               @Nullable Bundle bundleForFragment) {
-        launch(launchActivity, fragmentClass, bundleForFragment, true);
+        launch(launchActivity, fragmentClass, bundleForFragment, FLAG_TOOLBAR);
     }
 
     /**
@@ -70,11 +73,11 @@ public class ReusableFragmentActivity extends BaseActivity implements
      * @param launchActivity    {@link Activity} that is launching the {@link ReusableFragmentActivity}
      * @param fragmentClass     Fragment to open inside this new Activity.
      * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
-     * @param showToolbar       Whether or not the toolbar should be enabled inside this Activity.
+     * @param optionFlags       Options to be passed on and applied to the new Activity.
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static void launch(@NonNull Activity launchActivity, @NonNull Class fragmentClass,
-                              @Nullable Bundle bundleForFragment, boolean showToolbar) {
+                              @Nullable Bundle bundleForFragment, int optionFlags) {
         if (fragmentClass.isInstance(Fragment.class)) {
             throw new ClassCastException("fragmentClass must extend " + Fragment.class.getName());
         }
@@ -83,7 +86,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
         Intent reusableFragmentActivityIntent = new Intent(launchActivity, activityClass);
         reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_BUNDLE, bundleForFragment);
         reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_NAME, fragmentClass.getName());
-        reusableFragmentActivityIntent.putExtra(TAG_SHOW_TOOLBAR, showToolbar);
+        reusableFragmentActivityIntent.putExtra(TAG_ACTIVITY_OPTIONS, optionFlags);
         //Launch the Activity:
         ActivityCompat.startActivity(launchActivity, reusableFragmentActivityIntent, PlatformUtils
                 .isNewerOrEqualSDKVersion(Build.VERSION_CODES.JELLY_BEAN) ? ActivityOptions
@@ -97,11 +100,11 @@ public class ReusableFragmentActivity extends BaseActivity implements
      * @param launchActivity    {@link Activity} that is launching the {@link ReusableFragmentActivity}
      * @param fragmentClass     Fragment to open inside this new Activity.
      * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
-     * @param showToolbar       Whether or not the toolbar should be enabled inside this Activity.
+     * @param optionFlags       Options to be passed on and applied to the new Activity.
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static Intent createIntent(@NonNull Context launchActivity, @NonNull Class fragmentClass,
-                                      @Nullable Bundle bundleForFragment, boolean showToolbar) {
+                                      @Nullable Bundle bundleForFragment, int optionFlags) {
         if (fragmentClass.isInstance(Fragment.class)) {
             throw new ClassCastException("fragmentClass must extend " + Fragment.class.getName());
         }
@@ -110,9 +113,24 @@ public class ReusableFragmentActivity extends BaseActivity implements
         Intent reusableFragmentActivityIntent = new Intent(launchActivity, activityClass);
         reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_BUNDLE, bundleForFragment);
         reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_NAME, fragmentClass.getName());
-        reusableFragmentActivityIntent.putExtra(TAG_SHOW_TOOLBAR, showToolbar);
+        reusableFragmentActivityIntent.putExtra(TAG_ACTIVITY_OPTIONS, optionFlags);
 
         return reusableFragmentActivityIntent;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    getSupportFragmentManager().popBackStack();
+                } else {
+                    finish();
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -121,19 +139,10 @@ public class ReusableFragmentActivity extends BaseActivity implements
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             //Show/hide toolbar:
-            if (getIntent().getBooleanExtra(TAG_SHOW_TOOLBAR, true)) {
+            if (isFlagSet(FLAG_TOOLBAR)) {
                 //Enable back-button in the toolbar:
                 getSupportActionBar().setDisplayShowHomeEnabled(true);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                if (toolbar != null) {
-                    toolbar.setNavigationOnClickListener(v -> {
-                        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                            getSupportFragmentManager().popBackStack();
-                        } else {
-                            finish();
-                        }
-                    });
-                }
             } else {
                 getSupportActionBar().hide();
             }
@@ -176,6 +185,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
     }
 
     @Override
+    @CallSuper
     protected void injectDependencies() {
         stubPresenter = new StubPresenter(new SubscriptionHelper());
     }
@@ -210,4 +220,13 @@ public class ReusableFragmentActivity extends BaseActivity implements
         }
     }
 
+    /**
+     * Returns true if the given flag has been set.
+     * @param flagToCheck flag to check
+     * @return true, if the flag was set.
+     */
+    protected boolean isFlagSet(int flagToCheck) {
+        int flags = getIntent().getIntExtra(TAG_ACTIVITY_OPTIONS, FLAG_TOOLBAR);
+        return (flags & flagToCheck) == flagToCheck;
+    }
 }
