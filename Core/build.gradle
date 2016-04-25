@@ -53,6 +53,7 @@ dependencies {
     compile("com.android.support:recyclerview-v7:$SUPPORT_VERSION") {
         exclude module: "support-v4"
     }
+    compile "com.android.support:design:$SUPPORT_VERSION"
 
     // Google Play Services
     compile "com.google.android.gms:play-services-location:$GOOGLE_PLAY_SERVICES_VERSION"
