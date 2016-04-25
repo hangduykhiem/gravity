@@ -1,8 +1,14 @@
 package fi.zalando.core.utils;
 
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -73,5 +79,63 @@ public class UIUtils {
         }
         //Restore original selection:
         passwordEditText.setSelection(selectionStart, selectionEnd);
+    }
+
+    /**
+     * Shows styled {@link Snackbar} with the given text.
+     * @param parent parent {@link View}
+     * @param resId text to show
+     */
+    public static void showSnack(@NonNull View parent, @StringRes int resId) {
+        Snackbar snackbar = Snackbar.make(parent, resId, Snackbar.LENGTH_LONG);
+        styleSnackbar(parent.getContext(), snackbar);
+        snackbar.show();
+    }
+
+    /**
+     * Shows styled {@link Snackbar} with the given text.
+     * @param parent parent {@link View}
+     * @param text text to show
+     */
+    public static void showSnack(@NonNull View parent, @NonNull CharSequence text) {
+        Snackbar snackbar = Snackbar.make(parent, text, Snackbar.LENGTH_LONG);
+        styleSnackbar(parent.getContext(), snackbar);
+        snackbar.show();
+    }
+
+    /**
+     * Styles the given Snackbar based on the styles defined in application styles with a name
+     * "SnackbarStyle".
+     * @param context {@link Context}
+     * @param snackbar {@link Snackbar}
+     */
+    @SuppressWarnings("ResourceType") //Solves lint bug
+    private static void styleSnackbar(Context context, Snackbar snackbar) {
+        View snackView = snackbar.getView();
+
+        //Get the styles defined in the XML:
+        int[] attrs = {android.R.attr.textColor, android.R.attr.background};
+        int textColor = Color.BLACK;
+        int backgroundColor = Color.WHITE;
+
+        int resID = context.getResources().getIdentifier("SnackbarStyle" , "style",
+                context.getPackageName());
+
+        //Try to fetch the style attributes
+        try {
+            TypedArray ta = context.getTheme().obtainStyledAttributes(resID, attrs);
+            try {
+                textColor = ta.getColor(0, Color.BLACK);
+                backgroundColor = ta.getColor(1, Color.WHITE);
+            } finally {
+                ta.recycle();
+            }
+        } catch (Resources.NotFoundException e) { //Attributes could not be found
+            //ignore
+        }
+
+        //Apply the styles:
+        snackView.setBackgroundColor(backgroundColor);
+        snackbar.setActionTextColor(textColor);
     }
 }
