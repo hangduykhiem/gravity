@@ -34,7 +34,7 @@ dependencies {
     final SUPPORT_VERSION = "23.3.0"
     final GOOGLE_PLAY_SERVICES_VERSION = "8.4.0"
     final RX_LOCATION_VERSION = "0.8@aar"
-    final BUTTERKNIFE_VERSION = "8.0.0"
+    final BUTTERKNIFE_VERSION = "8.0.1"
     final RXJAVA_VERSION = "1.1.5"
     final RXANDROID_VERSION = "1.2.0"
     final EVENT_BUS_VERSION = "3.0.0"
@@ -63,6 +63,7 @@ dependencies {
 
     // Butterknife library to ease the access to inject views in activities and fragments
     compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
+    apt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
 
     // RxJava and RxAndroid libraries
     compile "io.reactivex:rxjava:$RXJAVA_VERSION"
