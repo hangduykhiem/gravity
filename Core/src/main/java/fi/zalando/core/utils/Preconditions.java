@@ -14,9 +14,6 @@
 
 package fi.zalando.core.utils;
 
-import com.google.common.annotations.GwtCompatible;
-import com.google.common.base.Verify;
-
 import android.support.annotation.Nullable;
 
 /**
@@ -77,7 +74,7 @@ import android.support.annotation.Nullable;
  *
  * <p>Projects which use {@code com.google.common} should generally avoid the use of {@link
  * java.util.Objects#requireNonNull(Object)}. Instead, use whichever of {@link
- * #checkNotNull(Object)} or {@link Verify#verifyNotNull(Object)} is appropriate to the situation.
+ * #checkNotNull(Object)} or Verify#verifyNotNull(Object) is appropriate to the situation.
  * (The same goes for the message-accepting overloads.)
  *
  * <h3>Only {@code %s} is supported</h3>
@@ -93,7 +90,6 @@ import android.support.annotation.Nullable;
  * @author Kevin Bourrillion
  * @since 2.0 (imported from Google Collections Library)
  */
-@GwtCompatible
 @SuppressWarnings("unused")
 public final class Preconditions {
     private Preconditions() {
