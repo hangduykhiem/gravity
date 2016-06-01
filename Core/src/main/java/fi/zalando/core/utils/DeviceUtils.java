@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.location.LocationManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.view.WindowManager;
@@ -48,7 +49,8 @@ public class DeviceUtils {
                     return networkCountry.toLowerCase(Locale.getDefault());
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Timber.e(e, "Error getting user country");
         }
         return null;
@@ -87,12 +89,13 @@ public class DeviceUtils {
 
     /**
      * Returns the aspect ratio (screen width / screen height)
+     *
      * @param context {@link Context}
      * @return aspect ratio
      */
     public static float getAspectRatio(Context context) {
         Point p = getScreenResolution(context);
-        return (float)p.x / (float)p.y;
+        return (float) p.x / (float) p.y;
     }
 
     /**
@@ -137,5 +140,15 @@ public class DeviceUtils {
      */
     public static float spToPx(final Context context, final float sp) {
         return sp * context.getResources().getDisplayMetrics().scaledDensity;
+    }
+
+    /**
+     * Get the unique identification of the device
+     *
+     * @param context context
+     * @return String contains UID
+     */
+    public static String getDeviceUniqueID(Context context) {
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 }
