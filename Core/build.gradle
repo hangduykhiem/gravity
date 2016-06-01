@@ -3,14 +3,15 @@ apply plugin: "com.neenbedankt.android-apt"
 apply plugin: "me.tatarka.retrolambda"
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        testInstrumentationRunner rootProject.ext.testInstrumentationRunner
     }
     buildTypes {
         release {
@@ -30,92 +31,60 @@ android {
 
 dependencies {
 
-    // 3rd party library versions
-    final SUPPORT_VERSION = "23.4.0"
-    final GOOGLE_PLAY_SERVICES_VERSION = "8.4.0"
-    final RX_LOCATION_VERSION = "0.8@aar"
-    final BUTTERKNIFE_VERSION = "8.0.1"
-    final RXJAVA_VERSION = "1.1.5"
-    final RXANDROID_VERSION = "1.2.0"
-    final EVENT_BUS_VERSION = "3.0.0"
-    final RETROLAMBDA_VERSION = "2.3.0"
-    final DAGGER_VERSION = "2.4"
-    final ICEPICK_VERSION = "3.2.0"
-    final TIMBER_VERSION = "4.1.2"
-    final RETROFIT_VERSION = "2.0.2"
-    final OKHTTP_VERSION = "3.2.0"
-
-
     compile fileTree(dir: "libs", include: ["*.jar"])
-
-    // Android support libraries
-    compile "com.android.support:appcompat-v7:$SUPPORT_VERSION"
-    compile("com.android.support:recyclerview-v7:$SUPPORT_VERSION") {
+    // support libraries
+    compile coreDeps.appcompat
+    compile(coreDeps.recyclerview) {
         exclude module: "support-v4"
     }
-    compile "com.android.support:design:$SUPPORT_VERSION"
-
+    compile coreDeps.design
     // Google Play Services
-    compile "com.google.android.gms:play-services-location:$GOOGLE_PLAY_SERVICES_VERSION"
-
-    // Reactive location library
-    compile "pl.charmas.android:android-reactive-location:$RX_LOCATION_VERSION"
-
+    compile coreDeps.gplayservices
+    // RxLocation library
+    compile coreDeps.rxlocation
     // Butterknife library to ease the access to inject views in activities and fragments
-    compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
-    apt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
-
+    compile coreDeps.butterknife
+    apt coreDeps.buttercompiler
     // RxJava and RxAndroid libraries
-    compile "io.reactivex:rxjava:$RXJAVA_VERSION"
-    compile("io.reactivex:rxandroid:$RXANDROID_VERSION") {
+    compile coreDeps.rxjava
+    compile(coreDeps.rxandroid) {
         exclude module: "rxjava"
     }
-
-    // Event bus broadcasting messages
-    compile "org.greenrobot:eventbus:$EVENT_BUS_VERSION"
-
+    // Event bus
+    compile coreDeps.eventbus
     // Retrolambda library
-    retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:$RETROLAMBDA_VERSION"
-
+    retrolambdaConfig coreDeps.retrolambda
     // Dagger 2 dependency injector requirements
-    apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
-    compile "com.google.dagger:dagger:$DAGGER_VERSION"
+    apt coreDeps.daggercompiler
+    compile coreDeps.dagger
     provided "javax.annotation:jsr250-api:1.0"
 
     // Ice Pick libraries
-    compile "frankiesardo:icepick:$ICEPICK_VERSION"
-    provided "frankiesardo:icepick-processor:$ICEPICK_VERSION"
-
+    compile coreDeps.icepick
+    provided coreDeps.icepickprocessor
     // Timber logger library
-    compile "com.jakewharton.timber:timber:$TIMBER_VERSION"
-
+    compile coreDeps.timber
     // Retrofit Library
-    compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    compile coreDeps.retrofit
     // GSON converter for retrofit
-    compile("com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION") {
+    compile(coreDeps.retrogson) {
         exclude module: "retrofit"
     }
     // RXJava adapter for retrofit
-    compile("com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION") {
+    compile(coreDeps.retrorxjava) {
         exclude module: "retrofit"
     }
-    compile("com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION") {
+    compile(coreDeps.okinterceptor) {
         exclude module: "retrofit"
     }
-
-    // Test library versions
-    final JUNIT_VERSION = "4.12"
-    final ROBOLECTRIC_VERSION = "3.0"
-    final MOCKITO_VERSION = "1.10.19"
-    final POWERMOCK_VERSION = "1.6.2"
 
     // Add test dependencies
-    testCompile "junit:junit:$JUNIT_VERSION"
-    testCompile "org.robolectric:robolectric:$ROBOLECTRIC_VERSION"
-    testCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
+    testCompile coreTestDeps.junit
+    testCompile coreTestDeps.robolectric
+    testCompile coreTestDeps.mockito
     // Powermock to mock static dependencies
-    testCompile "org.powermock:powermock-module-junit4:$POWERMOCK_VERSION"
-    testCompile "org.powermock:powermock-module-junit4-rule:$POWERMOCK_VERSION"
-    testCompile "org.powermock:powermock-api-mockito:$POWERMOCK_VERSION"
-    testCompile "org.powermock:powermock-classloading-xstream:$POWERMOCK_VERSION"
+    testCompile coreTestDeps.powermockJunit
+    testCompile coreTestDeps.powermockRule
+    testCompile coreTestDeps.powermockMockito
+    testCompile coreTestDeps.powermockXtream
 }
