@@ -5,8 +5,10 @@ import android.content.Context;
 import android.graphics.Point;
 import android.location.LocationManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.view.WindowManager;
 
 import java.util.Locale;
@@ -87,12 +89,13 @@ public class DeviceUtils {
 
     /**
      * Returns the aspect ratio (screen width / screen height)
+     *
      * @param context {@link Context}
      * @return aspect ratio
      */
     public static float getAspectRatio(Context context) {
         Point p = getScreenResolution(context);
-        return (float)p.x / (float)p.y;
+        return (float) p.x / (float) p.y;
     }
 
     /**
@@ -137,5 +140,69 @@ public class DeviceUtils {
      */
     public static float spToPx(final Context context, final float sp) {
         return sp * context.getResources().getDisplayMetrics().scaledDensity;
+    }
+
+    /**
+     * Returns android ID. Available after FROYO.
+     *
+     * @param context Application Context
+     * @return Android Id string
+     */
+    private static String getAndroidId(Context context) {
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
+
+    /**
+     * Provides devices device id, first using device IMEI, second Android ID and third device board
+     * ID. The order is sequential, if one success next one will be tried.
+     *
+     * @return Device id {@link String}
+     */
+    @Nullable
+    public static String getDeviceId(Context context) {
+        try {
+            String deviceId = getTelephoneManager(context).getDeviceId();
+            if (!TextUtils.isEmpty(deviceId) && TextUtils.isEmpty(deviceId.replace("0", ""))) {
+                return SecurityUtils.MD5.createDigest(deviceId);
+            }
+            deviceId = getAndroidId(context);
+            if (!TextUtils.isEmpty(deviceId) && !deviceId.equals("9774d56d682e549c")) {
+                return SecurityUtils.MD5.createDigest(deviceId);
+            }
+            return SecurityUtils.MD5.createDigest(getDeviceIdPseudo(context));
+        }
+        catch (Exception ex) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns device's pseudo ID using board flags
+     *
+     * @param context Application Context
+     * @return Device Board Pseudo ID
+     */
+    @SuppressWarnings("deprecation")
+    private static String getDeviceIdPseudo(Context context) {
+        String result = "";
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+            result += Build.SERIAL;
+            result += "::" + (Build.PRODUCT.length() % 10) + (Build.BOARD.length() % 10) + (
+                    Build.BRAND.length() % 10) + (Build.CPU_ABI.length() % 10) + (
+                    Build.DEVICE.length() % 10) + (Build.MANUFACTURER.length() % 10) + (
+                    Build.MODEL.length() % 10);
+        }
+        return result;
+    }
+
+    /**
+     * Get the telephony manager with the context
+     *
+     * @param context context
+     * @return telephonyManager
+     */
+    private static TelephonyManager getTelephoneManager(Context context) {
+
+        return (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
     }
 }
