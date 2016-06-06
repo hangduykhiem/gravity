@@ -48,8 +48,6 @@ dependencies {
     compile(coreDeps.rxandroid) {
         exclude module: "rxjava"
     }
-    // Event bus
-    compile coreDeps.eventbus
     // Retrolambda library
     retrolambdaConfig coreDeps.retrolambda
     // Dagger 2 dependency injector requirements
