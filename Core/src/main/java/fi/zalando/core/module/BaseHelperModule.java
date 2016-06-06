@@ -3,8 +3,6 @@ package fi.zalando.core.module;
 import android.content.Context;
 import android.location.LocationManager;
 
-import org.greenrobot.eventbus.EventBus;
-
 import pl.charmas.android.reactivelocation.ReactiveLocationProvider;
 
 import javax.inject.Singleton;
@@ -27,14 +25,13 @@ public class BaseHelperModule {
     /**
      * Provides a {@link CleaningHelper} instance dependency
      *
-     * @param eventBus {@link EventBus} instance
      * @return {@link CleaningHelper} instance
      */
     @Provides
     @Singleton
-    public CleaningHelper provideCleaningHelper(EventBus eventBus) {
+    public CleaningHelper provideCleaningHelper() {
 
-        return new CleaningHelper(eventBus);
+        return new CleaningHelper();
     }
 
     /**
