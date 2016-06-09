@@ -5,6 +5,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import pl.charmas.android.reactivelocation.ReactiveLocationProvider;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 
 /**
@@ -21,6 +23,7 @@ public class GooglePlayServicesHelper {
      *
      * @param reactiveLocationProvider {@link ReactiveLocationProvider} instance
      */
+    @Inject
     public GooglePlayServicesHelper(ReactiveLocationProvider reactiveLocationProvider) {
 
         this.reactiveLocationProvider = reactiveLocationProvider;

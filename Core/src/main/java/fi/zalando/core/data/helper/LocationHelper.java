@@ -11,6 +11,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
+import javax.inject.Inject;
+
 import fi.zalando.core.data.entity.transformer.LocationDataTransformerFactory;
 import fi.zalando.core.exception.PermissionSecurityException;
 import fi.zalando.core.exception.ServiceDisabledException;
@@ -33,6 +35,7 @@ public class LocationHelper {
      * @param applicationContext {@link Context} of the application
      * @param locationManager    {@link LocationManager} from the device
      */
+    @Inject
     public LocationHelper(Context applicationContext, LocationManager locationManager) {
 
         this.applicationContext = applicationContext.getApplicationContext();

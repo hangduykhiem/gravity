@@ -9,6 +9,8 @@ import android.text.TextUtils;
 import java.util.Date;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import fi.zalando.core.utils.Preconditions;
 import timber.log.Timber;
 
@@ -23,6 +25,7 @@ public class PersistentHashTable {
     private SharedPreferences sharedPreferences;
     private String persistentHashTableId;
 
+    @Inject
     public PersistentHashTable(Context applicationContext) {
 
         context = applicationContext.getApplicationContext();

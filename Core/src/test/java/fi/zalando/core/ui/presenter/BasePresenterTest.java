@@ -14,7 +14,6 @@ import java.io.Serializable;
 
 import fi.zalando.core.BuildConfig;
 import fi.zalando.core.domain.helper.SubscriptionHelper;
-import fi.zalando.core.module.BaseHelperModule;
 import fi.zalando.core.ui.view.BaseView;
 import icepick.State;
 import rx.Observable;
@@ -45,7 +44,7 @@ public class BasePresenterTest {
     @Before
     public void setUp() {
 
-        basePresenter = new MockBasePresenter(new BaseHelperModule().provideSubscriptionHelper());
+        basePresenter = new MockBasePresenter(new SubscriptionHelper());
         baseView = mock(BaseView.class);
     }
 
@@ -136,7 +135,7 @@ public class BasePresenterTest {
         // Verify bundle is not empty
         assertFalse(bundle.isEmpty());
         // Destroy the saved variables in the MockBasePresenter and init it again with the bundle
-        basePresenter = new MockBasePresenter(new BaseHelperModule().provideSubscriptionHelper());
+        basePresenter = new MockBasePresenter(new SubscriptionHelper());
         basePresenter.setView(baseView);
         basePresenter.initialise(bundle);
         basePresenter.resume();

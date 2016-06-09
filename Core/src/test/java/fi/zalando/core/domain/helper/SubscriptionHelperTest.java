@@ -3,7 +3,6 @@ package fi.zalando.core.domain.helper;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.zalando.core.module.BaseHelperModule;
 import rx.Observable;
 import rx.Subscription;
 
@@ -22,7 +21,7 @@ public class SubscriptionHelperTest {
     @Before
     public void setup() {
 
-        subscriptionHelper = new BaseHelperModule().provideSubscriptionHelper();
+        subscriptionHelper = new SubscriptionHelper();
     }
 
     @Test

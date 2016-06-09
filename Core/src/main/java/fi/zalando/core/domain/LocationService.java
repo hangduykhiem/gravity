@@ -7,6 +7,9 @@ import android.location.Location;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import fi.zalando.core.data.LocationRepository;
 import fi.zalando.core.helper.CleaningHelper;
 import rx.Observable;
@@ -16,6 +19,7 @@ import rx.Observable;
  *
  * Created by jduran on 27/01/16.
  */
+@Singleton
 public class LocationService extends BaseService {
 
     private final LocationRepository locationRepository;
@@ -26,6 +30,7 @@ public class LocationService extends BaseService {
      * @param locationRepository {@link LocationRepository} dependency
      * @param cleaningHelper     {@link CleaningHelper} dependency
      */
+    @Inject
     public LocationService(LocationRepository locationRepository, CleaningHelper cleaningHelper) {
 
         super(cleaningHelper);
