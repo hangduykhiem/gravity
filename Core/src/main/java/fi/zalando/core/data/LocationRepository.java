@@ -7,6 +7,8 @@ import android.location.Location;
 
 import pl.charmas.android.reactivelocation.ReactiveLocationProvider;
 
+import javax.inject.Inject;
+
 import fi.zalando.core.data.helper.LocationHelper;
 import fi.zalando.core.data.entity.transformer.LocationDataTransformerFactory;
 import fi.zalando.core.utils.Preconditions;
@@ -29,6 +31,7 @@ public class LocationRepository extends BaseRepository {
      * @param locationHelper           {@link LocationHelper} to use as backup if G.P.Services
      *                                 fails
      */
+    @Inject
     public LocationRepository(ReactiveLocationProvider reactiveLocationProvider, LocationHelper
             locationHelper) {
 

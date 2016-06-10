@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fi.zalando.core.BuildConfig;
-import fi.zalando.core.module.BasePersistenceModule;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -36,8 +35,7 @@ public class PersistentHashTableTest {
     @Before
     public void setup() {
 
-        persistentHashTable = new BasePersistenceModule()
-                .providePersistentHashTable(RuntimeEnvironment.application);
+        persistentHashTable = new PersistentHashTable(RuntimeEnvironment.application);
     }
 
     @Test

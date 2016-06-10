@@ -78,6 +78,7 @@ dependencies {
     testCompile coreTestDeps.junit
     testCompile coreTestDeps.robolectric
     testCompile coreTestDeps.mockito
+    testCompile coreTestDeps.assertj
     // Powermock to mock static dependencies
     testCompile coreTestDeps.powermockJunit
     testCompile coreTestDeps.powermockRule

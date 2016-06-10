@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import fi.zalando.core.utils.SecurityUtils;
 import rx.Observable;
 import timber.log.Timber;
@@ -19,6 +22,7 @@ import timber.log.Timber;
  *
  * @author jduran
  */
+@Singleton
 public class KeyChain {
 
     private static final int BASE64_FLAGS = Base64.NO_WRAP;
@@ -30,6 +34,7 @@ public class KeyChain {
      *
      * @param persistentHashTable {@link PersistentHashTable} to use internally
      */
+    @Inject
     public KeyChain(PersistentHashTable persistentHashTable) {
 
         this.persistentHashTable = persistentHashTable;

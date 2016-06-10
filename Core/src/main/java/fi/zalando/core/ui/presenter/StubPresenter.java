@@ -1,5 +1,7 @@
 package fi.zalando.core.ui.presenter;
 
+import javax.inject.Inject;
+
 import fi.zalando.core.domain.helper.SubscriptionHelper;
 import fi.zalando.core.ui.view.StubView;
 
@@ -13,6 +15,7 @@ public class StubPresenter extends BasePresenter<StubView> {
     /**
      * Constructor
      */
+    @Inject
     public StubPresenter(SubscriptionHelper subscriptionHelper) {
 
         super(subscriptionHelper);

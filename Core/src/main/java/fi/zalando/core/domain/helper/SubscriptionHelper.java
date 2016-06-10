@@ -2,6 +2,8 @@ package fi.zalando.core.domain.helper;
 
 import android.support.annotation.NonNull;
 
+import javax.inject.Inject;
+
 import fi.zalando.core.utils.Preconditions;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -20,6 +22,7 @@ public class SubscriptionHelper {
     /**
      * Constructor
      */
+    @Inject
     public SubscriptionHelper() {
 
         subscriptions = new CompositeSubscription();

@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import fi.zalando.core.utils.Preconditions;
 
 /**
@@ -13,6 +16,7 @@ import fi.zalando.core.utils.Preconditions;
  *
  * Created by jduran on 01/03/16.
  */
+@Singleton
 public class CleaningHelper {
 
     private final List<Cleanable> cleanables;
@@ -33,6 +37,7 @@ public class CleaningHelper {
     /**
      * Constructor
      */
+    @Inject
     public CleaningHelper() {
 
         cleanables = new ArrayList<>();
