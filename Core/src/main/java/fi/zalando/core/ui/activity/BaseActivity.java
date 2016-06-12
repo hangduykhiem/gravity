@@ -18,7 +18,7 @@ import fi.zalando.core.ui.Navigator;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
 import fi.zalando.core.utils.UIUtils;
-import rx.Observable;
+import rx.Completable;
 import rx.subjects.BehaviorSubject;
 
 /**
@@ -119,7 +119,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     /**
      * Called right before Presenter's initialization, but after super.onCreate.
      */
-    public void prePresenterInitialise() {}
+    public void prePresenterInitialise() {
+    }
 
     /**
      * Adds the initial fragment to the default fragment container
@@ -231,8 +232,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     }
 
     @Override
-    public Observable<Void> getOnViewReady() {
-        return onViewReadyObservable;
+    public Completable getOnViewReady() {
+        return Completable.fromObservable(onViewReadyObservable);
     }
 
     @Override

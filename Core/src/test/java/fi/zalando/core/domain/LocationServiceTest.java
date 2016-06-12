@@ -18,7 +18,6 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -47,7 +46,7 @@ public class LocationServiceTest {
     @Test
     public void testLoadCurrentLocationIsUsed() {
 
-        // Setup LocationRepository mock  to return something when loadDigest is called
+        // Setup LocationRepository mock  to return something when loadCurrentLocation is called
         // If not, test will crash
         doAnswer(invocation -> Observable.never()).when(locationRepository).loadCurrentLocation();
         // Make the request
@@ -55,7 +54,7 @@ public class LocationServiceTest {
         // Check that mocked loadCurrentLocation is used
         verify(locationRepository).loadCurrentLocation();
         // Verify that apply schedulers is called
-        verify(locationService, times(1)).applySchedulers();
+        verify(locationService).applySchedulersToObservable();
     }
 
     @Test
@@ -72,6 +71,6 @@ public class LocationServiceTest {
         verify(locationRepository).loadLocations(TimeUnit.SECONDS.toMillis(10L), LocationRequest
                 .PRIORITY_HIGH_ACCURACY);
         // Verify that apply schedulers is called
-        verify(locationService, times(1)).applySchedulers();
+        verify(locationService).applySchedulersToObservable();
     }
 }

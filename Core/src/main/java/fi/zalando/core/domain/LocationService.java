@@ -44,7 +44,7 @@ public class LocationService extends BaseService {
      */
     public Observable<LatLng> loadCurrentLocation() {
 
-        return locationRepository.loadCurrentLocation().compose(applySchedulers());
+        return locationRepository.loadCurrentLocation().compose(applySchedulersToObservable());
     }
 
     /**
@@ -62,6 +62,6 @@ public class LocationService extends BaseService {
             accuracyCriteria) {
 
         return locationRepository.loadLocations(timeUnit.toMillis(locationUpdateFrequency),
-                accuracyCriteria).compose(applySchedulers());
+                accuracyCriteria).compose(applySchedulersToObservable());
     }
 }
