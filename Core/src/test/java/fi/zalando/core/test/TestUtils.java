@@ -41,6 +41,8 @@ public class TestUtils {
                 .applySchedulersToObservable();
         doAnswer(invocation -> TestUtils.createDummyTransformer()).when(domainService)
                 .applySchedulersToCompletable();
+        doAnswer(invocation -> TestUtils.createDummyTransformer()).when(domainService)
+                .applySchedulersToSingle();
     }
 
 }
