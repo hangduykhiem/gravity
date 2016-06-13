@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
 import fi.zalando.core.utils.UIUtils;
-import rx.Observable;
+import rx.Completable;
 import rx.subjects.BehaviorSubject;
 
 /**
@@ -152,7 +152,7 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     }
 
     @Override
-    public Observable<Void> getOnViewReady() {
-        return onViewReadyObservable;
+    public Completable getOnViewReady() {
+        return Completable.fromObservable(onViewReadyObservable);
     }
 }

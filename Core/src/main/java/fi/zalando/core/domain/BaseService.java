@@ -1,7 +1,9 @@
 package fi.zalando.core.domain;
 
 import fi.zalando.core.helper.CleaningHelper;
+import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
@@ -25,15 +27,38 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
     }
 
     /**
-     * Provides an {@link rx.Observable.Transformer} to apply correct schedulers
+     * Provides an {@link rx.Observable.Transformer} to apply correct schedulers to Completables
+     *
+     * @return {@link rx.Observable.Transformer} that will apply correctly the right schedulers
+     */
+    public Completable.CompletableTransformer applySchedulersToCompletable() {
+
+        return completable -> completable.subscribeOn(Schedulers.io()).observeOn
+                (AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * Provides an {@link rx.Single.Transformer} to apply correct schedulers to Singles
+     *
+     * @param <T> {@link T} type to create the transformer
+     * @return {@link rx.Single.Transformer} that will apply correctly the right schedulers
+     */
+    public <T> Single.Transformer<T, T> applySchedulersToSingle() {
+
+        return completable -> completable.subscribeOn(Schedulers.io()).observeOn
+                (AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * Provides an {@link rx.Observable.Transformer} to apply correct schedulers to Observables
      *
      * @param <T> {@link T} type to create the transformer
      * @return {@link rx.Observable.Transformer} that will apply correctly the right schedulers
      */
-    public <T> Observable.Transformer<T, T> applySchedulers() {
+    public <T> Observable.Transformer<T, T> applySchedulersToObservable() {
 
-        return observable -> observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
-                .mainThread());
+        return observable -> observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     /**

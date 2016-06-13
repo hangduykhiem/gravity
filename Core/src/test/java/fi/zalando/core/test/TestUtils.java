@@ -38,7 +38,11 @@ public class TestUtils {
 
         // Mock the apply schedulers so the call to real object won't crash
         doAnswer(invocation -> TestUtils.createDummyTransformer()).when(domainService)
-                .applySchedulers();
+                .applySchedulersToObservable();
+        doAnswer(invocation -> TestUtils.createDummyTransformer()).when(domainService)
+                .applySchedulersToCompletable();
+        doAnswer(invocation -> TestUtils.createDummyTransformer()).when(domainService)
+                .applySchedulersToSingle();
     }
 
 }
