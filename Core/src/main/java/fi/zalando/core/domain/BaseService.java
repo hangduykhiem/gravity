@@ -1,5 +1,6 @@
 package fi.zalando.core.domain;
 
+import fi.zalando.core.exception.BaseThrowable;
 import fi.zalando.core.helper.CleaningHelper;
 import rx.Completable;
 import rx.Observable;
@@ -33,8 +34,11 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
      */
     public Completable.CompletableTransformer applySchedulersToCompletable() {
 
-        return completable -> completable.subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread());
+        return completable ->
+                completable.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .onErrorResumeNext(throwable ->
+                                Completable.error(new BaseThrowable(throwable)));
     }
 
     /**
@@ -45,8 +49,11 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
      */
     public <T> Single.Transformer<T, T> applySchedulersToSingle() {
 
-        return completable -> completable.subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread());
+        return completable ->
+                completable.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .onErrorResumeNext(throwable ->
+                                Single.error(new BaseThrowable(throwable)));
     }
 
     /**
@@ -57,8 +64,11 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
      */
     public <T> Observable.Transformer<T, T> applySchedulersToObservable() {
 
-        return observable -> observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return observable ->
+                observable.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .onErrorResumeNext(throwable ->
+                                Observable.error(new BaseThrowable(throwable)));
     }
 
     /**
