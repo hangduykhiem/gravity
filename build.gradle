@@ -63,9 +63,9 @@ ext.coreDeps = [
         icepick         : 'frankiesardo:icepick:3.2.0',
         icepickprocessor: 'frankiesardo:icepick-processor:3.2.0',
         timber          : 'com.jakewharton.timber:timber:4.1.2',
-        retrofit        : 'com.squareup.retrofit2:retrofit:2.0.2',
-        retrogson       : 'com.squareup.retrofit2:converter-gson:2.0.2',
-        retrorxjava     : 'com.squareup.retrofit2:adapter-rxjava:2.0.2',
+        retrofit        : 'com.squareup.retrofit2:retrofit:2.1.0',
+        retrogson       : 'com.squareup.retrofit2:converter-gson:2.1.0',
+        retrorxjava     : 'com.squareup.retrofit2:adapter-rxjava:2.1.0',
         okinterceptor   : 'com.squareup.okhttp3:logging-interceptor:3.2.0',
 ]
 
