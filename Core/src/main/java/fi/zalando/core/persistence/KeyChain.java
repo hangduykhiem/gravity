@@ -107,7 +107,7 @@ public class KeyChain {
      */
     public Observable<String> load(@NonNull String key) {
 
-        return Observable.just(get(key));
+        return Observable.defer(() -> Observable.just(get(key)));
     }
 
     /**
@@ -119,7 +119,7 @@ public class KeyChain {
      */
     public Observable<Map<String, String>> load(@NonNull List<String> keys) {
 
-        return Observable.just(get(keys));
+        return Observable.defer(() -> Observable.just(get(keys)));
     }
 
     /**
