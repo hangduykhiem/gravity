@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fi.zalando.core.BuildConfig;
+import rx.Subscription;
+import rx.observers.TestSubscriber;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -94,6 +96,23 @@ public class PersistentHashTableTest {
     }
 
     @Test
+    public void testSavingFloat() {
+
+        final String key = "testSavingFloat";
+
+        // Test default values
+        assertEquals(persistentHashTable.get(key, (float) 1), (float) 1, 0.01);
+
+        // Save a value with the key
+        persistentHashTable.put(key, (float) 1);
+
+        // Check if it is properly saved, providing as default a different value as saved one
+        assertEquals(persistentHashTable.get(key, (float) 2), (float) 1, 0.01);
+        // Check that given a key with break lines at the end gives same result
+        assertEquals(persistentHashTable.get(" " + key + "\n", (float) 2), (float) 1, 0.01);
+    }
+
+    @Test
     public void testSavingInteger() {
 
         final String key = "testSavingInteger";
@@ -138,6 +157,8 @@ public class PersistentHashTableTest {
         boolean booleanValue = true;
         String stringKey = "stringKey";
         String stringValue = "stringValue";
+        String floatKey = "floatKey";
+        float floatValue = (float) 1.0;
         String longKey = "longKey";
         long longValue = (long) 1;
         String integerKey = "integerKey";
@@ -149,6 +170,7 @@ public class PersistentHashTableTest {
         mapToSave.put(booleanKey, booleanValue);
         mapToSave.put(stringKey, stringValue);
         mapToSave.put(longKey, longValue);
+        mapToSave.put(floatKey, floatValue);
         mapToSave.put(integerKey, integerValue);
         mapToSave.put(dateKey, dateValue);
 
@@ -156,6 +178,8 @@ public class PersistentHashTableTest {
         assertEquals(persistentHashTable.get(booleanKey, !booleanValue), !booleanValue);
         assertEquals(persistentHashTable.get(stringKey, "anotherString"), "anotherString");
         assertEquals(persistentHashTable.get(longKey, Long.MAX_VALUE).longValue(), Long.MAX_VALUE);
+        assertEquals(persistentHashTable.get(floatKey, Float.MAX_VALUE).floatValue(), Float
+                .MAX_VALUE, 0.01);
         assertEquals(persistentHashTable.get(integerKey, Integer.MAX_VALUE).intValue(), Integer
                 .MAX_VALUE);
         assertEquals(persistentHashTable.get(dateKey, new Date(0)), new Date(0));
@@ -167,6 +191,8 @@ public class PersistentHashTableTest {
         assertEquals(persistentHashTable.get(booleanKey, !booleanValue), booleanValue);
         assertEquals(persistentHashTable.get(stringKey, "anotherString"), stringValue);
         assertEquals(persistentHashTable.get(longKey, Long.MAX_VALUE).longValue(), longValue);
+        assertEquals(persistentHashTable.get(floatKey, Float.MAX_VALUE).floatValue(), floatValue,
+                0.01);
         assertEquals(persistentHashTable.get(integerKey, Integer.MAX_VALUE).intValue(),
                 integerValue);
         assertEquals(persistentHashTable.get(dateKey, new Date(0)), dateValue);
@@ -239,6 +265,169 @@ public class PersistentHashTableTest {
 
         // Check that previously stored value does not exist anymore
         assertFalse(persistentHashTable.get(key, false));
+    }
+
+    @Test
+    public void testLoadBoolean() {
+
+        final String key = "testLoadBoolean";
+
+        TestSubscriber<Boolean> subscriber = new TestSubscriber<>();
+        Subscription subscription = persistentHashTable.load(key, true)
+                .subscribe(subscriber);
+
+        // Verify it is not closed, and that it returns default value
+        subscriber.assertValueCount(1);
+        subscriber.assertNoErrors();
+        subscriber.assertNotCompleted();
+        assertTrue(subscriber.getOnNextEvents().get(0));
+
+        // Verify after saving a new item with same key, subscriber is called again
+        persistentHashTable.put(key, false);
+        subscriber.assertValueCount(2);
+        subscriber.assertNoErrors();
+        subscriber.assertNotCompleted();
+        assertFalse(subscriber.getOnNextEvents().get(1));
+
+        // Verify after unsubscribing that the subscriber does not throw errors
+        subscription.unsubscribe();
+        subscriber.assertNoErrors();
+    }
+
+    @Test
+    public void testLoadString() {
+
+        final String key = "testLoadString";
+
+        TestSubscriber<String> subscriber = new TestSubscriber<>();
+        Subscription subscription = persistentHashTable.load(key, "default")
+                .subscribe(subscriber);
+
+        // Verify it is not closed, and that it returns default value
+        subscriber.assertValueCount(1);
+        subscriber.assertNoErrors();
+        subscriber.assertNotCompleted();
+        assertEquals("default", subscriber.getOnNextEvents().get(0));
+
+        // Verify after saving a new item with same key, subscriber is called again
+        persistentHashTable.put(key, "another");
+        subscriber.assertValueCount(2);
+        subscriber.assertNoErrors();
+        subscriber.assertNotCompleted();
+        assertEquals("another", subscriber.getOnNextEvents().get(1));
+
+        // Verify after unsubscribing that the subscriber does not throw errors
+        subscription.unsubscribe();
+        subscriber.assertNoErrors();
+    }
+
+    @Test
+    public void testLoadFloat() {
+
+        final String key = "testLoadFloat";
+
+        TestSubscriber<Float> subscriber = new TestSubscriber<>();
+        Subscription subscription = persistentHashTable.load(key, 1f)
+                .subscribe(subscriber);
+
+        // Verify it is not closed, and that it returns default value
+        subscriber.assertValueCount(1);
+        subscriber.assertNoErrors();
+        subscriber.assertNotCompleted();
+        assertEquals(1f, subscriber.getOnNextEvents().get(0), 0.01);
+
+        // Verify after saving a new item with same key, subscriber is called again
+        persistentHashTable.put(key, 2f);
+        subscriber.assertValueCount(2);
+        subscriber.assertNoErrors();
+        subscriber.assertNotCompleted();
+        assertEquals(2f, subscriber.getOnNextEvents().get(1), 0.01);
+
+        // Verify after unsubscribing that the subscriber does not throw errors
+        subscription.unsubscribe();
+        subscriber.assertNoErrors();
+    }
+
+    @Test
+    public void testLoadLong() {
+
+        final String key = "testLoadLong";
+
+        TestSubscriber<Long> subscriber = new TestSubscriber<>();
+        Subscription subscription = persistentHashTable.load(key, 1L)
+                .subscribe(subscriber);
+
+        // Verify it is not closed, and that it returns default value
+        subscriber.assertValueCount(1);
+        subscriber.assertNoErrors();
+        subscriber.assertNotCompleted();
+        assertEquals(Long.valueOf(1L), subscriber.getOnNextEvents().get(0));
+
+        // Verify after saving a new item with same key, subscriber is called again
+        persistentHashTable.put(key, 2L);
+        subscriber.assertValueCount(2);
+        subscriber.assertNoErrors();
+        subscriber.assertNotCompleted();
+        assertEquals(Long.valueOf(2L), subscriber.getOnNextEvents().get(1));
+
+        // Verify after unsubscribing that the subscriber does not throw errors
+        subscription.unsubscribe();
+        subscriber.assertNoErrors();
+    }
+
+    @Test
+    public void testLoadDate() {
+
+        final String key = "testLoadDate";
+        final Date defaultDate = new Date();
+
+        TestSubscriber<Date> subscriber = new TestSubscriber<>();
+        Subscription subscription = persistentHashTable.load(key, defaultDate)
+                .subscribe(subscriber);
+
+        // Verify it is not closed, and that it returns default value
+        subscriber.assertValueCount(1);
+        subscriber.assertNoErrors();
+        subscriber.assertNotCompleted();
+        assertEquals(defaultDate, subscriber.getOnNextEvents().get(0));
+
+        // Verify after saving a new item with same key, subscriber is called again
+        persistentHashTable.put(key, new Date(0L));
+        subscriber.assertValueCount(2);
+        subscriber.assertNoErrors();
+        subscriber.assertNotCompleted();
+        assertEquals(new Date(0L), subscriber.getOnNextEvents().get(1));
+
+        // Verify after unsubscribing that the subscriber does not throw errors
+        subscription.unsubscribe();
+        subscriber.assertNoErrors();
+    }
+
+    @Test
+    public void testLoadInteger() {
+
+        final String key = "testLoadInteger";
+
+        TestSubscriber<Integer> subscriber = new TestSubscriber<>();
+        Subscription subscription = persistentHashTable.load(key, 1)
+                .subscribe(subscriber);
+
+        // Verify it is not closed, and that it returns default value
+        subscriber.assertValueCount(1);
+        subscriber.assertNoErrors();
+        subscriber.assertNotCompleted();
+        assertEquals(Integer.valueOf(1), subscriber.getOnNextEvents().get(0));
+
+        // Verify after saving a new item with same key, subscriber is called again
+        persistentHashTable.put(key, 2);
+        subscriber.assertValueCount(2);
+        subscriber.assertNoErrors();
+        subscriber.assertNotCompleted();
+        assertEquals(Integer.valueOf(2), subscriber.getOnNextEvents().get(1));
+
+        // Verify after unsubscribing that the subscriber does not throw errors
+        subscription.unsubscribe();
+        subscriber.assertNoErrors();
     }
 
 }
