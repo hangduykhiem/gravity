@@ -80,15 +80,6 @@ public class BaseThrowable extends Throwable {
 
     @Override
     public Throwable getCause() {
-        return sourceThrowable.getCause();
-    }
-
-    /**
-     * Provides the throwable that originated the exception
-     *
-     * @return {@link Throwable} that originated the exception
-     */
-    public Throwable getSourceThrowable() {
         return sourceThrowable;
     }
 
