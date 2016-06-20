@@ -32,7 +32,7 @@ public class SubscriptionHelperTest {
         // Create a sample Subscription, ensure it's never ending
         Subscription sampleSubscription = Observable.never().subscribe();
         // Add the subscription
-        subscriptionHelper.addSubscription(sampleSubscription);
+        subscriptionHelper.addSubscription(sampleSubscription, sampleSubscription);
         // Check if it contains something
         assertTrue(subscriptionHelper.hasSubscriptions());
         // Unsubscribe all
@@ -56,13 +56,6 @@ public class SubscriptionHelperTest {
         subscriptionHelper.clear();
         // Check it is empty now
         assertFalse(subscriptionHelper.hasSubscriptions());
-    }
-
-    @SuppressWarnings("all")
-    @Test(expected = NullPointerException.class)
-    public void testNotNullPreconditions() {
-
-        subscriptionHelper.addSubscription(null);
     }
 
 }

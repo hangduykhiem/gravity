@@ -31,16 +31,18 @@ public class SubscriptionHelper {
     /**
      * Adds a {@link Subscription} to the {@link SubscriptionHelper}
      *
-     * @param subscription {@link Subscription} tp add
+     * @param subscriptionsToAdd {@link Subscription} to add
      */
-    public void addSubscription(@NonNull Subscription subscription) {
+    public void addSubscription(@NonNull Subscription... subscriptionsToAdd) {
 
         // Check preconditions
-        Preconditions.checkNotNull(subscription);
+        Preconditions.checkNotNull(subscriptionsToAdd);
 
-        Timber.d("addSubscription %s", subscription);
+        Timber.d("addSubscription");
 
-        subscriptions.add(subscription);
+        for (Subscription subscription : subscriptionsToAdd) {
+            subscriptions.add(subscription);
+        }
     }
 
     /**
