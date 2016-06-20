@@ -78,12 +78,8 @@ public class BaseThrowable extends Throwable {
         type = Type.UNKNOWN;
     }
 
-    /**
-     * Provides the throwable that originated the exception
-     *
-     * @return {@link Throwable} that originated the exception
-     */
-    public Throwable getSourceThrowable() {
+    @Override
+    public Throwable getCause() {
         return sourceThrowable;
     }
 
