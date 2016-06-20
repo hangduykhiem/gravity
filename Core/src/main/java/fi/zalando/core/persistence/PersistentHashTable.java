@@ -193,7 +193,8 @@ public class PersistentHashTable {
 
                 subscriber.onNext(get(key, defaultValue, clazz));
             }
-        });
+            // Do not throw same items
+        }).distinctUntilChanged();
     }
 
     /**

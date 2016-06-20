@@ -289,6 +289,11 @@ public class PersistentHashTableTest {
         subscriber.assertNotCompleted();
         assertFalse(subscriber.getOnNextEvents().get(1));
 
+        // Verify after saving same item, nothing is thrown since it is same saved data
+        persistentHashTable.put(key, false);
+        subscriber.assertValueCount(2);
+        subscriber.assertNoErrors();
+
         // Verify after unsubscribing that the subscriber does not throw errors
         subscription.unsubscribe();
         subscriber.assertNoErrors();
@@ -315,6 +320,11 @@ public class PersistentHashTableTest {
         subscriber.assertNoErrors();
         subscriber.assertNotCompleted();
         assertEquals("another", subscriber.getOnNextEvents().get(1));
+
+        // Verify after saving same item, nothing is thrown since it is same saved data
+        persistentHashTable.put(key, "another");
+        subscriber.assertValueCount(2);
+        subscriber.assertNoErrors();
 
         // Verify after unsubscribing that the subscriber does not throw errors
         subscription.unsubscribe();
@@ -343,6 +353,11 @@ public class PersistentHashTableTest {
         subscriber.assertNotCompleted();
         assertEquals(2f, subscriber.getOnNextEvents().get(1), 0.01);
 
+        // Verify after saving same item, nothing is thrown since it is same saved data
+        persistentHashTable.put(key, 2f);
+        subscriber.assertValueCount(2);
+        subscriber.assertNoErrors();
+
         // Verify after unsubscribing that the subscriber does not throw errors
         subscription.unsubscribe();
         subscriber.assertNoErrors();
@@ -369,6 +384,11 @@ public class PersistentHashTableTest {
         subscriber.assertNoErrors();
         subscriber.assertNotCompleted();
         assertEquals(Long.valueOf(2L), subscriber.getOnNextEvents().get(1));
+
+        // Verify after saving same item, nothing is thrown since it is same saved data
+        persistentHashTable.put(key, 2L);
+        subscriber.assertValueCount(2);
+        subscriber.assertNoErrors();
 
         // Verify after unsubscribing that the subscriber does not throw errors
         subscription.unsubscribe();
@@ -398,6 +418,11 @@ public class PersistentHashTableTest {
         subscriber.assertNotCompleted();
         assertEquals(new Date(0L), subscriber.getOnNextEvents().get(1));
 
+        // Verify after saving same item, nothing is thrown since it is same saved data
+        persistentHashTable.put(key, new Date(0L));
+        subscriber.assertValueCount(2);
+        subscriber.assertNoErrors();
+
         // Verify after unsubscribing that the subscriber does not throw errors
         subscription.unsubscribe();
         subscriber.assertNoErrors();
@@ -424,6 +449,11 @@ public class PersistentHashTableTest {
         subscriber.assertNoErrors();
         subscriber.assertNotCompleted();
         assertEquals(Integer.valueOf(2), subscriber.getOnNextEvents().get(1));
+
+        // Verify after saving same item, nothing is thrown since it is same saved data
+        persistentHashTable.put(key, 2);
+        subscriber.assertValueCount(2);
+        subscriber.assertNoErrors();
 
         // Verify after unsubscribing that the subscriber does not throw errors
         subscription.unsubscribe();
