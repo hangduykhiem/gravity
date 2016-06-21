@@ -12,6 +12,9 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import fi.zalando.core.utils.Preconditions;
+import rx.Observable;
+import rx.Subscriber;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 /**
@@ -33,6 +36,51 @@ public class PersistentHashTable {
     }
 
     /**
+     * Provides the saved {@link T} value of the given {@link Class} <T>. If key/value relation does
+     * not exist, provide default value
+     *
+     * @param key          {@link String} with the key to retrieve
+     * @param defaultValue {@link T} with the default value in case key does not exist
+     * @param clazz        {@link Class} of the datatype to retrieve
+     * @param <T>          {@link T} type to retrieve
+     * @return {@link T} matching the given key
+     */
+    private <T> T get(String key, T defaultValue, Class<T> clazz) {
+
+        Preconditions.checkArgument(defaultValue.getClass().equals(clazz));
+
+        // Check each supported type
+        if (defaultValue instanceof Boolean) {
+            return clazz.cast(sharedPreferences.getBoolean(validateAndCleanKey(key),
+                    (Boolean) defaultValue));
+        }
+        if (defaultValue instanceof String) {
+            return clazz.cast(sharedPreferences.getString(validateAndCleanKey(key),
+                    (String) defaultValue));
+        }
+        if (defaultValue instanceof Float) {
+            return clazz.cast(sharedPreferences.getFloat(validateAndCleanKey(key),
+                    (Float) defaultValue));
+        }
+        if (defaultValue instanceof Long) {
+            return clazz.cast(sharedPreferences.getLong(validateAndCleanKey(key),
+                    (Long) defaultValue));
+        }
+        if (defaultValue instanceof Date) {
+            return clazz.cast(new Date(sharedPreferences.getLong(validateAndCleanKey(key),
+                    ((Date) defaultValue).getTime())));
+        }
+        if (defaultValue instanceof Integer) {
+            return clazz.cast(sharedPreferences.getInt(validateAndCleanKey(key),
+                    (Integer) defaultValue));
+        }
+
+        // If reached this point we are trying to get a not supported type. Throw exception
+        throw new IllegalArgumentException(String.format("Retrieving %s type is not supported",
+                clazz));
+    }
+
+    /**
      * Returns the {@link Boolean} value of the given {@link String} key
      *
      * @param key          {@link String} with the key
@@ -41,18 +89,7 @@ public class PersistentHashTable {
      */
     public synchronized Boolean get(@NonNull String key, boolean defaultValue) {
 
-        return sharedPreferences.getBoolean(validateAndCleanKey(key), defaultValue);
-    }
-
-    /**
-     * Saves in the Persistent table the given {@link Boolean} for the given {@link String} key
-     *
-     * @param key      {@link String} key to link the {@link Boolean} value
-     * @param keyValue {@link Boolean} value to link the key
-     */
-    public synchronized void put(@NonNull String key, boolean keyValue) {
-
-        sharedPreferences.edit().putBoolean(validateAndCleanKey(key), keyValue).apply();
+        return get(key, defaultValue, Boolean.class);
     }
 
     /**
@@ -64,18 +101,7 @@ public class PersistentHashTable {
      */
     public String get(@NonNull String key, String defaultValue) {
 
-        return sharedPreferences.getString(validateAndCleanKey(key), defaultValue);
-    }
-
-    /**
-     * Saves in the Persistent table the given {@link String} for the given {@link String} key
-     *
-     * @param key      {@link String} key to link the {@link String} value
-     * @param keyValue {@link String} value to link the key
-     */
-    public void put(@NonNull String key, String keyValue) {
-
-        sharedPreferences.edit().putString(validateAndCleanKey(key), keyValue.trim()).apply();
+        return get(key, defaultValue, String.class);
     }
 
     /**
@@ -87,18 +113,19 @@ public class PersistentHashTable {
      */
     public Long get(@NonNull String key, Long defaultValue) {
 
-        return sharedPreferences.getLong(validateAndCleanKey(key), defaultValue);
+        return get(key, defaultValue, Long.class);
     }
 
     /**
-     * Saves in the Persistent table the given {@link Long} for the given {@link String} key
+     * Returns the {@link Float} value of the given {@link String} key
      *
-     * @param key      {@link String} key to link the {@link Long} value
-     * @param keyValue {@link Long} value to link the key
+     * @param key          {@link String} with the key
+     * @param defaultValue {@link Float} default value if the key doesn't exist
+     * @return {@link Float} of the given key
      */
-    public void put(@NonNull String key, Long keyValue) {
+    public Float get(@NonNull String key, Float defaultValue) {
 
-        sharedPreferences.edit().putLong(validateAndCleanKey(key), keyValue).apply();
+        return get(key, defaultValue, Float.class);
     }
 
     /**
@@ -110,18 +137,7 @@ public class PersistentHashTable {
      */
     public Integer get(@NonNull String key, Integer defaultValue) {
 
-        return sharedPreferences.getInt(validateAndCleanKey(key), defaultValue);
-    }
-
-    /**
-     * Saves in the Persistent table the given {@link Integer} for the given {@link String} key
-     *
-     * @param key      {@link String} key to link the {@link Integer} value
-     * @param keyValue {@link Integer} value to link the key
-     */
-    public void put(@NonNull String key, Integer keyValue) {
-
-        sharedPreferences.edit().putInt(validateAndCleanKey(key), keyValue).apply();
+        return get(key, defaultValue, Integer.class);
     }
 
     /**
@@ -133,19 +149,171 @@ public class PersistentHashTable {
      */
     public Date get(@NonNull String key, Date defaultValue) {
 
-        return new Date(sharedPreferences.getLong(validateAndCleanKey(key), defaultValue.getTime
-                ()));
+        return get(key, defaultValue, Date.class);
     }
 
     /**
-     * Saves in the Persistent table the given {@link Date} for the given {@link String} key
+     * Checks if the persistent hash table is empty
      *
-     * @param key      {@link String} key to link the {@link Date} value
-     * @param keyValue {@link Date} value to link the key
+     * @return {@link Boolean} indicating if the table is empty
      */
-    public void put(@NonNull String key, Date keyValue) {
+    public boolean isEmpty() {
 
-        sharedPreferences.edit().putLong(validateAndCleanKey(key), keyValue.getTime()).apply();
+        return sharedPreferences.getAll().isEmpty();
+    }
+
+    /**
+     * Loads the saved {@link T} value of the given {@link Class} <T> using an {@link Observable}.
+     * If key/value relation does not exist, provide default value
+     *
+     * @param key          {@link String} with the key to retrieve
+     * @param defaultValue {@link T} with the default value in case key does not exist
+     * @param clazz        {@link Class} of the datatype to retrieve
+     * @param <T>          {@link T} type to retrieve
+     * @return {@link Observable} to load the matching given key
+     */
+    private <T> Observable<T> load(String key, T defaultValue, Class<T> clazz) {
+
+        return Observable.create(new Observable.OnSubscribe<T>() {
+            @Override
+            public void call(Subscriber<? super T> subscriber) {
+
+                SharedPreferences.OnSharedPreferenceChangeListener
+                        preferenceChangeListener = (sharedPreferencesInstance, changedKey) -> {
+                    if (key.equals(changedKey)) {
+                        subscriber.onNext(get(key, defaultValue, clazz));
+                    }
+                };
+
+                sharedPreferences.registerOnSharedPreferenceChangeListener
+                        (preferenceChangeListener);
+                subscriber.add(Subscriptions.create(() ->
+                        sharedPreferences.unregisterOnSharedPreferenceChangeListener
+                                (preferenceChangeListener)));
+
+                subscriber.onNext(get(key, defaultValue, clazz));
+            }
+            // Do not throw same items
+        }).distinctUntilChanged();
+    }
+
+    /**
+     * Loads using an {@link Observable} the {@link Boolean} stored with the given {@link String}
+     * key
+     *
+     * @param key          {@link String} with the key to retrieve
+     * @param defaultValue {@link Boolean} with the default value to return if the key does not
+     *                     exist
+     * @return {@link Observable} to load the {@link Boolean} with the given key
+     */
+    public Observable<Boolean> load(String key, Boolean defaultValue) {
+
+        return load(key, defaultValue, Boolean.class);
+    }
+
+    /**
+     * Loads using an {@link Observable} the {@link String} stored with the given {@link String}
+     * key
+     *
+     * @param key          {@link String} with the key to retrieve
+     * @param defaultValue {@link String} with the default value to return if the key does not
+     *                     exist
+     * @return {@link Observable} to load the {@link String} with the given key
+     */
+    public Observable<String> load(String key, String defaultValue) {
+
+        return load(key, defaultValue, String.class);
+    }
+
+    /**
+     * Loads using an {@link Observable} the {@link Float} stored with the given {@link String} key
+     *
+     * @param key          {@link String} with the key to retrieve
+     * @param defaultValue {@link Float} with the default value to return if the key does not exist
+     * @return {@link Observable} to load the {@link Float} with the given key
+     */
+    public Observable<Float> load(String key, Float defaultValue) {
+
+        return load(key, defaultValue, Float.class);
+    }
+
+    /**
+     * Loads using an {@link Observable} the {@link Long} stored with the given {@link String} key
+     *
+     * @param key          {@link String} with the key to retrieve
+     * @param defaultValue {@link Long} with the default value to return if the key does not exist
+     * @return {@link Observable} to load the {@link Long} with the given key
+     */
+    public Observable<Long> load(String key, Long defaultValue) {
+
+        return load(key, defaultValue, Long.class);
+    }
+
+    /**
+     * Loads using an {@link Observable} the {@link Date} stored with the given {@link String} key
+     *
+     * @param key          {@link String} with the key to retrieve
+     * @param defaultValue {@link Date} with the default value to return if the key does not exist
+     * @return {@link Observable} to load the {@link Date} with the given key
+     */
+    public Observable<Date> load(String key, Date defaultValue) {
+
+        return load(key, defaultValue, Date.class);
+    }
+
+    /**
+     * Loads using an {@link Observable} the {@link Integer} stored with the given {@link String}
+     * key
+     *
+     * @param key          {@link String} with the key to retrieve
+     * @param defaultValue {@link Integer} with the default value to return if the key does not
+     *                     exist
+     * @return {@link Observable} to load the {@link Integer} with the given key
+     */
+    public Observable<Integer> load(String key, Integer defaultValue) {
+
+        return load(key, defaultValue, Integer.class);
+    }
+
+    /**
+     * Puts a new value in the persistent hash table using the given {@link String} key
+     *
+     * @param key   {@link String} with the key to save
+     * @param value {@link T} with the value to save
+     * @param <T>   {@link T} class to save
+     */
+    public <T> void put(String key, T value) {
+
+        // Check each supported type
+        if (value instanceof Boolean) {
+            sharedPreferences.edit().putBoolean(validateAndCleanKey(key), (Boolean) value).apply();
+            return;
+        }
+        if (value instanceof String) {
+            sharedPreferences.edit().putString(validateAndCleanKey(key), (String) value).apply();
+            return;
+        }
+        if (value instanceof Float) {
+            sharedPreferences.edit().putFloat(validateAndCleanKey(key), (Float) value).apply();
+            return;
+        }
+        if (value instanceof Long) {
+            sharedPreferences.edit().putLong(validateAndCleanKey(key), (Long) value).apply();
+            return;
+        }
+        if (value instanceof Date) {
+            sharedPreferences.edit().putLong(validateAndCleanKey(key), ((Date) value).getTime())
+                    .apply();
+            return;
+        }
+        if (value instanceof Integer) {
+            sharedPreferences.edit().putInt(validateAndCleanKey(key), (Integer) value).apply();
+            return;
+        }
+
+        // If reached this point we are trying to get a not supported type. Throw exception
+        throw new IllegalArgumentException(String.format("Saving %s type is not supported",
+                value.getClass()));
     }
 
     /**
@@ -170,6 +338,10 @@ public class PersistentHashTable {
             }
             if (contentValue instanceof String) {
                 editor.putString(validateAndCleanKey(key), ((String) contentValue).trim());
+                continue;
+            }
+            if (contentValue instanceof Float) {
+                editor.putFloat(validateAndCleanKey(key), (Float) contentValue);
                 continue;
             }
             if (contentValue instanceof Long) {
@@ -203,16 +375,6 @@ public class PersistentHashTable {
                 persistentHashTableId));
 
         sharedPreferences.edit().clear().apply();
-    }
-
-    /**
-     * Checks if the persistent hash table is empty
-     *
-     * @return {@link Boolean} indicating if the table is empty
-     */
-    public boolean isEmpty() {
-
-        return sharedPreferences.getAll().isEmpty();
     }
 
     /**
