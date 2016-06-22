@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -27,8 +26,7 @@ import fi.zalando.core.utils.PlatformUtils;
 import timber.log.Timber;
 
 /**
- * An empty, reusable Activity to host Fragments.
- * Created by vraisanen on 14.4.2016.
+ * An empty, reusable Activity to host Fragments. Created by vraisanen on 14.4.2016.
  */
 public class ReusableFragmentActivity extends BaseActivity implements
         ReusableFragmentActivityView {
@@ -46,7 +44,8 @@ public class ReusableFragmentActivity extends BaseActivity implements
     StubPresenter stubPresenter;
 
     /**
-     * Launches ReusableFragmentActivity, and opens the given Fragment in it. Toolbar will be enabled.
+     * Launches ReusableFragmentActivity, and opens the given Fragment in it. Toolbar will be
+     * enabled.
      *
      * @param launchActivity {@link Activity} that is launching the {@link ReusableFragmentActivity}
      * @param fragmentClass  Fragment to open inside this new Activity.
@@ -56,9 +55,11 @@ public class ReusableFragmentActivity extends BaseActivity implements
     }
 
     /**
-     * Launches ReusableFragmentActivity, and opens the given Fragment in it. Toolbar will be enabled.
+     * Launches ReusableFragmentActivity, and opens the given Fragment in it. Toolbar will be
+     * enabled.
      *
-     * @param launchActivity    {@link Activity} that is launching the {@link ReusableFragmentActivity}
+     * @param launchActivity
+     * {@link Activity} that is launching the {@link ReusableFragmentActivity}
      * @param fragmentClass     Fragment to open inside this new Activity.
      * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
      */
@@ -71,7 +72,8 @@ public class ReusableFragmentActivity extends BaseActivity implements
     /**
      * Launches ReusableFragmentActivity, and opens the given Fragment in it.
      *
-     * @param launchActivity    {@link Activity} that is launching the {@link ReusableFragmentActivity}
+     * @param launchActivity
+     * {@link Activity} that is launching the {@link ReusableFragmentActivity}
      * @param fragmentClass     Fragment to open inside this new Activity.
      * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
      * @param optionFlags       Options to be passed on and applied to the new Activity.
@@ -79,8 +81,9 @@ public class ReusableFragmentActivity extends BaseActivity implements
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static void launch(@NonNull Activity launchActivity, @NonNull Class fragmentClass,
                               @Nullable Bundle bundleForFragment, int optionFlags) {
-        if (fragmentClass.isInstance(Fragment.class)) {
-            throw new ClassCastException("fragmentClass must extend " + Fragment.class.getName());
+        if (fragmentClass.isInstance(BaseFragment.class)) {
+            throw new ClassCastException("fragmentClass must extend " + BaseFragment.class
+                    .getName());
         }
 
         //Pack the Fragment name and Bundle to the Intent:
@@ -98,7 +101,8 @@ public class ReusableFragmentActivity extends BaseActivity implements
     /**
      * Creates an Intent to launch ReusableFragmentActivity with the given Fragment
      *
-     * @param launchActivity    {@link Activity} that is launching the {@link ReusableFragmentActivity}
+     * @param launchActivity
+     * {@link Activity} that is launching the {@link ReusableFragmentActivity}
      * @param fragmentClass     Fragment to open inside this new Activity.
      * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
      * @param optionFlags       Options to be passed on and applied to the new Activity.
@@ -106,8 +110,9 @@ public class ReusableFragmentActivity extends BaseActivity implements
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static Intent createIntent(@NonNull Context launchActivity, @NonNull Class fragmentClass,
                                       @Nullable Bundle bundleForFragment, int optionFlags) {
-        if (fragmentClass.isInstance(Fragment.class)) {
-            throw new ClassCastException("fragmentClass must extend " + Fragment.class.getName());
+        if (fragmentClass.isInstance(BaseFragment.class)) {
+            throw new ClassCastException("fragmentClass must extend " + BaseFragment.class
+                    .getName());
         }
 
         //Pack the Fragment name and Bundle to the Intent:
@@ -136,7 +141,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
 
     @Override
     public void initView() {
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             //Show/hide toolbar:
@@ -160,7 +165,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
             //Get the default empty constructor:
             Constructor<?> constructor = fragmentClass.getConstructor();
             //Create new instance of the Fragment:
-            Fragment fragment = (Fragment) constructor.newInstance();
+            BaseFragment fragment = (BaseFragment) constructor.newInstance();
             //Give the Bundle as argument:
             fragment.setArguments(bundleForFragment);
             //Show the Fragment:
@@ -223,6 +228,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
 
     /**
      * Returns true if the given flag has been set.
+     *
      * @param flagToCheck flag to check
      * @return true, if the flag was set.
      */
