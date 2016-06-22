@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import dagger.Lazy;
 import fi.zalando.core.R;
 import fi.zalando.core.ui.Navigator;
+import fi.zalando.core.ui.fragment.BaseFragment;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
 import fi.zalando.core.utils.UIUtils;
@@ -164,12 +165,12 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     /**
      * Replaces the fragment container with the given fragment
      *
-     * @param newFragment         {@link Fragment} that will replace the previous one
+     * @param newFragment         {@link BaseFragment} that will replace the previous one
      * @param fragmentContainerId layout id to place the fragment
      * @param addToBackStack      True if wanted to add to BackStack false otherwise
      * @param animate             True if you want to animate the change
      */
-    protected void switchFragment(int fragmentContainerId, Fragment newFragment, boolean
+    protected void switchFragment(int fragmentContainerId, BaseFragment newFragment, boolean
             addToBackStack, boolean animate) {
 
         String tag = ((Object) newFragment).getClass().getSimpleName();
@@ -206,7 +207,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
      * @param enterAnimation      Entry animation resource id
      * @param exitAnimation       Exit animation resource id
      */
-    protected void switchFragment(int fragmentContainerId, Fragment newFragment, boolean
+    protected void switchFragment(int fragmentContainerId, BaseFragment newFragment, boolean
             addToBackStack, @AnimRes int enterAnimation, @AnimRes int exitAnimation) {
 
         String tag = ((Object) newFragment).getClass().getSimpleName();

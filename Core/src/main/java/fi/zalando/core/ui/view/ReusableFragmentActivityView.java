@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 
+import fi.zalando.core.ui.fragment.BaseFragment;
+
 /*
  * Created by vraisanen on 14.4.2016.
  */
@@ -13,18 +15,18 @@ public interface ReusableFragmentActivityView extends BaseView {
      * Replaces the fragment container with the given {@link Fragment} using no animations or back
      * stack.
      *
-     * @param fragment {@link Fragment} to switch to.
+     * @param fragment {@link BaseFragment} to switch to.
      */
-    public void switchFragment(@NonNull Fragment fragment);
+    public void switchFragment(@NonNull BaseFragment fragment);
 
     /**
      * Replaces the fragment container with the given fragment
      *
-     * @param fragment       {@link Fragment} that will replace the previous one
+     * @param fragment       {@link BaseFragment} that will replace the previous one
      * @param addToBackStack True if wanted to add to BackStack false otherwise
      * @param animate        True if you want to animate the change
      */
-    public void switchFragment(Fragment fragment, boolean addToBackStack, boolean animate);
+    public void switchFragment(BaseFragment fragment, boolean addToBackStack, boolean animate);
 
     /**
      * Sets the toolbar title to the given String.
