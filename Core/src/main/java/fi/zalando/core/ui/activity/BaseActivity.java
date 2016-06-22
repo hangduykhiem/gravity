@@ -2,6 +2,7 @@ package fi.zalando.core.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.AnimRes;
+import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -129,7 +130,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
      * @param fragmentContainerId layout id to place the fragment
      * @param fragment            Fragment to add
      */
-    protected final void addInitialFragment(int fragmentContainerId, Fragment fragment) {
+    @CallSuper
+    protected void addInitialFragment(int fragmentContainerId, BaseFragment fragment) {
 
         String tag = ((Object) fragment).getClass().getSimpleName();
         if (fragmentManager.findFragmentByTag(tag) == null) {
@@ -170,6 +172,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
      * @param addToBackStack      True if wanted to add to BackStack false otherwise
      * @param animate             True if you want to animate the change
      */
+    @CallSuper
     protected void switchFragment(int fragmentContainerId, BaseFragment newFragment, boolean
             addToBackStack, boolean animate) {
 
@@ -207,6 +210,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
      * @param enterAnimation      Entry animation resource id
      * @param exitAnimation       Exit animation resource id
      */
+    @CallSuper
     protected void switchFragment(int fragmentContainerId, BaseFragment newFragment, boolean
             addToBackStack, @AnimRes int enterAnimation, @AnimRes int exitAnimation) {
 
