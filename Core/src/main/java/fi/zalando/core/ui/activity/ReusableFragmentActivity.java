@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 
 import fi.zalando.core.R;
 import fi.zalando.core.domain.helper.SubscriptionHelper;
+import fi.zalando.core.ui.fragment.BaseFragment;
 import fi.zalando.core.ui.presenter.StubPresenter;
 import fi.zalando.core.ui.view.ReusableFragmentActivityView;
 import fi.zalando.core.utils.PlatformUtils;
@@ -191,14 +192,14 @@ public class ReusableFragmentActivity extends BaseActivity implements
     }
 
     @Override
-    public void switchFragment(@NonNull Fragment fragment) {
+    public void switchFragment(@NonNull BaseFragment fragment) {
 
         super.switchFragment(R.id.reusablefragmentactivity_fragmentcontainer, fragment,
                 false, false);
     }
 
     @Override
-    public void switchFragment(Fragment fragment, boolean addToBackStack, boolean animate) {
+    public void switchFragment(BaseFragment fragment, boolean addToBackStack, boolean animate) {
 
         super.switchFragment(R.id.reusablefragmentactivity_fragmentcontainer, fragment,
                 addToBackStack, animate);
