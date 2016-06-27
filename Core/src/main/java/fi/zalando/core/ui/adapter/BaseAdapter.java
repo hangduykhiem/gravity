@@ -1,6 +1,7 @@
 package fi.zalando.core.ui.adapter;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
@@ -83,10 +84,13 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
      *
      * @param items List of items to be added to the adapter.
      */
-    public void setItems(@NonNull final List<T> items) {
+    public void setItems(@Nullable final List<T> items) {
         modCountUITest++;
+
         this.items.clear();
-        this.items.addAll(items);
+        if (items != null) {
+            this.items.addAll(items);
+        }
         notifyDataSetChanged();
     }
 
