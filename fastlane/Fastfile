@@ -72,7 +72,9 @@ platform :android do
     end
 
     if lane.to_s == "test"
-        hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core library successfully Unit Tested!", custom_color: "yellow" , channel: "Fleek%20Android", success: true)
+        # hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core library successfully Unit Tested!", custom_color: "yellow" , channel: "Fleek%20Android", success: true)
+        # No instrumentation tests running at the moment bring test to green color until we have maven upload task
+        hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core library successfully Unit Tested!", channel: "Fleek%20Android", success: true)
     end
 
     if lane.to_s == "instrumentationtest"
