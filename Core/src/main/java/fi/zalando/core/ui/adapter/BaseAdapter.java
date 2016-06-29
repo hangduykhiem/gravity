@@ -3,6 +3,7 @@ package fi.zalando.core.ui.adapter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -93,5 +94,8 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
         }
         notifyDataSetChanged();
     }
+
+    @Override
+    public abstract U onCreateViewHolder(ViewGroup parent, int viewType);
 
 }
