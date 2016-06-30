@@ -37,8 +37,7 @@ public class DeviceUtils {
     @Nullable
     public static String getUserCountry(Context context) {
         try {
-            final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context
-                    .TELEPHONY_SERVICE);
+            final TelephonyManager tm = getTelephoneManager(context);
             final String simCountry = tm.getSimCountryIso();
             if (simCountry != null && simCountry.length() == 2) { // SIM country code is available
                 return simCountry.toLowerCase(Locale.getDefault());
@@ -170,9 +169,9 @@ public class DeviceUtils {
                 return SecurityUtils.MD5.createDigest(deviceId);
             }
             return SecurityUtils.MD5.createDigest(getDeviceIdPseudo(context));
-        }
-        catch (Exception ex) {
-            return null;
+        } catch (Exception ex) {
+            return SecurityUtils.MD5.createDigest(Settings.Secure.getString(context
+                    .getContentResolver(), Settings.Secure.ANDROID_ID));
         }
     }
 
