@@ -1,6 +1,13 @@
 package fi.zalando.core.utils;
 
+import android.os.Build;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
+
+import fi.zalando.core.BuildConfig;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -10,6 +17,9 @@ import static junit.framework.Assert.assertTrue;
  *
  * Created by jduran on 17/03/16.
  */
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, manifest =
+        "src/main/AndroidManifest.xml")
 public class URLUtilsTest {
 
     @Test
@@ -34,6 +44,21 @@ public class URLUtilsTest {
         assertTrue(URLUtils.extractQueryParameters(urlWithMultipleParameters, "q").contains("red"));
         assertTrue(URLUtils.extractQueryParameters(urlWithMultipleParameters, "q").contains
                 ("another"));
+    }
+
+    @Test
+    public void testExtractLastSegmentFromUrl() {
+
+        assertEquals("42", URLUtils.extractLastSegmentFromUrl("http://example" +
+                ".com/foo/bar/42?param=true"));
+        assertEquals("foo", URLUtils.extractLastSegmentFromUrl("http://example.com/foo"));
+        assertEquals("bar", URLUtils.extractLastSegmentFromUrl("http://example.com/bar/"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testExtractLastSegmentFromUrlFailed() {
+
+        URLUtils.extractLastSegmentFromUrl("invalid URL");
     }
 
 }

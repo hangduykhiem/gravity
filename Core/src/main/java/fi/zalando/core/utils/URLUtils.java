@@ -47,6 +47,18 @@ public class URLUtils {
     }
 
     /**
+     * Provides the last segment from a given URL
+     *
+     * @param url {@link String} with the url to extract the segment
+     * @return {@link String} extracted url
+     */
+    public static String extractLastSegmentFromUrl(final String url) {
+
+        Preconditions.checkArgument(ValidationUtils.isValidURL(url), "Given url is invalid");
+        return url.replaceFirst(".*/([^/?]+).*", "$1");
+    }
+
+    /**
      * Provides a {@link Map} with all the parameters key/value pairs in the given {@link String}
      * url
      *
