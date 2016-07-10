@@ -237,7 +237,7 @@ public class DeviceUtils {
      * @param pattern an array of longs of times for which to turn the vibrator on or off.
      * @param repeat  the index into pattern at which to repeat, or -1 if you don't want to repeat.
      */
-    public void vibrate(final Context context, long[] pattern, int repeat) {
+    public static void vibrate(final Context context, long[] pattern, int repeat) {
 
         // Get instance of Vibrator from current Context and apply the pattern
         ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(pattern, repeat);
