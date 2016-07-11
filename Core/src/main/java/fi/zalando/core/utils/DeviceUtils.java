@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
@@ -12,6 +13,7 @@ import android.text.TextUtils;
 import android.view.WindowManager;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
 
@@ -204,4 +206,41 @@ public class DeviceUtils {
 
         return (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
     }
+
+    /**
+     * Performs vibration of the time specified in the parameters
+     *
+     * @param context       Application context
+     * @param vibrationTime {@link Long} with the time to vibrate
+     * @param timeUnit      {@link TimeUnit} of the given vibration time
+     */
+    public static void vibrate(final Context context,
+                               long vibrationTime,
+                               TimeUnit timeUnit) {
+
+        ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE))
+                .vibrate(timeUnit.toMillis(vibrationTime));
+    }
+
+    /**
+     * Vibrate with a given pattern.
+     *
+     * <p> Pass in an array of ints that are the durations for which to turn on or off the vibrator
+     * in milliseconds.  The first value indicates the number of milliseconds to wait before turning
+     * the vibrator on.  The next value indicates the number of milliseconds for which to keep the
+     * vibrator on before turning it off.  Subsequent values alternate between durations in
+     * milliseconds to turn the vibrator off or to turn the vibrator on. </p><p> To cause the
+     * pattern to repeat, pass the index into the pattern array at which to start the repeat, or -1
+     * to disable repeating. </p> <p>This method requires the caller to hold the permission {@link
+     * android.Manifest.permission#VIBRATE}.
+     *
+     * @param pattern an array of longs of times for which to turn the vibrator on or off.
+     * @param repeat  the index into pattern at which to repeat, or -1 if you don't want to repeat.
+     */
+    public static void vibrate(final Context context, long[] pattern, int repeat) {
+
+        // Get instance of Vibrator from current Context and apply the pattern
+        ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(pattern, repeat);
+    }
+
 }
