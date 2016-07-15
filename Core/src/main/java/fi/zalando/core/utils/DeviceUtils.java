@@ -1,6 +1,5 @@
 package fi.zalando.core.utils;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Point;
 import android.location.LocationManager;
@@ -10,6 +9,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.WindowManager;
 
 import java.util.Locale;
@@ -70,22 +70,63 @@ public class DeviceUtils {
     }
 
     /**
+     * Returns the dimensions of the bottom navigation bar, if one is present
+     * @param context {@link Context}
+     * @return bottom bar dimensions in {@link Point}.
+     */
+    public static Point getNavigationBarSize(Context context) {
+        Point appUsableSize = getAppUsableScreenSize(context);
+        Point realScreenSize = getScreenResolution(context);
+
+        // navigation bar on the right
+        if (appUsableSize.x < realScreenSize.x) {
+            return new Point(realScreenSize.x - appUsableSize.x, appUsableSize.y);
+        }
+
+        // navigation bar at the bottom
+        if (appUsableSize.y < realScreenSize.y) {
+            return new Point(appUsableSize.x, realScreenSize.y - appUsableSize.y);
+        }
+
+        // navigation bar is not present
+        return new Point();
+    }
+
+    /**
+     * Returns the usable area of the screen, i.e. screen size minus the decorations & bottom bar.
+     * @param context {@link Context}
+     * @return usable dimensions in {@link Point}
+     */
+    public static Point getAppUsableScreenSize(Context context) {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size;
+    }
+
+    /**
      * Gets the device's native screen resolution rotated based on the device's current screen
      * orientation.
      *
      * @param context {@link Context} of the app
      * @return {@link Point} with the device screen native resolution
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static Point getScreenResolution(Context context) {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        Point size = new Point();
 
-        // TargetApi is needed To remove warning about using getRealSize prior to API 17
+        if (Build.VERSION.SDK_INT >= 17) {
+            display.getRealSize(size);
+        } else if (Build.VERSION.SDK_INT >= 14) {
+            try {
+                size.x = (Integer) Display.class.getMethod("getRawWidth").invoke(display);
+                size.y = (Integer) Display.class.getMethod("getRawHeight").invoke(display);
+            } catch (Exception e) {/*nada*/}
+        }
 
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context
-                .WINDOW_SERVICE);
-        Point screenResolution = new Point();
-        windowManager.getDefaultDisplay().getRealSize(screenResolution);
-        return screenResolution;
+        return size;
     }
 
     /**
