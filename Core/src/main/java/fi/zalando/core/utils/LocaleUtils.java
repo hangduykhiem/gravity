@@ -4,7 +4,9 @@ import android.support.annotation.Nullable;
 
 import java.text.NumberFormat;
 import java.util.Currency;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -14,6 +16,15 @@ import timber.log.Timber;
  * Created by jduran on 26/04/16.
  */
 public class LocaleUtils {
+
+    //Holds a list of country code and their locales
+    private static Map<String, Locale> countryLocales;
+
+    /**
+     * Private constructor to avoid method reference
+     */
+    private LocaleUtils() {
+    }
 
     /**
      * Returns a {@link String} with a localised price using device locale and given parameters
@@ -38,6 +49,24 @@ public class LocaleUtils {
         }
 
         return priceText;
+    }
+
+    /**
+     * Provides the {@link Locale} of the given country code
+     *
+     * @param countryCode {@link String} with the ISO country code
+     * @return {@link Locale} of the given country code. Null if country locale is not found.
+     */
+    @Nullable
+    public static Locale getCountryLocale(String countryCode) {
+        if (countryLocales == null) {
+            countryLocales = new HashMap<>();
+            for (String iso : Locale.getISOCountries()) {
+                Locale l = new Locale("", iso);
+                countryLocales.put(iso, l);
+            }
+        }
+        return countryLocales.get(countryCode);
     }
 
 }
