@@ -36,7 +36,6 @@ public class DeviceUtils {
      * @param context {@link TelephonyManager} reference to get the TelephonyManager instance from
      * @return {@link String) with country ISO code or empty if not available
      */
-    @Nullable
     public static String getUserCountry(Context context) {
         try {
             final TelephonyManager tm = getTelephoneManager(context);
