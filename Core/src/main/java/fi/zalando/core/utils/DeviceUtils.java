@@ -31,12 +31,11 @@ public class DeviceUtils {
     }
 
     /**
-     * Get ISO 3166-1 alpha-2 country code for this device (or null if not available)
+     * Get ISO 3166-1 alpha-2 country code for this device (or empty String if not available)
      *
      * @param context {@link TelephonyManager} reference to get the TelephonyManager instance from
-     * @return {@link String) with country ISO code or null
+     * @return {@link String) with country ISO code or empty if not available
      */
-    @Nullable
     public static String getUserCountry(Context context) {
         try {
             final TelephonyManager tm = getTelephoneManager(context);
@@ -54,7 +53,7 @@ public class DeviceUtils {
         } catch (Exception e) {
             Timber.e(e, "Error getting user country");
         }
-        return null;
+        return "";
     }
 
     /**
@@ -71,6 +70,7 @@ public class DeviceUtils {
 
     /**
      * Returns the dimensions of the bottom navigation bar, if one is present
+     *
      * @param context {@link Context}
      * @return bottom bar dimensions in {@link Point}.
      */
@@ -94,11 +94,13 @@ public class DeviceUtils {
 
     /**
      * Returns the usable area of the screen, i.e. screen size minus the decorations & bottom bar.
+     *
      * @param context {@link Context}
      * @return usable dimensions in {@link Point}
      */
     public static Point getAppUsableScreenSize(Context context) {
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context
+                .WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -113,7 +115,8 @@ public class DeviceUtils {
      * @return {@link Point} with the device screen native resolution
      */
     public static Point getScreenResolution(Context context) {
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context
+                .WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
         Point size = new Point();
 

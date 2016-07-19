@@ -7,8 +7,6 @@ import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subjects.BehaviorSubject;
-import rx.subjects.Subject;
 
 /**
  * Base class that will host common methods for all the domain service definitions
@@ -69,21 +67,6 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
                         .observeOn(AndroidSchedulers.mainThread())
                         .onErrorResumeNext(throwable ->
                                 Observable.error(new BaseThrowable(throwable)));
-    }
-
-    /**
-     * Creates a {@link BehaviorSubject} to use within domain services using the given {@link
-     * Observable} as a reference
-     *
-     * @param observable {@link Observable} to use as reference in the {@link Subject}
-     * @param <T>        {@link T} of the {@link Observable}
-     * @return {@link Subject} that listens and emits the given {@link Observable}
-     */
-    protected <T> Observable<T> createObservingSubject(Observable<T> observable) {
-
-        Subject<T, T> behaviorSubject = BehaviorSubject.create();
-        observable.subscribe(behaviorSubject::onNext, behaviorSubject::onError);
-        return behaviorSubject;
     }
 
     /**
