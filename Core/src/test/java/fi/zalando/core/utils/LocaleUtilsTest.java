@@ -5,9 +5,7 @@ import org.junit.Test;
 import java.util.Locale;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
 
 /**
  * Test class for {@link LocaleUtils} utility class
