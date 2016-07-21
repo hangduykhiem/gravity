@@ -63,10 +63,10 @@ public class LocaleUtils {
             countryLocales = new HashMap<>();
             for (String iso : Locale.getISOCountries()) {
                 Locale l = new Locale("", iso);
-                countryLocales.put(iso.toUpperCase(), l);
+                countryLocales.put(iso.toUpperCase(Locale.US), l);
             }
         }
-        return countryLocales.get(countryCode.toUpperCase());
+        return countryLocales.get(countryCode.toUpperCase(Locale.US));
     }
 
 }
