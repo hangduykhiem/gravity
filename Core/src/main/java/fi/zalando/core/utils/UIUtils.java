@@ -107,7 +107,9 @@ public class UIUtils {
     /**
      * Shows styled {@link Snackbar} with the given text and button
      * @param parent parent {@link View}
-     * @param resId text to show
+     * @param resId text resource id
+     * @param buttonTextId button text resource id
+     * @param onClickAction {@link Runnable} to execute on button press
      */
     public static void showSnack(@NonNull View parent, @StringRes int resId,
                                  @StringRes int buttonTextId, @Nullable Runnable onClickAction) {
