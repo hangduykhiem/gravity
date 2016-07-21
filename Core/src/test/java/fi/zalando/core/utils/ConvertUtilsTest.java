@@ -135,11 +135,11 @@ public class ConvertUtilsTest {
     public void testGetDisplayCountry(){
 
         // Test Germany
-        assertEquals(ConvertUtils.getDisplayCountry("DE"), "Germany");
+        assertEquals(ConvertUtils.getDisplayCountry("de"), "Germany");
         // Test Finland
         assertEquals(ConvertUtils.getDisplayCountry("FI"), "Finland");
         // Test Spanish
-        assertEquals(ConvertUtils.getDisplayCountry("ES"), "Spain");
+        assertEquals(ConvertUtils.getDisplayCountry("es"), "Spain");
         // Test Vietnam
         assertEquals(ConvertUtils.getDisplayCountry("VN"), "Vietnam");
     }
