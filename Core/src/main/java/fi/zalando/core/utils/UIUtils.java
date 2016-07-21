@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.text.method.PasswordTransformationMethod;
@@ -99,6 +100,23 @@ public class UIUtils {
      */
     public static void showSnack(@NonNull View parent, @NonNull CharSequence text) {
         Snackbar snackbar = Snackbar.make(parent, text, Snackbar.LENGTH_LONG);
+        styleSnackbar(parent.getContext(), snackbar);
+        snackbar.show();
+    }
+
+    /**
+     * Shows styled {@link Snackbar} with the given text and button
+     * @param parent parent {@link View}
+     * @param resId text resource id
+     * @param buttonTextId button text resource id
+     * @param onClickAction {@link Runnable} to execute on button press
+     */
+    public static void showSnack(@NonNull View parent, @StringRes int resId,
+                                 @StringRes int buttonTextId, @Nullable Runnable onClickAction) {
+        Snackbar snackbar = Snackbar.make(parent, resId, Snackbar.LENGTH_INDEFINITE);
+        if (onClickAction != null) {
+            snackbar.setAction(buttonTextId, (v) -> onClickAction.run());
+        }
         styleSnackbar(parent.getContext(), snackbar);
         snackbar.show();
     }
