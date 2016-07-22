@@ -86,22 +86,26 @@ public class UIUtils {
      * Shows styled {@link Snackbar} with the given text.
      * @param parent parent {@link View}
      * @param resId text to show
+     * @return Snackbar that is shown
      */
-    public static void showSnack(@NonNull View parent, @StringRes int resId) {
-        Snackbar snackbar = Snackbar.make(parent, resId, Snackbar.LENGTH_LONG);
+    public static Snackbar showSnack(@NonNull View parent, @StringRes int resId) {
+        final Snackbar snackbar = Snackbar.make(parent, resId, Snackbar.LENGTH_LONG);
         styleSnackbar(parent.getContext(), snackbar);
         snackbar.show();
+        return snackbar;
     }
 
     /**
      * Shows styled {@link Snackbar} with the given text.
      * @param parent parent {@link View}
      * @param text text to show
+     * @return Snackbar that is shown
      */
-    public static void showSnack(@NonNull View parent, @NonNull CharSequence text) {
-        Snackbar snackbar = Snackbar.make(parent, text, Snackbar.LENGTH_LONG);
+    public static Snackbar showSnack(@NonNull View parent, @NonNull CharSequence text) {
+        final Snackbar snackbar = Snackbar.make(parent, text, Snackbar.LENGTH_LONG);
         styleSnackbar(parent.getContext(), snackbar);
         snackbar.show();
+        return snackbar;
     }
 
     /**
@@ -110,15 +114,17 @@ public class UIUtils {
      * @param resId text resource id
      * @param buttonTextId button text resource id
      * @param onClickAction {@link Runnable} to execute on button press
+     * @return Snackbar that is shown
      */
-    public static void showSnack(@NonNull View parent, @StringRes int resId,
+    public static Snackbar showSnack(@NonNull View parent, @StringRes int resId,
                                  @StringRes int buttonTextId, @Nullable Runnable onClickAction) {
-        Snackbar snackbar = Snackbar.make(parent, resId, Snackbar.LENGTH_INDEFINITE);
+        final Snackbar snackbar = Snackbar.make(parent, resId, Snackbar.LENGTH_INDEFINITE);
         if (onClickAction != null) {
             snackbar.setAction(buttonTextId, (v) -> onClickAction.run());
         }
         styleSnackbar(parent.getContext(), snackbar);
         snackbar.show();
+        return snackbar;
     }
 
     /**
