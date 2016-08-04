@@ -13,6 +13,7 @@
 
 # If you want to automatically update fastlane if a new version is available:
 # update_fastlane
+fastlane_version "1.64.0"
 
 # This is the minimum version number required.
 # Update this, if you use features of a newer version
@@ -27,19 +28,12 @@
 # fastlane --verbose --env ci instrumentationtest build_url:$BUILD_URL build_number:$BUILD_NUMBER adb:$ADB_PATH
 # Runs instrumentation tests action for CI environment, with injected build_url from jenkins providing also the ADB path
 
-fastlane_version "1.64.0"
-
 default_platform :android
 
 platform :android do
 
   before_all do
     $environment = ENV["ENVIRONMENT"]
-  end
-
-  desc "Runs Lint"
-  lane :lint do
-    gradle(task: 'lint')
   end
 
   desc "Runs all unit tests"
@@ -50,16 +44,7 @@ platform :android do
   desc "Runs all instrumentation tests"
   lane :instrumentationtest do |options|
 
-    $adb_path = options[:adb]
-
-    # Wake up the screen
-    adb(adb_path: $adb_path, command: 'shell input keyevent KEYCODE_WAKEUP')
-
-    # Uninstall previous app
-    gradle(task: 'uninstallAll')
-
-    # Run the tests
-    gradle(task: ENV["TEST_INSTRUMENTATION_TASK"], flags: '--stacktrace')
+    # TODO upload the test APK to TestDroid
 
   end
 
@@ -67,40 +52,18 @@ platform :android do
 
     $build_number = options[:build_number]
 
-    if lane.to_s == "lint"
-        hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core library successfully Lint checked!", custom_color: "gray" , channel: "Fleek%20Android", success: true)
-    end
-
     if lane.to_s == "test"
         # hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core library successfully Unit Tested!", custom_color: "yellow" , channel: "Fleek%20Android", success: true)
         # No instrumentation tests running at the moment bring test to green color until we have maven upload task
         hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core library successfully Unit Tested!", channel: "Fleek%20Android", success: true)
     end
 
-    if lane.to_s == "instrumentationtest"
-
-        # Send message to hipchat
-        hipchat(from: "MsJenkins", message: "#{$environment}-#{$build_number}: Android core library successfully Tested!", channel: "Fleek%20Android", success: true)
-
-        # Say built was successful
-        say "Android Core Library `#{$environment}` Build #{$build_number} Successful"
-
-    end
-
   end
 
   error do |lane, exception, options|
 
-    if lane.to_s == "lint"
-        hipchat(from: "MsJenkins", message_format:"html", message: $environment + ": Android core lint test failed... WEAR THE HAT! <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
-    end
-
     if lane.to_s == "test"
-        hipchat(from: "MsJenkins", message_format:"html", message: $environment + ": Android core unit test failed... WEAR THE HAT! <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
-    end
-
-    if lane.to_s == "instrumentationtest"
-       hipchat(from: "MsJenkins", message_format:'html', message: $environment + ": Android core instrumentation test failed... <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
+        hipchat(from: "MsJenkins", message_format:"html", message: $environment + ": Android core unit test failed...! <a href="+options[:build_url]+">ERROR LOG</a>", channel: "Fleek%20Android", success: false)
     end
 
   end
