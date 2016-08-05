@@ -4,6 +4,7 @@ commit:
       - '^#[0-9+]' #GitHub issues
 approvals:
   minimum: 1
+  ignore: pr_opener # do not count approval from PR opener
   ignore: none
   pattern: "^(:\\+1:|👍)$"
   veto:
