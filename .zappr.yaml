@@ -1,0 +1,15 @@
+commit:
+  message:
+    patterns:
+      - '^#[0-9+]' #GitHub issues
+approvals:
+  minimum: 1
+  ignore: none
+  pattern: "^(:\\+1:|👍)$"
+  veto:
+    pattern: "^(:\\-1:|👎)$"
+specification:
+  title:
+    minimum-length:
+      enabled: true
+      length: 8
