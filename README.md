@@ -9,9 +9,10 @@ This document describes the setup instructions, tools, libraries, style and nami
 - Forking the team-level repository
 - Git clone your own repository
 - [Configure a remote for a fork](https://help.github.com/articles/configuring-a-remote-for-a-fork/)
-- Commits your changes to YOUR repos. Every commit should include the JIRA ticket code it is related with. For example, "ZMAL-XYZ: This is a commit" where XYZ is the ticket number.
+- Commits your changes to YOUR repos. Every commit should include the Github issue code it is related with. For example, "#XYZ: This is a commit" where XYZ is the ticket number.
 - Create a pull request to merge your changes to team repos
-- ONLY a reviewer can merge your changes to the team-level repository.
+- Ask team members to check, once they are happy they need to add :+1: in the comments.
+- Once at least one colleague have added the validation comment, the PR opener can merge the PR.
 - Three different repositories exist on team-level repository. Development; where under development code resides. Staging; where last built used for staging resides. Master; where last published code is located. 
 
 ## Creating a Pull Request
