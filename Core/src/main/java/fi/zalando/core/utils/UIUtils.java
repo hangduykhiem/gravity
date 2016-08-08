@@ -178,6 +178,7 @@ public class UIUtils {
         for (TextView textView : textViews) {
             if (!TextUtils.isEmpty(textView.getError())) {
                 textView.requestFocus();
+                return;
             }
         }
     }
