@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * Utility class to help with UI related tasks
@@ -65,7 +66,7 @@ public class UIUtils {
      * Updates the status of the password visibility of the given {@link EditText} to match the
      * given {@link CheckBox}.
      *
-     * @param passwordEditText {@link EditText} whose transformation method to update
+     * @param passwordEditText     {@link EditText} whose transformation method to update
      * @param showPasswordCheckBox {@link CheckBox} whose status determines the method.
      */
     public static void updatePasswordTransformation(EditText passwordEditText, CheckBox
@@ -85,8 +86,9 @@ public class UIUtils {
 
     /**
      * Shows styled {@link Snackbar} with the given text.
+     *
      * @param parent parent {@link View}
-     * @param resId text to show
+     * @param resId  text to show
      * @return Snackbar that is shown
      */
     public static Snackbar showSnack(@NonNull View parent, @StringRes int resId) {
@@ -98,8 +100,9 @@ public class UIUtils {
 
     /**
      * Shows styled {@link Snackbar} with the given text.
+     *
      * @param parent parent {@link View}
-     * @param text text to show
+     * @param text   text to show
      * @return Snackbar that is shown
      */
     public static Snackbar showSnack(@NonNull View parent, @NonNull CharSequence text) {
@@ -111,14 +114,16 @@ public class UIUtils {
 
     /**
      * Shows styled {@link Snackbar} with the given text and button
-     * @param parent parent {@link View}
-     * @param resId text resource id
-     * @param buttonTextId button text resource id
+     *
+     * @param parent        parent {@link View}
+     * @param resId         text resource id
+     * @param buttonTextId  button text resource id
      * @param onClickAction {@link Runnable} to execute on button press
      * @return Snackbar that is shown
      */
     public static Snackbar showSnack(@NonNull View parent, @StringRes int resId,
-                                 @StringRes int buttonTextId, @Nullable Runnable onClickAction) {
+                                     @StringRes int buttonTextId, @Nullable Runnable
+                                             onClickAction) {
         final Snackbar snackbar = Snackbar.make(parent, resId, Snackbar.LENGTH_INDEFINITE);
         if (onClickAction != null) {
             snackbar.setAction(buttonTextId, (v) -> onClickAction.run());
@@ -131,7 +136,8 @@ public class UIUtils {
     /**
      * Styles the given Snackbar based on the styles defined in application styles with a name
      * "SnackbarStyle".
-     * @param context {@link Context}
+     *
+     * @param context  {@link Context}
      * @param snackbar {@link Snackbar}
      */
     @SuppressWarnings("ResourceType") //Solves lint bug
@@ -143,7 +149,7 @@ public class UIUtils {
         int textColor = Color.BLACK;
         int backgroundColor = Color.WHITE;
 
-        int resID = context.getResources().getIdentifier("SnackbarStyle" , "style",
+        int resID = context.getResources().getIdentifier("SnackbarStyle", "style",
                 context.getPackageName());
 
         //Try to fetch the style attributes
@@ -167,11 +173,11 @@ public class UIUtils {
     /**
      * Get the focus to the first error of the registration
      */
-    public void focusOnFirstError(EditText... editTexts) {
+    public static void focusOnFirstError(TextView... textViews) {
 
-        for (EditText editText : editTexts) {
-            if (!TextUtils.isEmpty(editText.getError())) {
-                editText.requestFocus();
+        for (TextView textView : textViews) {
+            if (!TextUtils.isEmpty(textView.getError())) {
+                textView.requestFocus();
             }
         }
     }
