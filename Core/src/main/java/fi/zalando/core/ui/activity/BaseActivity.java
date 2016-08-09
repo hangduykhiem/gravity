@@ -20,6 +20,7 @@ import fi.zalando.core.ui.fragment.BaseFragment;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
 import fi.zalando.core.utils.UIUtils;
+import icepick.Icepick;
 import rx.Completable;
 import rx.subjects.BehaviorSubject;
 
@@ -53,7 +54,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
+        // init IcePick
+        Icepick.restoreInstanceState(this, savedInstanceState);
         // Init fragment manager to have an easy access to fragment related operations
         fragmentManager = getSupportFragmentManager();
         // Force injection of dependencies
@@ -115,6 +117,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     public void onSaveInstanceState(Bundle outState) {
 
         super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
         getPresenter().onSaveInstanceState(outState);
     }
 
