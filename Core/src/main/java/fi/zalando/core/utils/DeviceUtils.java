@@ -109,7 +109,7 @@ public class DeviceUtils {
             WindowManager windowManager = (WindowManager) context.getSystemService(Context
                     .WINDOW_SERVICE);
             Display display = windowManager.getDefaultDisplay();
-            appUsableScreenSize new Point();
+            appUsableScreenSize=  new Point();
             display.getSize(appUsableScreenSize);
             return appUsableScreenSize;
         }
