@@ -24,6 +24,11 @@ import timber.log.Timber;
  */
 public class DeviceUtils {
 
+    @Nullable
+    private static Point deviceResolution;
+    @Nullable
+    private static Point appUsableScreenSize;
+
     /**
      * Private constructor to avoid class instances
      */
@@ -99,12 +104,16 @@ public class DeviceUtils {
      * @return usable dimensions in {@link Point}
      */
     public static Point getAppUsableScreenSize(Context context) {
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context
-                .WINDOW_SERVICE);
-        Display display = windowManager.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        return size;
+
+        if (appUsableScreenSize == null) {
+            WindowManager windowManager = (WindowManager) context.getSystemService(Context
+                    .WINDOW_SERVICE);
+            Display display = windowManager.getDefaultDisplay();
+            appUsableScreenSize new Point();
+            display.getSize(appUsableScreenSize);
+            return appUsableScreenSize;
+        }
+        return appUsableScreenSize;
     }
 
     /**
@@ -115,21 +124,25 @@ public class DeviceUtils {
      * @return {@link Point} with the device screen native resolution
      */
     public static Point getScreenResolution(Context context) {
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context
-                .WINDOW_SERVICE);
-        Display display = windowManager.getDefaultDisplay();
-        Point size = new Point();
 
-        if (Build.VERSION.SDK_INT >= 17) {
-            display.getRealSize(size);
-        } else if (Build.VERSION.SDK_INT >= 14) {
-            try {
-                size.x = (Integer) Display.class.getMethod("getRawWidth").invoke(display);
-                size.y = (Integer) Display.class.getMethod("getRawHeight").invoke(display);
-            } catch (Exception e) {/*nada*/}
+        if (deviceResolution == null) {
+            WindowManager windowManager = (WindowManager) context.getSystemService(Context
+                    .WINDOW_SERVICE);
+            Display display = windowManager.getDefaultDisplay();
+            deviceResolution = new Point();
+
+            if (Build.VERSION.SDK_INT >= 17) {
+                display.getRealSize(deviceResolution);
+            } else if (Build.VERSION.SDK_INT >= 14) {
+                try {
+                    deviceResolution.x =
+                            (Integer) Display.class.getMethod("getRawWidth").invoke(display);
+                    deviceResolution.y =
+                            (Integer) Display.class.getMethod("getRawHeight").invoke(display);
+                } catch (Exception e) {/*nada*/}
+            }
         }
-
-        return size;
+        return deviceResolution;
     }
 
     /**
