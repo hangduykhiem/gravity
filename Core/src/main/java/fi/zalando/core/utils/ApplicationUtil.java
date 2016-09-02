@@ -41,4 +41,22 @@ public class ApplicationUtil {
         return null;
     }
 
+    /**
+     * Provides the {@link Integer} with the app version code
+     *
+     * @param context {@link Context} of the app
+     * @return {@link Integer} with the version code, or -1 if something went wrong
+     */
+    public static int getAppVersionCode(Context context) {
+
+        PackageInfo pInfo = null;
+        try {
+            pInfo = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+            return pInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException exception) {
+            Timber.e(exception, "Error getting app version");
+        }
+        return -1;
+    }
 }
