@@ -6,10 +6,12 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -89,25 +91,38 @@ public class UIUtils {
      *
      * @param parent parent {@link View}
      * @param resId  text to show
+     * @param duration      {@link Snackbar.Duration} of the snackbar
      * @return Snackbar that is shown
      */
-    public static Snackbar showSnack(@NonNull View parent, @StringRes int resId) {
-        final Snackbar snackbar = Snackbar.make(parent, resId, Snackbar.LENGTH_LONG);
+    public static Snackbar showSnack(@NonNull View parent,
+                                     @StringRes int resId,
+                                     @Snackbar.Duration int duration) {
+
+        final Snackbar snackbar = Snackbar.make(parent, resId, duration);
         styleSnackbar(parent.getContext(), snackbar);
         snackbar.show();
         return snackbar;
     }
 
     /**
-     * Shows styled {@link Snackbar} with the given text.
+     * Shows styled {@link Snackbar} with the given text and style it with given parameters
      *
-     * @param parent parent {@link View}
-     * @param text   text to show
+     * @param parent          parent {@link View}
+     * @param backgroundColor {@link ColorRes} for the Snackbar background
+     * @param resId           text to show
+     * @param duration        {@link Snackbar.Duration} of the snackbar
      * @return Snackbar that is shown
      */
-    public static Snackbar showSnack(@NonNull View parent, @NonNull CharSequence text) {
-        final Snackbar snackbar = Snackbar.make(parent, text, Snackbar.LENGTH_LONG);
+    public static Snackbar showSnack(@NonNull View parent,
+                                     @StringRes int resId,
+                                     @ColorRes int backgroundColor,
+                                     @Snackbar.Duration int duration) {
+
+        final Snackbar snackbar = Snackbar.make(parent, resId, duration);
+        // We first style it, and then change the needed params
         styleSnackbar(parent.getContext(), snackbar);
+        snackbar.getView()
+                .setBackgroundColor(ContextCompat.getColor(parent.getContext(), backgroundColor));
         snackbar.show();
         return snackbar;
     }
@@ -119,16 +134,49 @@ public class UIUtils {
      * @param resId         text resource id
      * @param buttonTextId  button text resource id
      * @param onClickAction {@link Runnable} to execute on button press
+     * @param duration      {@link Snackbar.Duration} of the snackbar
      * @return Snackbar that is shown
      */
-    public static Snackbar showSnack(@NonNull View parent, @StringRes int resId,
-                                     @StringRes int buttonTextId, @Nullable Runnable
-                                             onClickAction) {
-        final Snackbar snackbar = Snackbar.make(parent, resId, Snackbar.LENGTH_INDEFINITE);
-        if (onClickAction != null) {
-            snackbar.setAction(buttonTextId, (v) -> onClickAction.run());
-        }
+    public static Snackbar showSnack(@NonNull View parent,
+                                     @StringRes int resId,
+                                     @StringRes int buttonTextId,
+                                     @NonNull Runnable onClickAction,
+                                     @Snackbar.Duration int duration) {
+
+        final Snackbar snackbar = Snackbar.make(parent, resId, duration);
+        snackbar.setAction(buttonTextId, (v) -> onClickAction.run());
         styleSnackbar(parent.getContext(), snackbar);
+        snackbar.show();
+        return snackbar;
+    }
+
+    /**
+     * Shows styled {@link Snackbar} with the given text and button, styling it with the given
+     * parameters
+     *
+     * @param parent          parent {@link View}
+     * @param resId           text resource id
+     * @param buttonTextId    button text resource id
+     * @param backgroundColor {@link ColorRes} for the Snackbar background
+     * @param actionColor     {@link ColorRes} for the color of the action button text
+     * @param onClickAction   {@link Runnable} to execute on button press
+     * @param duration      {@link Snackbar.Duration} of the snackbar
+     * @return Snackbar that is shown
+     */
+    public static Snackbar showSnack(@NonNull View parent,
+                                     @StringRes int resId,
+                                     @StringRes int buttonTextId,
+                                     @ColorRes int backgroundColor,
+                                     @ColorRes int actionColor,
+                                     @NonNull Runnable onClickAction,
+                                     @Snackbar.Duration int duration) {
+
+        final Snackbar snackbar = Snackbar.make(parent, resId, duration);
+            snackbar.setAction(buttonTextId, (v) -> onClickAction.run());
+        // no need to style it first... everything styleable will override
+        snackbar.setActionTextColor(ContextCompat.getColor(parent.getContext(), actionColor));
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(parent.getContext(),
+                backgroundColor));
         snackbar.show();
         return snackbar;
     }
