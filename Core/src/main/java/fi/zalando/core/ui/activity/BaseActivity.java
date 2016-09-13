@@ -128,22 +128,19 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     }
 
     /**
-     * Adds the initial fragment to the default fragment container
+     * Replaces the fragment to the default fragment container
      *
      * @param fragmentContainerId layout id to place the fragment
      * @param fragment            Fragment to add
      */
     @CallSuper
-    protected void addInitialFragment(int fragmentContainerId, BaseFragment fragment) {
+    protected void setFragment(int fragmentContainerId, BaseFragment fragment) {
 
-        String tag = ((Object) fragment).getClass().getSimpleName();
-        if (fragmentManager.findFragmentByTag(tag) == null) {
-            // Add the fragment to the 'fragment_container' FrameLayout
-            FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.replace(fragmentContainerId, fragment, ((Object) fragment).getClass()
-                    .getSimpleName());
-            ft.commit();
-        }
+        // Add the fragment to the 'fragment_container' FrameLayout
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(fragmentContainerId, fragment, ((Object) fragment).getClass()
+                .getSimpleName());
+        ft.commit();
     }
 
     /**

@@ -169,7 +169,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
             //Give the Bundle as argument:
             fragment.setArguments(bundleForFragment);
             //Show the Fragment:
-            addInitialFragment(R.id.reusablefragmentactivity_fragmentcontainer,
+            setFragment(R.id.reusablefragmentactivity_fragmentcontainer,
                     fragment);
         } catch (Exception e) {
             Timber.e(e, "Error when initializing Fragment.");
