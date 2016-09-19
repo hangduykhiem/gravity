@@ -1,7 +1,10 @@
 package fi.zalando.core.utils;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -314,5 +317,22 @@ public class ConvertUtils {
     public static String getDisplayCountry(String countryCode) {
         Locale locale = LocaleUtils.getCountryLocale(countryCode);
         return locale != null ? locale.getDisplayCountry() : null;
+    }
+
+    /**
+     * Transforms a {@link java.util.List} with a subclass of {@link U} into pure {@link U} {@link
+     * List}
+     *
+     * @param <U> Superclass type
+     * @param <T> Subclass type
+     * @return {@link List} transformed
+     */
+    public static <U, T extends U> List<U> convertList(@NonNull List<T> listToTransform) {
+
+        List<U> transformedList = new ArrayList<>(listToTransform.size());
+        for (T item : listToTransform) {
+            transformedList.add(item);
+        }
+        return transformedList;
     }
 }

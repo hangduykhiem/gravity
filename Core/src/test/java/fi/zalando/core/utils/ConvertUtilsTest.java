@@ -2,7 +2,11 @@ package fi.zalando.core.utils;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static junit.framework.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class for {@link ConvertUtils}
@@ -132,7 +136,7 @@ public class ConvertUtilsTest {
     }
 
     @Test
-    public void testGetDisplayCountry(){
+    public void testGetDisplayCountry() {
 
         // Test Germany
         assertEquals(ConvertUtils.getDisplayCountry("de"), "Germany");
@@ -142,5 +146,22 @@ public class ConvertUtilsTest {
         assertEquals(ConvertUtils.getDisplayCountry("es"), "Spain");
         // Test Vietnam
         assertEquals(ConvertUtils.getDisplayCountry("VN"), "Vietnam");
+    }
+
+    @Test
+    public void shouldConvertEmptyList() {
+
+        List<String> listToTest = new ArrayList<>();
+        assertThat(ConvertUtils.convertList(listToTest)).isEmpty();
+    }
+
+    @Test
+    public void shouldConvertList() {
+
+        List<String> listToTest = new ArrayList<>();
+        listToTest.add("String");
+        List<Object> convertedList = ConvertUtils.convertList(listToTest);
+        assertThat(convertedList).isNotEmpty();
+        assertThat(convertedList).contains("String");
     }
 }
