@@ -329,7 +329,7 @@ public class ConvertUtils {
      */
     public static <U, T extends U> List<U> convertList(@NonNull List<T> listToTransform) {
 
-        List<U> transformedList = new ArrayList<>(listToTransform.size());
+        final List<U> transformedList = new ArrayList<>(listToTransform.size());
         for (T item : listToTransform) {
             transformedList.add(item);
         }
