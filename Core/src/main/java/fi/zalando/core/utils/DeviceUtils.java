@@ -98,6 +98,22 @@ public class DeviceUtils {
     }
 
     /**
+     * Returns the height of the status bar in pixels
+     *
+     * @param context {@link Context}
+     * @return height of the status bar in pixels
+     */
+    public static int getStatusBarHeight(Context context) {
+        int result = 0;
+        final int resourceId = context.getResources()
+                .getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    /**
      * Returns the usable area of the screen, i.e. screen size minus the decorations & bottom bar.
      *
      * @param context {@link Context}
