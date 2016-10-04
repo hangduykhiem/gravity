@@ -47,11 +47,12 @@ public final class RestApiFactory {
      * @return {@link T} with the implementation of the Rest interface
      */
     public static <T> T createApi(Class<T> restInterface, @NonNull String baseUrl, @Nullable
-    List<Interceptor> interceptors, @Nullable Gson gson, boolean logs) {
+            List<Interceptor> interceptors, @Nullable Gson gson, boolean logs) {
 
         Timber.d("getRestApi: %s interface: %s gson: %s", baseUrl, restInterface.getName(), gson);
 
-        return setupRetrofit(baseUrl, interceptors, RxJavaCallAdapterFactory.createWithScheduler
+        return setupRetrofit(baseUrl, interceptors, null, RxJavaCallAdapterFactory
+                .createWithScheduler
                 (Schedulers.io()), gson != null ? gson : new GsonBuilder().create(), logs).create
                 (restInterface);
     }
@@ -69,22 +70,53 @@ public final class RestApiFactory {
 
         Timber.d("getRestApi: %s interface: %s", baseUrl, restInterface.getName());
 
-        return setupRetrofit(baseUrl, null, RxJavaCallAdapterFactory.createWithScheduler
+        return setupRetrofit(baseUrl, null, null, RxJavaCallAdapterFactory.createWithScheduler
                 (Schedulers.io()), new GsonBuilder().create(), logs).create(restInterface);
+    }
+
+    /**
+     * @param restInterface      {@link T} with the rest interface definition
+     * @param baseUrl            {@link String} with the base URL
+     * @param interceptors       {@link List} of {@link Interceptor} to add to the rest api
+     * @param networkInterceptor {@link Interceptor} as NetworkInterceptor
+     * @param gson               {@link Gson} to use for serialising. Null to use default one.
+     * @param logs               {@link Boolean} indicating if logs are required
+     * @param <T>                {@link Class} with the definition of the rest interface
+     * @return {@link T} with the implementation of the Rest interface
+     */
+    public static <T> T createApi(Class<T> restInterface,
+                                  @NonNull String baseUrl,
+                                  @Nullable List<Interceptor> interceptors,
+                                  @Nullable Interceptor networkInterceptor,
+                                  @Nullable Gson gson,
+                                  boolean logs) {
+
+        return setupRetrofit(
+                baseUrl,
+                interceptors,
+                networkInterceptor,
+                RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()),
+                gson != null ? gson : new GsonBuilder().create(),
+                logs).create(restInterface);
     }
 
     /**
      * Creates a {@link Retrofit} object with the given settings
      *
      * @param url                  {@link String} with the Base Url
+     * @param interceptors         {@link List} of {@link Interceptor} to add to the rest api
+     * @param networkInterceptor   {@link Interceptor} as NetworkInterceptor
      * @param callAdapterFactory   {@link retrofit2.CallAdapter.Factory}
      * @param gsonConverterFactory {@link Gson} converter to use for serialising
      * @param logs                 {@link Boolean} indicating if logs are required
      * @return {@link Retrofit} object with the given settings
      */
-    private static Retrofit setupRetrofit(@NonNull String url, @Nullable List<Interceptor>
-            interceptors, @NonNull CallAdapter.Factory callAdapterFactory, @NonNull Gson
-                                                  gsonConverterFactory, boolean logs) {
+    private static Retrofit setupRetrofit(@NonNull String url,
+                                          @Nullable List<Interceptor> interceptors,
+                                          @Nullable Interceptor networkInterceptor,
+                                          @NonNull CallAdapter.Factory callAdapterFactory,
+                                          @NonNull Gson gsonConverterFactory,
+                                          boolean logs) {
 
         Preconditions.checkArgument(ValidationUtils.isValidURL(url), "Base URL is invalid");
         Timber.d("setupRetrofit: %s", url);
@@ -106,6 +138,11 @@ public final class RestApiFactory {
         // Add all of them to the okHttpBuilder
         for (int i = 0; i < interceptorList.size(); i++) {
             okHttpClientBuilder.addInterceptor(interceptorList.get(i));
+        }
+
+        // Add interceptor as network interceptor 
+        if (networkInterceptor != null) {
+            okHttpClientBuilder.addNetworkInterceptor(networkInterceptor);
         }
 
         // Finally create the client
