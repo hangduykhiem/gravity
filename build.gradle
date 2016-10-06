@@ -27,8 +27,6 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        // Added repository for IcePick library
-        maven { url "https://clojars.org/repo/" }
     }
 }
 
@@ -60,8 +58,6 @@ ext.coreDeps = [
         retrolambda     : 'net.orfjackal.retrolambda:retrolambda:2.3.0',
         daggercompiler  : 'com.google.dagger:dagger-compiler:2.4',
         dagger          : 'com.google.dagger:dagger:2.4',
-        icepick         : 'frankiesardo:icepick:3.2.0',
-        icepickprocessor: 'frankiesardo:icepick-processor:3.2.0',
         timber          : 'com.jakewharton.timber:timber:4.1.2',
         retrofit        : 'com.squareup.retrofit2:retrofit:2.1.0',
         retrogson       : 'com.squareup.retrofit2:converter-gson:2.1.0',
