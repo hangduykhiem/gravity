@@ -40,7 +40,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
     /**
      * Default request code for activityresult
      */
-    private static final int REQUEST_DEFAULT = 1111;
+    public static final int REQUEST_DEFAULT = 1111;
 
     private static final String TAG_FRAGMENT_NAME = "tag.fragment.name";
     private static final String TAG_FRAGMENT_BUNDLE = "tag.fragment.bundle";
