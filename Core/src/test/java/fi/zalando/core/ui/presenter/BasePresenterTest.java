@@ -2,6 +2,7 @@ package fi.zalando.core.ui.presenter;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +16,6 @@ import java.io.Serializable;
 import fi.zalando.core.BuildConfig;
 import fi.zalando.core.domain.helper.SubscriptionHelper;
 import fi.zalando.core.ui.view.BaseView;
-import icepick.State;
 import rx.Observable;
 
 import static junit.framework.Assert.assertEquals;
@@ -43,7 +43,6 @@ public class BasePresenterTest {
 
     @Before
     public void setUp() {
-
         basePresenter = new MockBasePresenter(new SubscriptionHelper());
         baseView = mock(BaseView.class);
     }
@@ -148,10 +147,10 @@ public class BasePresenterTest {
 
     protected class MockBasePresenter extends BasePresenter<BaseView> {
 
-        @State Integer testSavingInt;
-        @State Boolean testSavingBoolean;
-        @State Float testSavingFloat;
-        @State Serializable testSavingSerializable;
+        Integer testSavingInt;
+        Boolean testSavingBoolean;
+        Float testSavingFloat;
+        Serializable testSavingSerializable;
 
         /**
          * Constructor
@@ -160,5 +159,24 @@ public class BasePresenterTest {
             super(subscriptionHelper);
         }
 
+        @Override
+        public void initialise(@Nullable Bundle savedInstanceState) {
+            super.initialise(savedInstanceState);
+            if (savedInstanceState != null) {
+                testSavingInt = savedInstanceState.getInt("savedInt");
+                testSavingBoolean = savedInstanceState.getBoolean("savedBool");
+                testSavingFloat = savedInstanceState.getFloat("savedFloat");
+                testSavingSerializable = savedInstanceState.getSerializable("savedSer");
+            }
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            outState.putInt("savedInt", testSavingInt);
+            outState.putBoolean("savedBool", testSavingBoolean);
+            outState.putFloat("savedFloat", testSavingFloat);
+            outState.putSerializable("savedSer", testSavingSerializable);
+            super.onSaveInstanceState(outState);
+        }
     }
 }

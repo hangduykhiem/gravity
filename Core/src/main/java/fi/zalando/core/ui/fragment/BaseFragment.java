@@ -15,7 +15,6 @@ import butterknife.ButterKnife;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
 import fi.zalando.core.utils.UIUtils;
-import icepick.Icepick;
 import rx.Completable;
 import rx.subjects.BehaviorSubject;
 
@@ -50,9 +49,6 @@ public abstract class BaseFragment extends Fragment implements BaseView {
         // Reset the ui test flags:
         UI_TEST_FLAG_ERROR.set(false);
         UI_TEST_FLAG_SUCCESS.set(false);
-
-        // Restore saved values using IcePick
-        Icepick.restoreInstanceState(this, savedInstanceState);
 
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(getSubFragmentLayoutId(), container, false);
@@ -111,9 +107,8 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
         getPresenter().onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
     }
 
     /**
