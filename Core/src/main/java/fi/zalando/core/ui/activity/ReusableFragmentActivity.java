@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -36,6 +37,11 @@ public class ReusableFragmentActivity extends BaseActivity implements
      */
     public static final int FLAG_TOOLBAR = 1;
 
+    /**
+     * Default request code for activityresult
+     */
+    public static final int REQUEST_DEFAULT = 1111;
+
     private static final String TAG_FRAGMENT_NAME = "tag.fragment.name";
     private static final String TAG_FRAGMENT_BUNDLE = "tag.fragment.bundle";
     private static final String TAG_ACTIVITY_OPTIONS = "tag.activity.options";
@@ -58,8 +64,8 @@ public class ReusableFragmentActivity extends BaseActivity implements
      * Launches ReusableFragmentActivity, and opens the given Fragment in it. Toolbar will be
      * enabled.
      *
-     * @param launchActivity
-     * {@link Activity} that is launching the {@link ReusableFragmentActivity}
+     * @param launchActivity    {@link Activity} that is launching the
+     * {@link ReusableFragmentActivity}
      * @param fragmentClass     Fragment to open inside this new Activity.
      * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
      */
@@ -72,8 +78,8 @@ public class ReusableFragmentActivity extends BaseActivity implements
     /**
      * Launches ReusableFragmentActivity, and opens the given Fragment in it.
      *
-     * @param launchActivity
-     * {@link Activity} that is launching the {@link ReusableFragmentActivity}
+     * @param launchActivity    {@link Activity} that is launching the
+     * {@link ReusableFragmentActivity}
      * @param fragmentClass     Fragment to open inside this new Activity.
      * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
      * @param optionFlags       Options to be passed on and applied to the new Activity.
@@ -99,10 +105,180 @@ public class ReusableFragmentActivity extends BaseActivity implements
     }
 
     /**
+     * Launches ReusableFragmentActivity for result and opens the given Fragment in it.
+     *
+     * @param launchActivity {@link Activity} that is launching the {@link ReusableFragmentActivity}
+     * @param fragmentClass  Fragment to open inside this new Activity.
+     */
+    public static void launchForResult(@NonNull Activity launchActivity,
+                                       @NonNull Class fragmentClass) {
+        launchForResult(launchActivity, fragmentClass, REQUEST_DEFAULT);
+    }
+
+    /**
+     * Launches ReusableFragmentActivity for result and opens the given Fragment in it.
+     *
+     * @param launchActivity    {@link Activity} that is launching the
+     * {@link ReusableFragmentActivity}
+     * @param fragmentClass     Fragment to open inside this new Activity.
+     * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
+     */
+    public static void launchForResult(@NonNull Activity launchActivity,
+                                       @NonNull Class fragmentClass,
+                                       @Nullable Bundle bundleForFragment) {
+        launchForResult(launchActivity, fragmentClass, bundleForFragment, REQUEST_DEFAULT);
+    }
+
+    /**
+     * Launches ReusableFragmentActivity for result and opens the given Fragment in it.
+     *
+     * @param launchActivity {@link Activity} that is launching the {@link ReusableFragmentActivity}
+     * @param fragmentClass  Fragment to open inside this new Activity.
+     * @param requestCode    Request code for the activity result.
+     */
+    public static void launchForResult(@NonNull Activity launchActivity,
+                                       @NonNull Class fragmentClass,
+                                       int requestCode) {
+        launchForResult(launchActivity, fragmentClass, null, requestCode);
+    }
+
+    /**
+     * Launches ReusableFragmentActivity for result and opens the given Fragment in it.
+     *
+     * @param launchActivity    {@link Activity} that is launching the
+     * {@link ReusableFragmentActivity}
+     * @param fragmentClass     Fragment to open inside this new Activity.
+     * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
+     * @param requestCode       Request code for the activity result.
+     */
+    public static void launchForResult(@NonNull Activity launchActivity,
+                                       @NonNull Class fragmentClass,
+                                       @Nullable Bundle bundleForFragment,
+                                       int requestCode) {
+        launchForResult(launchActivity, fragmentClass, bundleForFragment, requestCode,
+                FLAG_TOOLBAR);
+    }
+
+    /**
+     * Launches ReusableFragmentActivity for result and opens the given Fragment in it.
+     *
+     * @param launchActivity    {@link Activity} that is launching the
+     * {@link ReusableFragmentActivity}
+     * @param fragmentClass     Fragment to open inside this new Activity.
+     * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
+     * @param requestCode       Request code for the activity result.
+     * @param optionFlags       Options to be passed on and applied to the new Activity.
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static void launchForResult(@NonNull Activity launchActivity,
+                                       @NonNull Class fragmentClass,
+                                       @Nullable Bundle bundleForFragment,
+                                       int requestCode,
+                                       int optionFlags) {
+        //Launch the Activity for result:
+        ActivityCompat.startActivityForResult(
+                launchActivity,
+                createIntent(launchActivity, fragmentClass, bundleForFragment, optionFlags),
+                requestCode,
+                PlatformUtils.isNewerOrEqualSDKVersion(Build.VERSION_CODES.JELLY_BEAN) ?
+                        ActivityOptions.makeCustomAnimation(
+                                launchActivity,
+                                R.anim.activity_slidein_left,
+                                R.anim.activity_slideout_left).toBundle() : null);
+    }
+
+    /**
+     * Launches ReusableFragmentActivity for result and opens the given Fragment in it.
+     *
+     * @param launchFragment {@link Fragment} that is launching the {@link ReusableFragmentActivity}
+     * @param fragmentClass  Fragment to open inside this new Activity.
+     */
+    public static void launchFromFragmentForResult(@NonNull Fragment launchFragment,
+                                                   @NonNull Class fragmentClass) {
+        launchFromFragmentForResult(launchFragment, fragmentClass, REQUEST_DEFAULT);
+    }
+
+    /**
+     * Launches ReusableFragmentActivity for result and opens the given Fragment in it.
+     *
+     * @param launchFragment    {@link Fragment} that is launching the
+     * {@link ReusableFragmentActivity}
+     * @param fragmentClass     Fragment to open inside this new Activity.
+     * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
+     */
+    public static void launchFromFragmentForResult(@NonNull Fragment launchFragment,
+                                                   @NonNull Class fragmentClass,
+                                                   @Nullable Bundle bundleForFragment) {
+        launchFromFragmentForResult(launchFragment, fragmentClass, bundleForFragment,
+                REQUEST_DEFAULT);
+    }
+
+    /**
+     * Launches ReusableFragmentActivity for result and opens the given Fragment in it.
+     *
+     * @param launchFragment {@link Fragment} that is launching the {@link ReusableFragmentActivity}
+     * @param fragmentClass  Fragment to open inside this new Activity.
+     * @param requestCode    Request code for the activity result.
+     */
+    public static void launchFromFragmentForResult(@NonNull Fragment launchFragment,
+                                                   @NonNull Class fragmentClass,
+                                                   int requestCode) {
+        launchFromFragmentForResult(launchFragment, fragmentClass, null, requestCode);
+    }
+
+    /**
+     * Launches ReusableFragmentActivity for result and opens the given Fragment in it.
+     *
+     * @param launchFragment    {@link Fragment} that is launching the
+     * {@link ReusableFragmentActivity}
+     * @param fragmentClass     Fragment to open inside this new Activity.
+     * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
+     * @param requestCode       Request code for the activity result.
+     */
+    public static void launchFromFragmentForResult(@NonNull Fragment launchFragment,
+                                                   @NonNull Class fragmentClass,
+                                                   @Nullable Bundle bundleForFragment,
+                                                   int requestCode) {
+        launchFromFragmentForResult(launchFragment, fragmentClass, bundleForFragment, requestCode,
+                FLAG_TOOLBAR);
+    }
+
+    /**
+     * Launches ReusableFragmentActivity for result and opens the given Fragment in it.
+     *
+     * @param launchFragment    {@link Fragment} that is launching the
+     * {@link ReusableFragmentActivity}
+     * @param fragmentClass     Fragment to open inside this new Activity.
+     * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
+     * @param requestCode       Request code for the activity result.
+     * @param optionFlags       Options to be passed on and applied to the new Activity.
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static void launchFromFragmentForResult(@NonNull Fragment launchFragment,
+                                                   @NonNull Class fragmentClass,
+                                                   @Nullable Bundle bundleForFragment,
+                                                   int requestCode,
+                                                   int optionFlags) {
+        //Launch the Activity for result:
+        launchFragment.startActivityForResult(
+                createIntent(
+                        launchFragment.getActivity(),
+                        fragmentClass,
+                        bundleForFragment,
+                        optionFlags),
+                requestCode,
+                PlatformUtils.isNewerOrEqualSDKVersion(Build.VERSION_CODES.JELLY_BEAN) ?
+                        ActivityOptions.makeCustomAnimation(
+                                launchFragment.getActivity(),
+                                R.anim.activity_slidein_left,
+                                R.anim.activity_slideout_left).toBundle() : null);
+    }
+
+    /**
      * Creates an Intent to launch ReusableFragmentActivity with the given Fragment
      *
-     * @param launchActivity
-     * {@link Activity} that is launching the {@link ReusableFragmentActivity}
+     * @param launchActivity    {@link Activity} that is launching the
+     * {@link ReusableFragmentActivity}
      * @param fragmentClass     Fragment to open inside this new Activity.
      * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
      * @param optionFlags       Options to be passed on and applied to the new Activity.
