@@ -55,9 +55,6 @@ dependencies {
     compile coreDeps.dagger
     provided "javax.annotation:jsr250-api:1.0"
 
-    // Ice Pick libraries
-    compile coreDeps.icepick
-    provided coreDeps.icepickprocessor
     // Timber logger library
     compile coreDeps.timber
     // Retrofit Library

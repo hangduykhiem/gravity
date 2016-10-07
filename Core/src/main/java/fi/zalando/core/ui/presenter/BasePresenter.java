@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import fi.zalando.core.domain.helper.SubscriptionHelper;
 import fi.zalando.core.ui.view.BaseView;
 import fi.zalando.core.utils.Preconditions;
-import icepick.Icepick;
 
 /**
  * Class responsible of holding common methods for all Presenters in the App.
@@ -55,8 +54,6 @@ public abstract class BasePresenter<T extends BaseView> {
 
         Preconditions.checkState(isViewSet, "Call setView before initialising presenter");
         isPresenterInitialised = true;
-        // Restore saved values using IcePick
-        Icepick.restoreInstanceState(this, savedInstanceState);
         // Init View
         view.initView();
     }
@@ -66,10 +63,10 @@ public abstract class BasePresenter<T extends BaseView> {
      *
      * @param outState {@link Bundle} to save the state
      */
+    @SuppressWarnings("UnusedParameters")
+    @CallSuper
     public void onSaveInstanceState(Bundle outState) {
 
-        // Save instance state using IcePick
-        Icepick.saveInstanceState(this, outState);
     }
 
     /**
