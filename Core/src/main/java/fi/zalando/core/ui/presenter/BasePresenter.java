@@ -47,10 +47,10 @@ public abstract class BasePresenter<T extends BaseView> {
      * Initialises the presenter. Linked to Activity onCreate() and Fragment onActivityCreated
      * lifecycle methods
      *
-     * @param savedInstanceState {@link Bundle} to restore the instance of the presenter
+     * @param state {@link Bundle} to restore or start the instance of the presenter
      */
     @CallSuper
-    public void initialise(@Nullable Bundle savedInstanceState) {
+    public void initialise(@Nullable Bundle state) {
 
         Preconditions.checkState(isViewSet, "Call setView before initialising presenter");
         isPresenterInitialised = true;
