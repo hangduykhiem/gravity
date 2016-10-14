@@ -66,7 +66,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         // Call this in case sub Activities want to do something after onCreate but before initView
         prePresenterInitialise();
         // Init Presenter
-        getPresenter().initialise(savedInstanceState);
+        getPresenter().initialise(savedInstanceState != null ? savedInstanceState :
+                getIntent().getExtras());
         // Notify the Observable when the UI is ready:
         UIUtils.runOnGlobalLayout(getWindow().getDecorView().getRootView(), () ->
                 onViewReadyObservable.onNext(null));
