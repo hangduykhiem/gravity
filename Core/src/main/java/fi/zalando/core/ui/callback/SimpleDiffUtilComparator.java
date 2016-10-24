@@ -8,6 +8,7 @@ package fi.zalando.core.ui.callback;
 public abstract class SimpleDiffUtilComparator<T>
         implements DiffUtilCallback.DiffUtilComparator<T> {
 
+    @Override
     public Object getChangePayload(T oldItem, T newItem) {
         return null;
     }
