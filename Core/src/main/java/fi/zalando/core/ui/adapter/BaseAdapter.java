@@ -35,6 +35,15 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
         this.items = items;
     }
 
+    /**
+     * Clears the adapter and notifies the list that everything is gone... Forever
+     */
+    public void clear() {
+
+        items.clear();
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
 
