@@ -348,8 +348,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
             setFragment(R.id.reusablefragmentactivity_fragmentcontainer,
                     fragment);
         } catch (Exception e) {
-            Timber.e(e, "Error when initializing Fragment.");
-            throw new IllegalStateException("Error when initializing Fragment.");
+            throw new IllegalStateException("Error when initializing Fragment.", e);
         }
     }
 
