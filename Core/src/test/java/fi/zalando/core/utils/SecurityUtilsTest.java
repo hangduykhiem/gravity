@@ -1,7 +1,7 @@
 package fi.zalando.core.utils;
 
 import android.os.Build;
-import android.support.v4.util.Pair;
+import android.util.Pair;
 import android.util.Base64;
 
 import org.junit.Test;
