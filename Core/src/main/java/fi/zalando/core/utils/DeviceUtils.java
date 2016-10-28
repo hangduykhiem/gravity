@@ -9,6 +9,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -114,6 +115,23 @@ public class DeviceUtils {
     }
 
     /**
+     * Return the height of the action bar in pixels. If attribute not found, return standard value
+     * of 56dp in pixels
+     *
+     * @param context {@link Context}
+     * @return height of status bar in pixels
+     */
+    public static float getActionBarHeight(Context context) {
+        TypedValue tv = new TypedValue();
+        if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            return TypedValue.complexToDimensionPixelSize(tv.data,
+                    context.getResources().getDisplayMetrics());
+        } else {
+            return dpToPx(context, 56);
+        }
+    }
+
+    /**
      * Returns the usable area of the screen, i.e. screen size minus the decorations & bottom bar.
      *
      * @param context {@link Context}
@@ -125,7 +143,7 @@ public class DeviceUtils {
             WindowManager windowManager = (WindowManager) context.getSystemService(Context
                     .WINDOW_SERVICE);
             Display display = windowManager.getDefaultDisplay();
-            appUsableScreenSize=  new Point();
+            appUsableScreenSize = new Point();
             display.getSize(appUsableScreenSize);
             return appUsableScreenSize;
         }
