@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import butterknife.ButterKnife;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
@@ -26,16 +24,6 @@ import rx.subjects.BehaviorSubject;
 public abstract class BaseFragment extends Fragment implements BaseView {
 
     /**
-     * Flag to tell the UI tests that an error within the Fragment happened. Has to be set manually,
-     * but is automatically cleared when a Fragment is created.
-     */
-    public static AtomicBoolean UI_TEST_FLAG_ERROR = new AtomicBoolean(false);
-    /**
-     * Flag to tell the UI tests that some action was completed successfully within the Fragment.
-     * Has to be set manually, but is automatically cleared when a Fragment is created.
-     */
-    public static AtomicBoolean UI_TEST_FLAG_SUCCESS = new AtomicBoolean(false);
-    /**
      * Internal private objects
      */
     private final BehaviorSubject<Void> onViewReadyObservable = BehaviorSubject.create();
@@ -46,10 +34,6 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Reset the ui test flags:
-        UI_TEST_FLAG_ERROR.set(false);
-        UI_TEST_FLAG_SUCCESS.set(false);
-
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(getSubFragmentLayoutId(), container, false);
         // Inject fragment views
