@@ -11,6 +11,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -41,8 +42,11 @@ public class ReusableFragmentActivity extends BaseActivity implements
      */
     public static final int REQUEST_DEFAULT = 1111;
 
+    @VisibleForTesting
     public static final String TAG_FRAGMENT_NAME = "tag.fragment.name";
+    @VisibleForTesting
     public static final String TAG_FRAGMENT_BUNDLE = "tag.fragment.bundle";
+    @VisibleForTesting
     public static final String TAG_ACTIVITY_OPTIONS = "tag.activity.options";
     public static Class activityClass = ReusableFragmentActivity.class;
 
