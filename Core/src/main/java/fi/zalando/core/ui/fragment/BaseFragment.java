@@ -70,7 +70,10 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     public void onResume() {
 
         super.onResume();
-        getPresenter().resume();
+        //Seemingly redundant null check that is actually not redundant:
+        if (getPresenter() != null) {
+            getPresenter().resume();
+        }
     }
 
     /**
@@ -79,8 +82,11 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     @Override
     public void onDestroy() {
 
+        //Seemingly redundant null check that is actually not redundant:
+        if (getPresenter() != null) {
+            getPresenter().destroy();
+        }
         super.onDestroy();
-        getPresenter().destroy();
     }
 
     /**
@@ -91,7 +97,10 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        getPresenter().onSaveInstanceState(outState);
+        //Seemingly redundant null check that is actually not redundant:
+        if (getPresenter() != null) {
+            getPresenter().onSaveInstanceState(outState);
+        }
         super.onSaveInstanceState(outState);
     }
 
