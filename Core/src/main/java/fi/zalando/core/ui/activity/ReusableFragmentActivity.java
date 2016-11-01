@@ -11,6 +11,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +25,6 @@ import fi.zalando.core.ui.fragment.BaseFragment;
 import fi.zalando.core.ui.presenter.StubPresenter;
 import fi.zalando.core.ui.view.ReusableFragmentActivityView;
 import fi.zalando.core.utils.PlatformUtils;
-import timber.log.Timber;
 
 /**
  * An empty, reusable Activity to host Fragments. Created by vraisanen on 14.4.2016.
@@ -42,12 +42,18 @@ public class ReusableFragmentActivity extends BaseActivity implements
      */
     public static final int REQUEST_DEFAULT = 1111;
 
-    private static final String TAG_FRAGMENT_NAME = "tag.fragment.name";
-    private static final String TAG_FRAGMENT_BUNDLE = "tag.fragment.bundle";
-    private static final String TAG_ACTIVITY_OPTIONS = "tag.activity.options";
+    @VisibleForTesting
+    public static final String TAG_FRAGMENT_NAME = "tag.fragment.name";
+    @VisibleForTesting
+    public static final String TAG_FRAGMENT_BUNDLE = "tag.fragment.bundle";
+    @VisibleForTesting
+    public static final String TAG_ACTIVITY_OPTIONS = "tag.activity.options";
     public static Class activityClass = ReusableFragmentActivity.class;
 
     StubPresenter stubPresenter;
+    private Bundle fragmentBundle;
+    private String className;
+    private int optionFlags;
 
     /**
      * Launches ReusableFragmentActivity, and opens the given Fragment in it. Toolbar will be
@@ -94,8 +100,8 @@ public class ReusableFragmentActivity extends BaseActivity implements
 
         //Pack the Fragment name and Bundle to the Intent:
         Intent reusableFragmentActivityIntent = new Intent(launchActivity, activityClass);
-        reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_BUNDLE, bundleForFragment);
         reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_NAME, fragmentClass.getName());
+        reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_BUNDLE, bundleForFragment);
         reusableFragmentActivityIntent.putExtra(TAG_ACTIVITY_OPTIONS, optionFlags);
         //Launch the Activity:
         ActivityCompat.startActivity(launchActivity, reusableFragmentActivityIntent, PlatformUtils
@@ -293,26 +299,37 @@ public class ReusableFragmentActivity extends BaseActivity implements
 
         //Pack the Fragment name and Bundle to the Intent:
         Intent reusableFragmentActivityIntent = new Intent(launchActivity, activityClass);
-        reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_BUNDLE, bundleForFragment);
         reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_NAME, fragmentClass.getName());
+        reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_BUNDLE, bundleForFragment);
         reusableFragmentActivityIntent.putExtra(TAG_ACTIVITY_OPTIONS, optionFlags);
 
         return reusableFragmentActivityIntent;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                    getSupportFragmentManager().popBackStack();
-                } else {
-                    finish();
-                }
-                return true;
+    protected void onCreate(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            //Get Fragment details from savedInstanceState:
+            className = savedInstanceState.getString(TAG_FRAGMENT_NAME);
+            fragmentBundle = savedInstanceState.getBundle(TAG_FRAGMENT_BUNDLE);
+            optionFlags = savedInstanceState.getInt(TAG_ACTIVITY_OPTIONS, FLAG_TOOLBAR);
         }
-        return super.onOptionsItemSelected(item);
+        else {
+            //Get Fragment details from the Intent:
+            className = getIntent().getStringExtra(TAG_FRAGMENT_NAME);
+            fragmentBundle = getIntent().getBundleExtra(TAG_FRAGMENT_BUNDLE);
+            optionFlags = getIntent().getIntExtra(TAG_ACTIVITY_OPTIONS, FLAG_TOOLBAR);
+        }
+        //Call onCreate last so that the previous values are initialised:
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(TAG_FRAGMENT_NAME, className);
+        outState.putBundle(TAG_FRAGMENT_BUNDLE, fragmentBundle);
+        outState.putInt(TAG_ACTIVITY_OPTIONS, optionFlags);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -331,9 +348,6 @@ public class ReusableFragmentActivity extends BaseActivity implements
         }
 
         //Initialise Fragment:
-        //Get Fragment details from the Intent Bundle:
-        Bundle bundleForFragment = getIntent().getBundleExtra(TAG_FRAGMENT_BUNDLE);
-        String className = getIntent().getStringExtra(TAG_FRAGMENT_NAME);
         //Use reflection to setup the Fragment:
         try {
             //Get the class (Fragment):
@@ -343,10 +357,9 @@ public class ReusableFragmentActivity extends BaseActivity implements
             //Create new instance of the Fragment:
             BaseFragment fragment = (BaseFragment) constructor.newInstance();
             //Give the Bundle as argument:
-            fragment.setArguments(bundleForFragment);
+            fragment.setArguments(fragmentBundle);
             //Show the Fragment:
-            setFragment(R.id.reusablefragmentactivity_fragmentcontainer,
-                    fragment);
+            setFragment(R.id.reusablefragmentactivity_fragmentcontainer, fragment);
         } catch (Exception e) {
             throw new IllegalStateException("Error when initializing Fragment.", e);
         }
@@ -369,6 +382,21 @@ public class ReusableFragmentActivity extends BaseActivity implements
     @CallSuper
     protected void injectDependencies() {
         stubPresenter = new StubPresenter(new SubscriptionHelper());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    getSupportFragmentManager().popBackStack();
+                } else {
+                    finish();
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -408,7 +436,6 @@ public class ReusableFragmentActivity extends BaseActivity implements
      * @return true, if the flag was set.
      */
     protected boolean isFlagSet(int flagToCheck) {
-        int flags = getIntent().getIntExtra(TAG_ACTIVITY_OPTIONS, FLAG_TOOLBAR);
-        return (flags & flagToCheck) == flagToCheck;
+        return (optionFlags & flagToCheck) == flagToCheck;
     }
 }
