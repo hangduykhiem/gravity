@@ -35,8 +35,13 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
         return completable ->
                 completable.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .onErrorResumeNext(throwable ->
-                                Completable.error(new BaseThrowable(throwable)));
+                        .onErrorResumeNext(throwable -> {
+                            if (!(throwable instanceof BaseThrowable)) {
+                                return Completable.error(new BaseThrowable(throwable));
+                            } else {
+                                return Completable.error(throwable);
+                            }
+                        });
     }
 
     /**
@@ -50,8 +55,13 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
         return completable ->
                 completable.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .onErrorResumeNext(throwable ->
-                                Single.error(new BaseThrowable(throwable)));
+                        .onErrorResumeNext(throwable -> {
+                            if (!(throwable instanceof BaseThrowable)) {
+                                return Single.error(new BaseThrowable(throwable));
+                            } else {
+                                return Single.error(throwable);
+                            }
+                        });
     }
 
     /**
@@ -65,8 +75,13 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
         return observable ->
                 observable.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .onErrorResumeNext(throwable ->
-                                Observable.error(new BaseThrowable(throwable)));
+                        .onErrorResumeNext(throwable -> {
+                            if (!(throwable instanceof BaseThrowable)) {
+                                return Observable.error(new BaseThrowable(throwable));
+                            } else {
+                                return Observable.error(throwable);
+                            }
+                        });
     }
 
     /**
