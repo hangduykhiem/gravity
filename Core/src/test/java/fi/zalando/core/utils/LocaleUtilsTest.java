@@ -15,7 +15,7 @@ import static junit.framework.Assert.assertNull;
 public class LocaleUtilsTest {
 
     @Test
-    public void testLocaliseCurrencyInFloat() {
+    public void testLocaliseCurrency() {
 
         assertEquals("23,15 €", LocaleUtils.localiseCurrency(23.15, "EUR", Locale.GERMANY));
         assertEquals("23,15 €", LocaleUtils.localiseCurrency(23.15, "eur", Locale.GERMANY));
