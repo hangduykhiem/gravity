@@ -29,13 +29,13 @@ public class LocaleUtils {
     /**
      * Returns a {@link String} with a localised price using device locale and given parameters
      *
-     * @param price        {@link Float} with the price
+     * @param price        {@link Double} with the price
      * @param currencyCode {@link String} ISO 4217 code.
      * @param localeToUse  {@link Locale} to use for the localisation
      * @return {@link String} localised. Null if code is wrong
      */
     @Nullable
-    public static String localiseCurrency(float price, String currencyCode, Locale localeToUse) {
+    public static String localiseCurrency(double price, String currencyCode, Locale localeToUse) {
 
         String priceText = null;
         try {
