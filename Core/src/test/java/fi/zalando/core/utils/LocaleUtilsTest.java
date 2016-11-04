@@ -15,15 +15,14 @@ import static junit.framework.Assert.assertNull;
 public class LocaleUtilsTest {
 
     @Test
-    public void testLocaliseCurrency() {
+    public void testLocaliseCurrencyInFloat() {
 
-        assertEquals("23,15 €", LocaleUtils.localiseCurrency(23.15f, "EUR", Locale.GERMANY));
-        assertEquals("23,15 €", LocaleUtils.localiseCurrency(23.15f, "eur", Locale.GERMANY));
+        assertEquals("23,15 €", LocaleUtils.localiseCurrency(23.15, "EUR", Locale.GERMANY));
+        assertEquals("23,15 €", LocaleUtils.localiseCurrency(23.15, "eur", Locale.GERMANY));
 
-        assertEquals("23,15 USD", LocaleUtils.localiseCurrency(23.15f, "USD", Locale.GERMANY));
-        assertEquals("23,15 USD", LocaleUtils.localiseCurrency(23.15f, "usd", Locale.GERMANY));
+        assertEquals("23,15 USD", LocaleUtils.localiseCurrency(23.15, "USD", Locale.GERMANY));
+        assertEquals("23,15 USD", LocaleUtils.localiseCurrency(23.15, "usd", Locale.GERMANY));
 
-        assertNull(LocaleUtils.localiseCurrency(23.15f, "another currency", Locale.GERMANY));
+        assertNull(LocaleUtils.localiseCurrency(23.15, "another currency", Locale.GERMANY));
     }
-
 }
