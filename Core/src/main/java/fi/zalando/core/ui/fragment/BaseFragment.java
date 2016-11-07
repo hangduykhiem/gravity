@@ -48,8 +48,15 @@ public abstract class BaseFragment extends Fragment implements BaseView {
         // Set the view to the presenter
         getPresenter().setView(this);
         // init objects
-        final Bundle initBundle = savedInstanceState != null ? savedInstanceState :
-                getArguments();
+        final Bundle initBundle;
+        if (savedInstanceState != null) {
+            initBundle = savedInstanceState;
+        } else if (getArguments() != null) {
+            initBundle = getArguments();
+        }
+        else {
+            initBundle = new Bundle();
+        }
         getPresenter().initialise(initBundle);
     }
 
