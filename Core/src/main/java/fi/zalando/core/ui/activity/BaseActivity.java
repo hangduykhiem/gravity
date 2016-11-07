@@ -50,8 +50,15 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
         super.onCreate(savedInstanceState);
 
-        final Bundle initBundle = savedInstanceState != null ? savedInstanceState :
-                getIntent().getExtras();
+        final Bundle initBundle;
+        if (savedInstanceState != null) {
+            initBundle = savedInstanceState;
+        } else if (getIntent().getExtras() != null) {
+            initBundle = getIntent().getExtras();
+        }
+        else {
+            initBundle = new Bundle();
+        }
         // Call this in case Activities want to do something right after super.onCreate
         initialise(initBundle);
         // Init fragment manager to have an easy access to fragment related operations
