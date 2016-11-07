@@ -324,7 +324,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
     }
 
     @Override
-    public void initView(Bundle initState) {
+    public void initView(@NonNull Bundle initState) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {

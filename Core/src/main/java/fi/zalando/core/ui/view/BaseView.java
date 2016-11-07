@@ -1,6 +1,7 @@
 package fi.zalando.core.ui.view;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 /**
  * Base interface that will be extended by Activities and Fragments that will define the actions
@@ -17,5 +18,5 @@ public abstract interface BaseView {
      * onCreate or onActivityCreated by the BasePresenter.
      * @param initBundle {@link Bundle} to restore or start the instance of the presenter
      */
-    public void initView(Bundle initBundle);
+    public void initView(@NonNull Bundle initBundle);
 }

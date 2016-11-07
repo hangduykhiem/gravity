@@ -3,7 +3,6 @@ package fi.zalando.core.ui.presenter;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import fi.zalando.core.domain.helper.SubscriptionHelper;
 import fi.zalando.core.ui.view.BaseView;
@@ -50,7 +49,7 @@ public abstract class BasePresenter<T extends BaseView> {
      * @param state {@link Bundle} to restore or start the instance of the presenter
      */
     @CallSuper
-    public void initialise(@Nullable Bundle state) {
+    public void initialise(@NonNull Bundle state) {
 
         Preconditions.checkState(isViewSet, "Call setView before initialising presenter");
         isPresenterInitialised = true;
