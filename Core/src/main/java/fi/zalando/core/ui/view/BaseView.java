@@ -1,6 +1,7 @@
 package fi.zalando.core.ui.view;
 
-import rx.Completable;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 /**
  * Base interface that will be extended by Activities and Fragments that will define the actions
@@ -13,16 +14,9 @@ import rx.Completable;
 public abstract interface BaseView {
 
     /**
-     * This method provides an Completable for Presenters to listen to, which will notify them when
-     * the UI is initialised.
-     *
-     * @return {@link Completable}
-     */
-    public Completable getOnViewReady();
-
-    /**
      * This is used to initialize the View for the first time. This method is called at the end of
      * onCreate or onActivityCreated by the BasePresenter.
+     * @param initBundle {@link Bundle} to restore or start the instance of the presenter
      */
-    public void initView();
+    public void initView(@NonNull Bundle initBundle);
 }

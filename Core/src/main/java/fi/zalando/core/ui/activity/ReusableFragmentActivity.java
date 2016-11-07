@@ -307,21 +307,12 @@ public class ReusableFragmentActivity extends BaseActivity implements
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            //Get Fragment details from savedInstanceState:
-            className = savedInstanceState.getString(TAG_FRAGMENT_NAME);
-            fragmentBundle = savedInstanceState.getBundle(TAG_FRAGMENT_BUNDLE);
-            optionFlags = savedInstanceState.getInt(TAG_ACTIVITY_OPTIONS, FLAG_TOOLBAR);
-        }
-        else {
-            //Get Fragment details from the Intent:
-            className = getIntent().getStringExtra(TAG_FRAGMENT_NAME);
-            fragmentBundle = getIntent().getBundleExtra(TAG_FRAGMENT_BUNDLE);
-            optionFlags = getIntent().getIntExtra(TAG_ACTIVITY_OPTIONS, FLAG_TOOLBAR);
-        }
-        //Call onCreate last so that the previous values are initialised:
-        super.onCreate(savedInstanceState);
+    public void initialise(@NonNull Bundle initBundle) {
+        super.initialise(initBundle);
+        //Get Fragment details from initBundle:
+        className = initBundle.getString(TAG_FRAGMENT_NAME);
+        fragmentBundle = initBundle.getBundle(TAG_FRAGMENT_BUNDLE);
+        optionFlags = initBundle.getInt(TAG_ACTIVITY_OPTIONS, FLAG_TOOLBAR);
     }
 
     @Override
@@ -333,7 +324,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
     }
 
     @Override
-    public void initView() {
+    public void initView(@NonNull Bundle initState) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
