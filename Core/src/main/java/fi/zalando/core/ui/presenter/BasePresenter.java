@@ -55,7 +55,7 @@ public abstract class BasePresenter<T extends BaseView> {
         Preconditions.checkState(isViewSet, "Call setView before initialising presenter");
         isPresenterInitialised = true;
         // Init View
-        view.initView();
+        view.initView(state);
     }
 
     /**

@@ -19,9 +19,6 @@ import fi.zalando.core.ui.Navigator;
 import fi.zalando.core.ui.fragment.BaseFragment;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
-import fi.zalando.core.utils.UIUtils;
-import rx.Completable;
-import rx.subjects.BehaviorSubject;
 
 /**
  * Abstract activity that holds common methods usable by all the {@link android.app.Activity} on the
@@ -35,7 +32,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
      * Internal private objects
      */
     private FragmentManager fragmentManager;
-    private final BehaviorSubject<Void> onViewReadyObservable = BehaviorSubject.create();
 
     /**
      * Protected objects
@@ -53,6 +49,11 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        final Bundle initBundle = savedInstanceState != null ? savedInstanceState :
+                getIntent().getExtras();
+        // Call this in case Activities want to do something right after super.onCreate
+        initialise(initBundle);
         // Init fragment manager to have an easy access to fragment related operations
         fragmentManager = getSupportFragmentManager();
         // Force injection of dependencies
@@ -66,12 +67,17 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         // Call this in case sub Activities want to do something after onCreate but before initView
         prePresenterInitialise();
         // Init Presenter
-        getPresenter().initialise(savedInstanceState != null ? savedInstanceState :
-                getIntent().getExtras());
-        // Notify the Observable when the UI is ready:
-        UIUtils.runOnGlobalLayout(getWindow().getDecorView().getRootView(), () ->
-                onViewReadyObservable.onNext(null));
+        getPresenter().initialise(initBundle);
     }
+
+    /**
+     * Called right after super.onCreate(), before injections and setContentView. This can be used
+     * to initialise objects before the Views or the presenters are created.
+     * @param initBundle if the savedInstanceState received from onCreate is null, this will be
+     *                   the Intent's Extras.
+     */
+    @CallSuper
+    public void initialise(@NonNull Bundle initBundle) {}
 
     /**
      * Lifecycle method
@@ -231,11 +237,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
             }
             ft.commit();
         }
-    }
-
-    @Override
-    public Completable getOnViewReady() {
-        return Completable.fromObservable(onViewReadyObservable);
     }
 
     @Override
