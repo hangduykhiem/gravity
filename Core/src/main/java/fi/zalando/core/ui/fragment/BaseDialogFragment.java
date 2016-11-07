@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +12,6 @@ import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
-import fi.zalando.core.utils.UIUtils;
-import rx.Completable;
-import rx.subjects.BehaviorSubject;
 
 /**
  * Base fragment to wrap all together some utility methods for DialogFragments
@@ -23,11 +19,6 @@ import rx.subjects.BehaviorSubject;
  * Created by jduran on 03/11/16.
  */
 public abstract class BaseDialogFragment extends DialogFragment implements BaseView {
-
-    /**
-     * Internal private objects
-     */
-    private final BehaviorSubject<Void> onViewReadyObservable = BehaviorSubject.create();
 
     /**
      * Lifecycle method
@@ -57,11 +48,8 @@ public abstract class BaseDialogFragment extends DialogFragment implements BaseV
         // Set the view to the presenter
         getPresenter().setView(this);
         // init objects
-        getPresenter().initialise(savedInstanceState != null ? savedInstanceState : getArguments());
-        // Notify the Observable when the UI is ready:
-        if (getView() != null) {
-            UIUtils.runOnGlobalLayout(getView(), () -> onViewReadyObservable.onNext(null));
-        }
+        final Bundle initBundle = savedInstanceState != null ? savedInstanceState : getArguments();
+        getPresenter().initialise(initBundle);
     }
 
     /**
@@ -144,10 +132,5 @@ public abstract class BaseDialogFragment extends DialogFragment implements BaseV
     protected boolean isFragmentVisible() {
 
         return isAdded() && !getActivity().isFinishing();
-    }
-
-    @Override
-    public Completable getOnViewReady() {
-        return Completable.fromObservable(onViewReadyObservable);
     }
 }
