@@ -19,6 +19,7 @@ import android.view.MenuItem;
 
 import java.lang.reflect.Constructor;
 
+import fi.zalando.core.BuildConfig;
 import fi.zalando.core.R;
 import fi.zalando.core.domain.helper.SubscriptionHelper;
 import fi.zalando.core.ui.fragment.BaseFragment;
@@ -43,11 +44,15 @@ public class ReusableFragmentActivity extends BaseActivity implements
     public static final int REQUEST_DEFAULT = 1111;
 
     @VisibleForTesting
-    public static final String TAG_FRAGMENT_NAME = "tag.fragment.name";
+    public static final String TAG_FRAGMENT_NAME =
+            BuildConfig.APPLICATION_ID + ".tag.fragment.name";
     @VisibleForTesting
-    public static final String TAG_FRAGMENT_BUNDLE = "tag.fragment.bundle";
+    public static final String TAG_FRAGMENT_BUNDLE =
+            BuildConfig.APPLICATION_ID + ".tag.fragment.bundle";
     @VisibleForTesting
-    public static final String TAG_ACTIVITY_OPTIONS = "tag.activity.options";
+    public static final String TAG_ACTIVITY_OPTIONS =
+            BuildConfig.APPLICATION_ID + ".tag.activity.options";
+
     public static Class activityClass = ReusableFragmentActivity.class;
 
     StubPresenter stubPresenter;
