@@ -1,6 +1,7 @@
 package fi.zalando.core.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.location.LocationManager;
 import android.os.Build;
@@ -101,15 +102,14 @@ public class DeviceUtils {
     /**
      * Returns the height of the status bar in pixels
      *
-     * @param context {@link Context}
      * @return height of the status bar in pixels
      */
-    public static int getStatusBarHeight(Context context) {
+    public static int getStatusBarHeight() {
         int result = 0;
-        final int resourceId = context.getResources()
+        final int resourceId = Resources.getSystem()
                 .getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
-            result = context.getResources().getDimensionPixelSize(resourceId);
+            result = Resources.getSystem().getDimensionPixelSize(resourceId);
         }
         return result;
     }
@@ -125,9 +125,9 @@ public class DeviceUtils {
         TypedValue tv = new TypedValue();
         if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
             return TypedValue.complexToDimensionPixelSize(tv.data,
-                    context.getResources().getDisplayMetrics());
+                    Resources.getSystem().getDisplayMetrics());
         } else {
-            return dpToPx(context, 56);
+            return dpToPx(56);
         }
     }
 
@@ -193,45 +193,41 @@ public class DeviceUtils {
     /**
      * Converts the given pixel amount to dp.
      *
-     * @param context Context
      * @param px      Pixels
      * @return Converted amount in dp
      */
-    public static float pxToDp(final Context context, final float px) {
-        return px / context.getResources().getDisplayMetrics().density;
+    public static float pxToDp(final float px) {
+        return px / Resources.getSystem().getDisplayMetrics().density;
     }
 
     /**
      * Convert the given dp amount to pixels.
      *
-     * @param context Context
      * @param dp      Dps
      * @return Converted amount in pixels
      */
-    public static float dpToPx(final Context context, final float dp) {
-        return dp * context.getResources().getDisplayMetrics().density;
+    public static float dpToPx(final float dp) {
+        return dp * Resources.getSystem().getDisplayMetrics().density;
     }
 
     /**
      * Convert the given pixels amount to sp.
      *
-     * @param context Context
      * @param px      Pixels
      * @return Converted amount in sp
      */
-    public static float pxToSp(final Context context, final float px) {
-        return px / context.getResources().getDisplayMetrics().scaledDensity;
+    public static float pxToSp(final float px) {
+        return px / Resources.getSystem().getDisplayMetrics().scaledDensity;
     }
 
     /**
      * Convert the given sp amount to pixels.
      *
-     * @param context Context
      * @param sp      Sps
      * @return Converted amount in pixels
      */
-    public static float spToPx(final Context context, final float sp) {
-        return sp * context.getResources().getDisplayMetrics().scaledDensity;
+    public static float spToPx(final float sp) {
+        return sp * Resources.getSystem().getDisplayMetrics().scaledDensity;
     }
 
     /**

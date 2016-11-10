@@ -145,7 +145,7 @@ public class DeviceUtilsTest {
         float density = RuntimeEnvironment.application.getResources().getDisplayMetrics().density;
         // Check that density is valid:
         assertTrue(density > 0);
-        float result = DeviceUtils.dpToPx(RuntimeEnvironment.application, testValue);
+        float result = DeviceUtils.dpToPx(testValue);
         // Check that the result is valid:
         assertTrue(result == testValue * density);
     }
@@ -157,7 +157,7 @@ public class DeviceUtilsTest {
         float density = RuntimeEnvironment.application.getResources().getDisplayMetrics().density;
         // Check that density is valid:
         assertTrue(density > 0);
-        float result = DeviceUtils.pxToDp(RuntimeEnvironment.application, testValue);
+        float result = DeviceUtils.pxToDp(testValue);
         // Check that the result is valid:
         assertTrue(result == testValue / density);
     }
@@ -170,7 +170,7 @@ public class DeviceUtilsTest {
                 .scaledDensity;
         // Check that scaledDensity is valid:
         assertTrue(scaledDensity > 0);
-        float result = DeviceUtils.spToPx(RuntimeEnvironment.application, testValue);
+        float result = DeviceUtils.spToPx(testValue);
         // Check that the result is valid:
         assertTrue(result == testValue * scaledDensity);
     }
@@ -183,7 +183,7 @@ public class DeviceUtilsTest {
                 .scaledDensity;
         // Check that scaledDensity is valid:
         assertTrue(scaledDensity > 0);
-        float result = DeviceUtils.pxToSp(RuntimeEnvironment.application, testValue);
+        float result = DeviceUtils.pxToSp(testValue);
         // Check that the result is valid:
         assertTrue(result == testValue / scaledDensity);
     }
