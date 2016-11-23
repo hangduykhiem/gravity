@@ -60,6 +60,8 @@ public class ReusableFragmentActivity extends BaseActivity implements
     private String className;
     private int optionFlags;
 
+    private StringBuilder sb = new StringBuilder();
+
     /**
      * Launches ReusableFragmentActivity, and opens the given Fragment in it. Toolbar will be
      * enabled.
@@ -312,7 +314,44 @@ public class ReusableFragmentActivity extends BaseActivity implements
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        sb.append("onCreate ");
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        sb.append("onResume ");
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        sb.append("onPause ");
+        super.onPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        sb.append("onRestart ");
+        super.onRestart();
+    }
+
+    @Override
+    protected void onStop() {
+        sb.append("onStop ");
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        sb.append("onDestroy ");
+        super.onDestroy();
+    }
+
+    @Override
     public void initialise(@NonNull Bundle initBundle) {
+        sb.append("initialise["+className+", "+fragmentBundle+"] ");
         super.initialise(initBundle);
         //Get Fragment details from initBundle:
         className = initBundle.getString(TAG_FRAGMENT_NAME);
@@ -322,6 +361,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        sb.append("onSave ");
         outState.putString(TAG_FRAGMENT_NAME, className);
         outState.putBundle(TAG_FRAGMENT_BUNDLE, fragmentBundle);
         outState.putInt(TAG_ACTIVITY_OPTIONS, optionFlags);
@@ -329,7 +369,14 @@ public class ReusableFragmentActivity extends BaseActivity implements
     }
 
     @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        sb.append("onRestore ");
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
     public void initView(@NonNull Bundle initState) {
+        sb.append("initView["+className+", "+fragmentBundle+"] ");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -357,7 +404,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
             //Show the Fragment:
             setFragment(R.id.reusablefragmentactivity_fragmentcontainer, fragment);
         } catch (Exception e) {
-            throw new IllegalStateException("Error when initializing Fragment.", e);
+            throw new IllegalStateException("Error when initializing Fragment: " + sb.toString(), e);
         }
     }
 
@@ -370,13 +417,14 @@ public class ReusableFragmentActivity extends BaseActivity implements
     @NonNull
     @Override
     protected StubPresenter getPresenter() {
-
+        sb.append("getPresenter ");
         return stubPresenter;
     }
 
     @Override
     @CallSuper
     protected void injectDependencies() {
+        sb.append("inject ");
         stubPresenter = new StubPresenter(new SubscriptionHelper());
     }
 
@@ -397,14 +445,14 @@ public class ReusableFragmentActivity extends BaseActivity implements
 
     @Override
     public void switchFragment(@NonNull BaseFragment fragment) {
-
+        sb.append("switchFragment ");
         super.switchFragment(R.id.reusablefragmentactivity_fragmentcontainer, fragment,
                 false, false);
     }
 
     @Override
     public void switchFragment(BaseFragment fragment, boolean addToBackStack, boolean animate) {
-
+        sb.append("switchFragment ");
         super.switchFragment(R.id.reusablefragmentactivity_fragmentcontainer, fragment,
                 addToBackStack, animate);
     }
@@ -415,6 +463,12 @@ public class ReusableFragmentActivity extends BaseActivity implements
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(title);
         }
+    }
+
+    @Override
+    protected void setFragment(int fragmentContainerId, BaseFragment fragment) {
+        sb.append("setFragment ");
+        super.setFragment(fragmentContainerId, fragment);
     }
 
     @Override
