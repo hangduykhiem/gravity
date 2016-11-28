@@ -51,7 +51,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         super.onCreate(savedInstanceState);
 
         final Bundle initBundle;
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null && !savedInstanceState.isEmpty()) {
             initBundle = savedInstanceState;
         } else if (getIntent().getExtras() != null) {
             initBundle = getIntent().getExtras();
