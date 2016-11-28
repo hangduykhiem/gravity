@@ -315,7 +315,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        sb.append("onCreate ");
+        sb.append("onCreate["+savedInstanceState+", "+getIntent()+"]");
         super.onCreate(savedInstanceState);
     }
 
