@@ -26,6 +26,8 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Force injection of dependencies
+        injectDependencies();
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(getSubFragmentLayoutId(), container, false);
         // Inject fragment views
@@ -43,8 +45,6 @@ public abstract class BaseFragment extends Fragment implements BaseView {
 
         super.onActivityCreated(savedInstanceState);
 
-        // Force injection of dependencies
-        injectDependencies();
         // Set the view to the presenter
         getPresenter().setView(this);
         // init objects

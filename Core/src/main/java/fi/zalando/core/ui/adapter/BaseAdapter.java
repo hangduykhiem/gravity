@@ -22,7 +22,6 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
     /**
      * Mod count used by UI tests to check for changes in this adapter.
      */
-    public transient int modCountUITest = 0;
     protected List<T> items;
 
     /**
@@ -31,7 +30,6 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
      * @param items {@link List} of {@link T} to render in the list
      */
     protected BaseAdapter(@NonNull List<T> items) {
-        modCountUITest = 0;
         this.items = items;
     }
 
@@ -63,7 +61,6 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
      * @param index item's index
      */
     public void removeItem(int index) {
-        modCountUITest++;
         items.remove(index);
         notifyItemRemoved(index);
     }
@@ -75,7 +72,6 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
      * @param location Position to add the item in
      */
     public void addItem(T item, int location) {
-        modCountUITest++;
         items.add(location, item);
         notifyItemInserted(location);
     }
@@ -86,7 +82,6 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
      * @param itemsToAdd Items to add
      */
     public void addItems(List<T> itemsToAdd) {
-        modCountUITest++;
         int count = itemsToAdd.size();
         int originalSize = items.size();
         items.addAll(itemsToAdd);
@@ -100,8 +95,6 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
      * @param items List of items to be added to the adapter.
      */
     public void setItems(@Nullable final List<T> items) {
-        modCountUITest++;
-
         this.items.clear();
         if (items != null) {
             this.items.addAll(items);
