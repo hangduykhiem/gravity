@@ -26,6 +26,7 @@ import fi.zalando.core.ui.fragment.BaseFragment;
 import fi.zalando.core.ui.presenter.StubPresenter;
 import fi.zalando.core.ui.view.ReusableFragmentActivityView;
 import fi.zalando.core.utils.PlatformUtils;
+import timber.log.Timber;
 
 /**
  * An empty, reusable Activity to host Fragments. Created by vraisanen on 14.4.2016.
@@ -60,7 +61,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
     private String className;
     private int optionFlags;
 
-    private StringBuilder sb = new StringBuilder();
+    private static StringBuilder sb = new StringBuilder();
 
     /**
      * Launches ReusableFragmentActivity, and opens the given Fragment in it. Toolbar will be
@@ -104,6 +105,11 @@ public class ReusableFragmentActivity extends BaseActivity implements
             throw new ClassCastException("fragmentClass must extend " + BaseFragment.class
                     .getName());
         }
+
+        //Logs:
+        sb = new StringBuilder(); //Clear the builder
+        sb.append("Launching Activity: " + launchActivity.getLocalClassName()
+                + " Fragment: " + fragmentClass.getName() + " ");
 
         //Pack the Fragment name and Bundle to the Intent:
         Intent reusableFragmentActivityIntent = new Intent(launchActivity, activityClass);
@@ -188,6 +194,11 @@ public class ReusableFragmentActivity extends BaseActivity implements
                                        @Nullable Bundle bundleForFragment,
                                        int requestCode,
                                        int optionFlags) {
+        //Logs:
+        sb = new StringBuilder(); //Clear the builder
+        sb.append("Launching Activity: " + launchActivity.getLocalClassName()
+                + " Fragment: " + fragmentClass.getName() + " ");
+
         //Launch the Activity for result:
         ActivityCompat.startActivityForResult(
                 launchActivity,
@@ -272,6 +283,11 @@ public class ReusableFragmentActivity extends BaseActivity implements
                                                    @Nullable Bundle bundleForFragment,
                                                    int requestCode,
                                                    int optionFlags) {
+        //Logs:
+        sb = new StringBuilder(); //Clear the builder
+        sb.append("Launching Fragment: " + fragmentClass.getSimpleName()
+                + " Fragment: " + fragmentClass.getName());
+
         //Launch the Activity for result:
         launchFragment.startActivityForResult(
                 createIntent(
@@ -357,6 +373,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
         className = initBundle.getString(TAG_FRAGMENT_NAME);
         fragmentBundle = initBundle.getBundle(TAG_FRAGMENT_BUNDLE);
         optionFlags = initBundle.getInt(TAG_ACTIVITY_OPTIONS, FLAG_TOOLBAR);
+        sb.append("initialiseParsed["+className+", "+fragmentBundle+"] ");
     }
 
     @Override
@@ -404,7 +421,18 @@ public class ReusableFragmentActivity extends BaseActivity implements
             //Show the Fragment:
             setFragment(R.id.reusablefragmentactivity_fragmentcontainer, fragment);
         } catch (Exception e) {
-            throw new IllegalStateException("Error when initializing Fragment: " + sb.toString(), e);
+            //CRASH!
+            //Collect more logs:
+            if (getIntent() != null && getIntent().getExtras() != null) {
+                Bundle extras = getIntent().getExtras();
+                for (String key : extras.keySet()) {
+                    sb.append("key: " + key + " value: " + extras.get(key));
+                }
+            }
+            //Send crash log to HockeyApp:
+            Timber.wtf("Error when initializing Fragment: " + sb.toString(), e);
+            //Recover by closing the Activity:
+            finish();
         }
     }
 
