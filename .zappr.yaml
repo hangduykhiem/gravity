@@ -13,3 +13,5 @@ specification:
     minimum-length:
       enabled: true
       length: 8
+X-Zalando-Team: "zeus"
+X-Zalando-Type: code
