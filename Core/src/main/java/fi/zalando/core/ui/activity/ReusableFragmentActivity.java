@@ -430,7 +430,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
                 }
             }
             //Send crash log to HockeyApp:
-            Timber.wtf("Error when initializing Fragment: " + sb.toString(), e);
+            Timber.wtf(e, "Error when initializing Fragment: " + sb.toString());
             //Recover by closing the Activity:
             finish();
         }
