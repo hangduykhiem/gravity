@@ -46,9 +46,9 @@ ext {
 }
 
 ext.coreDeps = [
-        appcompat       : 'com.android.support:appcompat-v7:25.0.1',
-        recyclerview    : 'com.android.support:recyclerview-v7:25.0.1',
-        design          : 'com.android.support:design:25.0.1',
+        appcompat       : 'com.android.support:appcompat-v7:25.1.0',
+        recyclerview    : 'com.android.support:recyclerview-v7:25.1.0',
+        design          : 'com.android.support:design:25.1.0',
         gplayservices   : 'com.google.android.gms:play-services-location:9.0.1',
         rxlocation      : 'pl.charmas.android:android-reactive-location:0.8@aar',
         butterknife     : 'com.jakewharton:butterknife:8.1.0',
