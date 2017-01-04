@@ -19,6 +19,7 @@ import fi.zalando.core.ui.Navigator;
 import fi.zalando.core.ui.fragment.BaseFragment;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
+import timber.log.Timber;
 
 /**
  * Abstract activity that holds common methods usable by all the {@link android.app.Activity} on the
@@ -111,11 +112,15 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
      */
     @Override
     public void onBackPressed() {
-
-        if (fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStack();
-        } else {
-            super.onBackPressed();
+        //Swallow state exceptions caused by fragments in this case:
+        try {
+            if (fragmentManager.getBackStackEntryCount() > 0) {
+                fragmentManager.popBackStack();
+            } else {
+                super.onBackPressed();
+            }
+        } catch (IllegalStateException exception) {
+            Timber.wtf(exception, "Caught exception in onBackPressed");
         }
     }
 
@@ -150,7 +155,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(fragmentContainerId, fragment, ((Object) fragment).getClass()
                 .getSimpleName());
-        ft.commit();
+        ft.commitAllowingStateLoss();
+        fragmentManager.executePendingTransactions();
     }
 
     /**
@@ -207,7 +213,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
             if (addToBackStack) {
                 ft.addToBackStack(((Object) newFragment).getClass().getSimpleName());
             }
-            ft.commit();
+            ft.commitAllowingStateLoss();
+            fragmentManager.executePendingTransactions();
         }
     }
 
@@ -242,7 +249,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
             if (addToBackStack) {
                 ft.addToBackStack(((Object) newFragment).getClass().getSimpleName());
             }
-            ft.commit();
+            ft.commitAllowingStateLoss();
+            fragmentManager.executePendingTransactions();
         }
     }
 
