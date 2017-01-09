@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.MenuItem;
@@ -159,6 +160,56 @@ public class ReusableFragmentActivity extends BaseActivity implements
         ActivityCompat.startActivityForResult(
                 launchActivity,
                 createIntent(launchActivity, fragmentClass, bundleForFragment, optionFlags),
+                requestCode,
+                options);
+    }
+
+    /**
+     * Launches ReusableFragmentActivity and opens the given Fragment in it, returning the result
+     * to the {@code launchFragment}.
+     *
+     * @param launchFragment    {@link Fragment} that is launching the
+     * {@link ReusableFragmentActivity}
+     * @param fragmentClass     Fragment to open inside this new Activity.
+     * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
+     * @param requestCode       Request code for the activity result.
+     * @param optionFlags       Options to be passed on and applied to the new Activity.
+     */
+    @SafeVarargs
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private static void launchFromFragmentForResult(@NonNull Fragment launchFragment,
+                                        @NonNull Class fragmentClass,
+                                        @Nullable Bundle bundleForFragment,
+                                        int requestCode,
+                                        int optionFlags,
+                                        Pair<View, String>... sharedElements) {
+        //Logs:
+        sb = new StringBuilder(); //Clear the builder
+        sb.append("Launching Fragment: " + launchFragment.getClass().getSimpleName()
+                + " Fragment: " + fragmentClass.getName() + " ");
+
+        final Bundle options;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP
+                && sharedElements != null
+                && sharedElements.length > 0) {
+            options = ActivityOptions.makeSceneTransitionAnimation(
+                    launchFragment.getActivity(),
+                    sharedElements).toBundle();
+        }
+        else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+            options = ActivityOptions.makeCustomAnimation(
+                    launchFragment.getActivity(),
+                    R.anim.activity_slidein_left,
+                    R.anim.activity_slideout_left).toBundle();
+        }
+        else {
+            options = null;
+        }
+
+        //Launch the Activity for result:
+        launchFragment.startActivityForResult(
+                createIntent(launchFragment.getActivity(), fragmentClass,
+                        bundleForFragment, optionFlags),
                 requestCode,
                 options);
     }
@@ -382,6 +433,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
      */
     public static class Builder {
         private Activity launchActivity;
+        private Fragment launchFragment;
         private Class fragmentClass;
         private Bundle bundleForFragment;
         private int optionFlags = FLAG_TOOLBAR;
@@ -396,6 +448,17 @@ public class ReusableFragmentActivity extends BaseActivity implements
          */
         public Builder(@NonNull Activity launchActivity, @NonNull Class fragmentClass) {
             this.launchActivity = launchActivity;
+            this.fragmentClass = fragmentClass;
+        }
+
+        /**
+         * Starts building the {@link ReusableFragmentActivity} from scratch
+         * @param launchFragment {@link Fragment} to launch the {@link ReusableFragmentActivity}
+         *                                       from
+         * @param fragmentClass {@link Class} of the {@link BaseFragment} to launch in the Activity
+         */
+        public Builder(@NonNull Fragment launchFragment, @NonNull Class fragmentClass) {
+            this.launchFragment = launchFragment;
             this.fragmentClass = fragmentClass;
         }
 
@@ -443,16 +506,27 @@ public class ReusableFragmentActivity extends BaseActivity implements
          * Launches the Activity with the applied settings
          */
         public void launch() {
+            if (launchActivity == null) {
+                launchActivity = launchFragment.getActivity();
+            }
             ReusableFragmentActivity.launch(launchActivity, fragmentClass,
                     bundleForFragment, optionFlags, sharedElements);
         }
 
         /**
-         * Launches the Activity for result with the applied settings
+         * Launches the Activity for result with the applied settings. If the
+         * {@code launchFragment} is set, the result will be returned to it. Otherwise the
+         * result is directed to the Activity.
          */
         public void launchForResult() {
-            ReusableFragmentActivity.launchForResult(launchActivity, fragmentClass,
-                    bundleForFragment, requestCode, optionFlags, sharedElements);
+            if (launchActivity == null) {
+                ReusableFragmentActivity.launchFromFragmentForResult(launchFragment, fragmentClass,
+                        bundleForFragment, requestCode, optionFlags, sharedElements);
+            }
+            else {
+                ReusableFragmentActivity.launchForResult(launchActivity, fragmentClass,
+                        bundleForFragment, requestCode, optionFlags, sharedElements);
+            }
         }
     }
 }
