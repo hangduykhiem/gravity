@@ -16,6 +16,13 @@ import rx.schedulers.Schedulers;
 public abstract class BaseService implements CleaningHelper.Cleanable {
 
     /**
+     * Default constructor, not making use of cleaning helper at all.
+     */
+    protected BaseService() {
+
+    }
+
+    /**
      * Constructor to enforce adding itself to {@link CleaningHelper}
      *
      * @param cleaningHelper {@link CleaningHelper} to add itself to
