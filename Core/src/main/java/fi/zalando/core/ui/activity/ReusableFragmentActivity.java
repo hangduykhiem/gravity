@@ -72,6 +72,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
      * @param fragmentClass     Fragment to open inside this new Activity.
      * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
      * @param optionFlags       Options to be passed on and applied to the new Activity.
+     * @param sharedElements    Array of {@link View} and {@link String} {@link Pair}s for animation
      */
     @SafeVarargs
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -124,6 +125,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
      * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
      * @param requestCode       Request code for the activity result.
      * @param optionFlags       Options to be passed on and applied to the new Activity.
+     * @param sharedElements    Array of {@link View} and {@link String} {@link Pair}s for animation
      */
     @SafeVarargs
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -174,6 +176,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
      * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
      * @param requestCode       Request code for the activity result.
      * @param optionFlags       Options to be passed on and applied to the new Activity.
+     * @param sharedElements    Array of {@link View} and {@link String} {@link Pair}s for animation
      */
     @SafeVarargs
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
