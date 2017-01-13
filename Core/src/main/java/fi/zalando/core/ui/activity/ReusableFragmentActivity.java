@@ -472,7 +472,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
          * @param bundleForFragment {@link Bundle}
          * @return this
          */
-        public Builder setBundleForFragment(Bundle bundleForFragment) {
+        public Builder setBundleForFragment(@Nullable Bundle bundleForFragment) {
             this.bundleForFragment = bundleForFragment;
             return this;
         }
@@ -502,7 +502,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
          * @param sharedElements array of {@link View} and {@link String} {@link Pair}s
          * @return this
          */
-        public Builder setSharedElements(Pair<View, String>[] sharedElements) {
+        public Builder setSharedElements(@Nullable Pair<View, String>[] sharedElements) {
             this.sharedElements = sharedElements;
             return this;
         }
@@ -512,7 +512,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
          * @param sharedElements {@link List} of {@link View} and {@link String} {@link Pair}s
          * @return this
          */
-        public Builder setSharedElements(List<Pair<View, String>> sharedElements) {
+        public Builder setSharedElements(@Nullable List<Pair<View, String>> sharedElements) {
             this.sharedElements = ConvertUtils.toTransitionArray(sharedElements);
             return this;
         }
