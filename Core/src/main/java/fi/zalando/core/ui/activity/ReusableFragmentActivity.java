@@ -2,7 +2,6 @@ package fi.zalando.core.ui.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -28,7 +27,7 @@ import fi.zalando.core.domain.helper.SubscriptionHelper;
 import fi.zalando.core.ui.fragment.BaseFragment;
 import fi.zalando.core.ui.presenter.StubPresenter;
 import fi.zalando.core.ui.view.ReusableFragmentActivityView;
-import fi.zalando.core.utils.ConvertUtils;
+import fi.zalando.core.utils.UIUtils;
 import timber.log.Timber;
 
 /**
@@ -74,34 +73,16 @@ public class ReusableFragmentActivity extends BaseActivity implements
      * @param fragmentClass     Fragment to open inside this new Activity.
      * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
      * @param optionFlags       Options to be passed on and applied to the new Activity.
-     * @param sharedElements    Array of {@link View} and {@link String} {@link Pair}s for animation
+     * @param sharedElements    {@link List} of {@link View} and {@link String} {@link Pair}s
+     *                                      for animation
      */
-    @SafeVarargs
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static void launch(@NonNull Activity launchActivity, @NonNull Class fragmentClass,
                                @Nullable Bundle bundleForFragment, int optionFlags,
-                               Pair<View, String>... sharedElements) {
+                               @Nullable List<Pair<View, String>> sharedElements) {
         if (fragmentClass.isInstance(BaseFragment.class)) {
             throw new ClassCastException("fragmentClass must extend " + BaseFragment.class
                     .getName());
-        }
-
-        final Bundle options;
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP
-                && sharedElements != null
-                && sharedElements.length > 0) {
-            options = ActivityOptions.makeSceneTransitionAnimation(
-                    launchActivity,
-                    sharedElements).toBundle();
-        }
-        else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-            options = ActivityOptions.makeCustomAnimation(
-                    launchActivity,
-                    R.anim.activity_slidein_left,
-                    R.anim.activity_slideout_left).toBundle();
-        }
-        else {
-            options = null;
         }
 
         //Logs:
@@ -115,7 +96,8 @@ public class ReusableFragmentActivity extends BaseActivity implements
         reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_BUNDLE, bundleForFragment);
         reusableFragmentActivityIntent.putExtra(TAG_ACTIVITY_OPTIONS, optionFlags);
         //Launch the Activity:
-        ActivityCompat.startActivity(launchActivity, reusableFragmentActivityIntent, options);
+        ActivityCompat.startActivity(launchActivity, reusableFragmentActivityIntent,
+                UIUtils.buildAnimationBundle(launchActivity, sharedElements));
     }
 
     /**
@@ -127,45 +109,27 @@ public class ReusableFragmentActivity extends BaseActivity implements
      * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
      * @param requestCode       Request code for the activity result.
      * @param optionFlags       Options to be passed on and applied to the new Activity.
-     * @param sharedElements    Array of {@link View} and {@link String} {@link Pair}s for animation
+     * @param sharedElements    {@link List} of {@link View} and {@link String} {@link Pair}s
+     *                                      for animation
      */
-    @SafeVarargs
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static void launchForResult(@NonNull Activity launchActivity,
                                         @NonNull Class fragmentClass,
                                         @Nullable Bundle bundleForFragment,
                                         int requestCode,
                                         int optionFlags,
-                                        Pair<View, String>... sharedElements) {
+                                        @Nullable List<Pair<View, String>> sharedElements) {
         //Logs:
         sb = new StringBuilder(); //Clear the builder
         sb.append("Launching Activity: " + launchActivity.getLocalClassName()
                 + " Fragment: " + fragmentClass.getName() + " ");
-
-        final Bundle options;
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP
-                && sharedElements != null
-                && sharedElements.length > 0) {
-            options = ActivityOptions.makeSceneTransitionAnimation(
-                    launchActivity,
-                    sharedElements).toBundle();
-        }
-        else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-            options = ActivityOptions.makeCustomAnimation(
-                    launchActivity,
-                    R.anim.activity_slidein_left,
-                    R.anim.activity_slideout_left).toBundle();
-        }
-        else {
-            options = null;
-        }
 
         //Launch the Activity for result:
         ActivityCompat.startActivityForResult(
                 launchActivity,
                 createIntent(launchActivity, fragmentClass, bundleForFragment, optionFlags),
                 requestCode,
-                options);
+                UIUtils.buildAnimationBundle(launchActivity, sharedElements));
     }
 
     /**
@@ -178,45 +142,27 @@ public class ReusableFragmentActivity extends BaseActivity implements
      * @param bundleForFragment Bundle to be passed on to the Fragment as arguments. Can be null.
      * @param requestCode       Request code for the activity result.
      * @param optionFlags       Options to be passed on and applied to the new Activity.
-     * @param sharedElements    Array of {@link View} and {@link String} {@link Pair}s for animation
+     * @param sharedElements    {@link List} of {@link View} and {@link String} {@link Pair}s
+     *                                      for animation
      */
-    @SafeVarargs
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static void launchFromFragmentForResult(@NonNull Fragment launchFragment,
                                         @NonNull Class fragmentClass,
                                         @Nullable Bundle bundleForFragment,
                                         int requestCode,
                                         int optionFlags,
-                                        Pair<View, String>... sharedElements) {
+                                        @Nullable List<Pair<View, String>> sharedElements) {
         //Logs:
         sb = new StringBuilder(); //Clear the builder
         sb.append("Launching Fragment: " + launchFragment.getClass().getSimpleName()
                 + " Fragment: " + fragmentClass.getName() + " ");
-
-        final Bundle options;
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP
-                && sharedElements != null
-                && sharedElements.length > 0) {
-            options = ActivityOptions.makeSceneTransitionAnimation(
-                    launchFragment.getActivity(),
-                    sharedElements).toBundle();
-        }
-        else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-            options = ActivityOptions.makeCustomAnimation(
-                    launchFragment.getActivity(),
-                    R.anim.activity_slidein_left,
-                    R.anim.activity_slideout_left).toBundle();
-        }
-        else {
-            options = null;
-        }
 
         //Launch the Activity for result:
         launchFragment.startActivityForResult(
                 createIntent(launchFragment.getActivity(), fragmentClass,
                         bundleForFragment, optionFlags),
                 requestCode,
-                options);
+                UIUtils.buildAnimationBundle(launchFragment.getActivity(), sharedElements));
     }
 
     /**
@@ -443,7 +389,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
         private Bundle bundleForFragment;
         private int optionFlags = FLAG_TOOLBAR;
         private int requestCode = REQUEST_DEFAULT;
-        private Pair<View, String>[] sharedElements;
+        private List<Pair<View, String>> sharedElements;
 
         /**
          * Starts building the {@link ReusableFragmentActivity} from scratch
@@ -499,21 +445,11 @@ public class ReusableFragmentActivity extends BaseActivity implements
 
         /**
          * Sets shared elements for animation purposes
-         * @param sharedElements array of {@link View} and {@link String} {@link Pair}s
-         * @return this
-         */
-        public Builder setSharedElements(@Nullable Pair<View, String>[] sharedElements) {
-            this.sharedElements = sharedElements;
-            return this;
-        }
-
-        /**
-         * Sets shared elements for animation purposes
          * @param sharedElements {@link List} of {@link View} and {@link String} {@link Pair}s
          * @return this
          */
         public Builder setSharedElements(@Nullable List<Pair<View, String>> sharedElements) {
-            this.sharedElements = ConvertUtils.toTransitionArray(sharedElements);
+            this.sharedElements = sharedElements;
             return this;
         }
 

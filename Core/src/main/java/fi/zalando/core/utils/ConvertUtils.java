@@ -2,8 +2,6 @@ package fi.zalando.core.utils;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Pair;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -336,18 +334,5 @@ public class ConvertUtils {
             transformedList.add(item);
         }
         return transformedList;
-    }
-
-    /**
-     * Transforms a {@link List} of {@link View} {@link String} {@link Pair}s into an array.
-     * Used for building material transformation animations.
-     * @param list {@link List} to convert into array
-     * @return array
-     */
-    @SuppressWarnings("unchecked")
-    public static Pair<View, String>[] toTransitionArray(List<Pair<View, String>> list) {
-        final Pair[] varargs = new Pair[list.size()];
-        list.toArray(varargs);
-        return varargs;
     }
 }
