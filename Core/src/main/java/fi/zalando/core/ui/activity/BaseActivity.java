@@ -115,8 +115,19 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         //Swallow state exceptions caused by fragments in this case:
         try {
             if (fragmentManager.getBackStackEntryCount() > 0) {
+                FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(
+                        fragmentManager.getBackStackEntryCount()-1);
+                BaseFragment fragment = (BaseFragment)fragmentManager
+                        .findFragmentByTag(backEntry.getName());
+                if (fragment != null) {
+                    fragment.onBackStackPop();
+                }
                 fragmentManager.popBackStack();
             } else {
+                BaseFragment fragment = (BaseFragment)fragmentManager.getFragments().get(0);
+                if (fragment != null) {
+                    fragment.onBackStackPop();
+                }
                 super.onBackPressed();
             }
         } catch (IllegalStateException exception) {

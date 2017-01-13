@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import java.lang.reflect.Constructor;
+import java.util.List;
 
 import fi.zalando.core.BuildConfig;
 import fi.zalando.core.R;
@@ -27,6 +28,7 @@ import fi.zalando.core.domain.helper.SubscriptionHelper;
 import fi.zalando.core.ui.fragment.BaseFragment;
 import fi.zalando.core.ui.presenter.StubPresenter;
 import fi.zalando.core.ui.view.ReusableFragmentActivityView;
+import fi.zalando.core.utils.ConvertUtils;
 import timber.log.Timber;
 
 /**
@@ -502,6 +504,16 @@ public class ReusableFragmentActivity extends BaseActivity implements
          */
         public Builder setSharedElements(Pair<View, String>[] sharedElements) {
             this.sharedElements = sharedElements;
+            return this;
+        }
+
+        /**
+         * Sets shared elements for animation purposes
+         * @param sharedElements {@link List} of {@link View} and {@link String} {@link Pair}s
+         * @return this
+         */
+        public Builder setSharedElements(List<Pair<View, String>> sharedElements) {
+            this.sharedElements = ConvertUtils.toTransitionArray(sharedElements);
             return this;
         }
 
