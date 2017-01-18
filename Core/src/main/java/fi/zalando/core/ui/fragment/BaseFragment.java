@@ -102,6 +102,12 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     }
 
     /**
+     * Called right before the fragment back stack is popped. Useful for preparing fragments for
+     * transition animations.
+     */
+    public void onBackStackPop() {}
+
+    /**
      * Provides the {@link Application} instance
      *
      * @return {@link Application} instance

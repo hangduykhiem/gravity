@@ -1,11 +1,14 @@
 package fi.zalando.core.utils;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,11 +17,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.util.List;
+
+import fi.zalando.core.R;
 
 /**
  * Utility class to help with UI related tasks
@@ -229,5 +237,49 @@ public class UIUtils {
                 return;
             }
         }
+    }
+
+    /**
+     * Utility method for building the transition animation for Activities
+     * @param launchActivity {@link Activity} to launch
+     * @param sharedElements {@link List} of {@link View} {@link String} {@link Pair}s for
+     *                                   transition animations
+     * @return Animation {@link Bundle} or null if old platform
+     */
+    @Nullable
+    public static Bundle buildAnimationBundle(@NonNull Activity launchActivity,
+                                              @Nullable List<Pair<View, String>> sharedElements) {
+        //Create transition animation for Lollipop & newer:
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                && sharedElements != null
+                && !sharedElements.isEmpty()) {
+            return ActivityOptions.makeSceneTransitionAnimation(
+                    launchActivity,
+                    toTransitionArray(sharedElements)).toBundle();
+        }
+        //Basic animation for Jelly Bean:
+        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            return ActivityOptions.makeCustomAnimation(
+                    launchActivity,
+                    R.anim.activity_slidein_left,
+                    R.anim.activity_slideout_left).toBundle();
+        }
+        //Standard whatever animation for older:
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * Transforms a {@link List} of {@link View} {@link String} {@link Pair}s into an array.
+     * Used for building material transformation animations.
+     * @param list {@link List} to convert into array
+     * @return array
+     */
+    @SuppressWarnings("unchecked")
+    public static Pair<View, String>[] toTransitionArray(List<Pair<View, String>> list) {
+        final Pair[] varargs = new Pair[list.size()];
+        list.toArray(varargs);
+        return varargs;
     }
 }
