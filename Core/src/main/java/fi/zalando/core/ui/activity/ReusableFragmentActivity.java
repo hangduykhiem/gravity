@@ -91,13 +91,14 @@ public class ReusableFragmentActivity extends BaseActivity implements
                 + " Fragment: " + fragmentClass.getName() + " ");
 
         //Pack the Fragment name and Bundle to the Intent:
-        Intent reusableFragmentActivityIntent = new Intent(launchActivity, activityClass);
-        reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_NAME, fragmentClass.getName());
-        reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_BUNDLE, bundleForFragment);
-        reusableFragmentActivityIntent.putExtra(TAG_ACTIVITY_OPTIONS, optionFlags);
+        final Intent intent = new Intent(launchActivity, activityClass);
+        intent.putExtra(TAG_FRAGMENT_NAME, fragmentClass.getName());
+        intent.putExtra(TAG_FRAGMENT_BUNDLE, bundleForFragment);
+        intent.putExtra(TAG_ACTIVITY_OPTIONS, optionFlags);
         //Launch the Activity:
-        ActivityCompat.startActivity(launchActivity, reusableFragmentActivityIntent,
-                UIUtils.buildAnimationBundle(launchActivity, sharedElements));
+        ActivityCompat.startActivity(launchActivity, intent,
+                UIUtils.buildAnimationBundle(launchActivity, intent,
+                        sharedElements));
     }
 
     /**
@@ -124,12 +125,15 @@ public class ReusableFragmentActivity extends BaseActivity implements
         sb.append("Launching Activity: " + launchActivity.getLocalClassName()
                 + " Fragment: " + fragmentClass.getName() + " ");
 
+        final Intent intent = createIntent(launchActivity, fragmentClass, bundleForFragment,
+                optionFlags);
+
         //Launch the Activity for result:
         ActivityCompat.startActivityForResult(
                 launchActivity,
-                createIntent(launchActivity, fragmentClass, bundleForFragment, optionFlags),
+                intent,
                 requestCode,
-                UIUtils.buildAnimationBundle(launchActivity, sharedElements));
+                UIUtils.buildAnimationBundle(launchActivity, intent, sharedElements));
     }
 
     /**
@@ -157,12 +161,14 @@ public class ReusableFragmentActivity extends BaseActivity implements
         sb.append("Launching Fragment: " + launchFragment.getClass().getSimpleName()
                 + " Fragment: " + fragmentClass.getName() + " ");
 
+        final Intent intent = createIntent(launchFragment.getActivity(), fragmentClass,
+                bundleForFragment, optionFlags);
+
         //Launch the Activity for result:
         launchFragment.startActivityForResult(
-                createIntent(launchFragment.getActivity(), fragmentClass,
-                        bundleForFragment, optionFlags),
+                intent,
                 requestCode,
-                UIUtils.buildAnimationBundle(launchFragment.getActivity(), sharedElements));
+                UIUtils.buildAnimationBundle(launchFragment.getActivity(), intent, sharedElements));
     }
 
     /**
@@ -183,12 +189,12 @@ public class ReusableFragmentActivity extends BaseActivity implements
         }
 
         //Pack the Fragment name and Bundle to the Intent:
-        Intent reusableFragmentActivityIntent = new Intent(launchActivity, activityClass);
-        reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_NAME, fragmentClass.getName());
-        reusableFragmentActivityIntent.putExtra(TAG_FRAGMENT_BUNDLE, bundleForFragment);
-        reusableFragmentActivityIntent.putExtra(TAG_ACTIVITY_OPTIONS, optionFlags);
+        final Intent intent = new Intent(launchActivity, activityClass);
+        intent.putExtra(TAG_FRAGMENT_NAME, fragmentClass.getName());
+        intent.putExtra(TAG_FRAGMENT_BUNDLE, bundleForFragment);
+        intent.putExtra(TAG_ACTIVITY_OPTIONS, optionFlags);
 
-        return reusableFragmentActivityIntent;
+        return intent;
     }
 
     @Override
