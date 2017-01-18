@@ -1,5 +1,6 @@
 package fi.zalando.core.ui.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.AnimRes;
 import android.support.annotation.CallSuper;
@@ -14,6 +15,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import dagger.Lazy;
+import fi.zalando.core.BuildConfig;
 import fi.zalando.core.R;
 import fi.zalando.core.ui.Navigator;
 import fi.zalando.core.ui.fragment.BaseFragment;
@@ -28,6 +30,8 @@ import timber.log.Timber;
  * Created by jduran on 17/11/15.
  */
 public abstract class BaseActivity extends AppCompatActivity implements BaseView {
+
+    public static final String HAS_SHARED_ELEMENTS = BuildConfig.APPLICATION_ID+".shared.elements";
 
     /**
      * Internal private objects
@@ -168,6 +172,13 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
                 .getSimpleName());
         ft.commitAllowingStateLoss();
         fragmentManager.executePendingTransactions();
+    }
+
+    /**
+     * @return true, if this {@link Activity} was launched with shared elements animation
+     */
+    public boolean hasSharedElements() {
+        return getIntent().getBooleanExtra(HAS_SHARED_ELEMENTS, false);
     }
 
     /**

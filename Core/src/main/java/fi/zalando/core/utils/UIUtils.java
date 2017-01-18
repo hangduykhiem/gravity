@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import fi.zalando.core.R;
+import fi.zalando.core.ui.activity.BaseActivity;
 
 /**
  * Utility class to help with UI related tasks
@@ -241,18 +243,22 @@ public class UIUtils {
 
     /**
      * Utility method for building the transition animation for Activities
-     * @param launchActivity {@link Activity} to launch
+     * @param launchActivity {@link Activity} to launch from
+     * @param launchIntent {@link Intent} to launch
      * @param sharedElements {@link List} of {@link View} {@link String} {@link Pair}s for
      *                                   transition animations
      * @return Animation {@link Bundle} or null if old platform
      */
     @Nullable
     public static Bundle buildAnimationBundle(@NonNull Activity launchActivity,
+                                              @NonNull Intent launchIntent,
                                               @Nullable List<Pair<View, String>> sharedElements) {
         //Create transition animation for Lollipop & newer:
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && sharedElements != null
                 && !sharedElements.isEmpty()) {
+            //Put a flag in the intent notifying about shared element animation:
+            launchIntent.putExtra(BaseActivity.HAS_SHARED_ELEMENTS, true);
             return ActivityOptions.makeSceneTransitionAnimation(
                     launchActivity,
                     toTransitionArray(sharedElements)).toBundle();
