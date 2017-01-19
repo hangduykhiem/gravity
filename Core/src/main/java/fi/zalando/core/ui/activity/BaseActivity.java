@@ -125,16 +125,16 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
             if (fragmentManager.getBackStackEntryCount() > 0) {
                 FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(
                         fragmentManager.getBackStackEntryCount()-1);
-                BaseFragment fragment = (BaseFragment)fragmentManager
+                final Fragment fragment = fragmentManager
                         .findFragmentByTag(backEntry.getName());
-                if (fragment != null) {
-                    fragment.onBackStackPop();
+                if (fragment != null && fragment instanceof BaseFragment) {
+                    ((BaseFragment)fragment).onBackStackPop();
                 }
                 fragmentManager.popBackStack();
             } else {
-                BaseFragment fragment = (BaseFragment)fragmentManager.getFragments().get(0);
-                if (fragment != null) {
-                    fragment.onBackStackPop();
+                final Fragment fragment = fragmentManager.getFragments().get(0);
+                if (fragment != null && fragment instanceof BaseFragment) {
+                    ((BaseFragment)fragment).onBackStackPop();
                 }
                 super.onBackPressed();
             }
