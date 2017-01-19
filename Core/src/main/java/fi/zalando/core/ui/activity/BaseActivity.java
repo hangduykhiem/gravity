@@ -6,6 +6,7 @@ import android.support.annotation.AnimRes;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,6 +22,7 @@ import fi.zalando.core.ui.Navigator;
 import fi.zalando.core.ui.fragment.BaseFragment;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
+import fi.zalando.core.utils.OnReadyForTransitionListener;
 import timber.log.Timber;
 
 /**
@@ -43,6 +45,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
      */
     @Inject
     protected Lazy<Navigator> navigator;
+
+    private OnReadyForTransitionListener onReadyForTransitionListener;
 
     /**
      * Lifecycle method
@@ -172,6 +176,24 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
                 .getSimpleName());
         ft.commitAllowingStateLoss();
         fragmentManager.executePendingTransactions();
+    }
+
+    /**
+     * Set the {@link OnReadyForTransitionListener} to listen for the event when the transition
+     * is ready.
+     * @param onReadyForTransitionListener {@link OnReadyForTransitionListener}
+     */
+    public void setOnReadyForTransitionListener(OnReadyForTransitionListener
+                                                        onReadyForTransitionListener) {
+        this.onReadyForTransitionListener = onReadyForTransitionListener;
+    }
+
+    /**
+     * @return {@link OnReadyForTransitionListener} if one is set
+     */
+    @Nullable
+    public OnReadyForTransitionListener getOnReadyForTransitionListener() {
+        return onReadyForTransitionListener;
     }
 
     /**
