@@ -254,7 +254,7 @@ public class UIUtils {
                                               @NonNull Intent launchIntent,
                                               @Nullable List<Pair<View, String>> sharedElements) {
         //Create transition animation for Lollipop & newer:
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP
                 && sharedElements != null
                 && !sharedElements.isEmpty()) {
             //Put a flag in the intent notifying about shared element animation:
