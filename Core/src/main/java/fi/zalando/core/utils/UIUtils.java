@@ -253,8 +253,8 @@ public class UIUtils {
     public static Bundle buildAnimationBundle(@NonNull Activity launchActivity,
                                               @NonNull Intent launchIntent,
                                               @Nullable List<Pair<View, String>> sharedElements) {
-        //Create transition animation for Lollipop_MR1 & newer:
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1
+        //Create transition animation for Lollipop & newer:
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && sharedElements != null
                 && !sharedElements.isEmpty()) {
             //Put a flag in the intent notifying about shared element animation:
