@@ -99,9 +99,9 @@ public class UIUtils {
     /**
      * Shows styled {@link Snackbar} with the given text.
      *
-     * @param parent parent {@link View}
-     * @param resId  text to show
-     * @param duration      {@link Snackbar.Duration} of the snackbar
+     * @param parent   parent {@link View}
+     * @param resId    text to show
+     * @param duration {@link Snackbar.Duration} of the snackbar
      * @return Snackbar that is shown
      */
     public static Snackbar showSnack(@NonNull View parent,
@@ -118,6 +118,7 @@ public class UIUtils {
      * Shows styled {@link Snackbar} with the given text and style it with given parameters
      *
      * @param parent          parent {@link View}
+     * @param textColor       {@link ColorRes} for the Snackbar text color
      * @param backgroundColor {@link ColorRes} for the Snackbar background
      * @param resId           text to show
      * @param duration        {@link Snackbar.Duration} of the snackbar
@@ -125,6 +126,7 @@ public class UIUtils {
      */
     public static Snackbar showSnack(@NonNull View parent,
                                      @StringRes int resId,
+                                     @ColorRes int textColor,
                                      @ColorRes int backgroundColor,
                                      @Snackbar.Duration int duration) {
 
@@ -133,6 +135,9 @@ public class UIUtils {
         styleSnackbar(parent.getContext(), snackbar);
         snackbar.getView()
                 .setBackgroundColor(ContextCompat.getColor(parent.getContext(), backgroundColor));
+        ((TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                .setTextColor(ContextCompat.getColor(parent.getContext(), textColor));
+        ((TextView) snackbar.getView().findViewById(R.id.snackbar_text)).setMaxLines(10);
         snackbar.show();
         return snackbar;
     }
@@ -167,26 +172,31 @@ public class UIUtils {
      * @param parent          parent {@link View}
      * @param resId           text resource id
      * @param buttonTextId    button text resource id
+     * @param textColor       {@link ColorRes} for the Snackbar text color
      * @param backgroundColor {@link ColorRes} for the Snackbar background
      * @param actionColor     {@link ColorRes} for the color of the action button text
      * @param onClickAction   {@link Runnable} to execute on button press
-     * @param duration      {@link Snackbar.Duration} of the snackbar
+     * @param duration        {@link Snackbar.Duration} of the snackbar
      * @return Snackbar that is shown
      */
     public static Snackbar showSnack(@NonNull View parent,
                                      @StringRes int resId,
                                      @StringRes int buttonTextId,
+                                     @ColorRes int textColor,
                                      @ColorRes int backgroundColor,
                                      @ColorRes int actionColor,
                                      @NonNull Runnable onClickAction,
                                      @Snackbar.Duration int duration) {
 
         final Snackbar snackbar = Snackbar.make(parent, resId, duration);
-            snackbar.setAction(buttonTextId, (v) -> onClickAction.run());
+        snackbar.setAction(buttonTextId, (v) -> onClickAction.run());
         // no need to style it first... everything styleable will override
         snackbar.setActionTextColor(ContextCompat.getColor(parent.getContext(), actionColor));
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(parent.getContext(),
                 backgroundColor));
+        ((TextView) snackbar.getView().findViewById(R.id.snackbar_text))
+                .setTextColor(ContextCompat.getColor(parent.getContext(), textColor));
+        ((TextView) snackbar.getView().findViewById(R.id.snackbar_text)).setMaxLines(10);
         snackbar.show();
         return snackbar;
     }
@@ -243,10 +253,11 @@ public class UIUtils {
 
     /**
      * Utility method for building the transition animation for Activities
+     *
      * @param launchActivity {@link Activity} to launch from
-     * @param launchIntent {@link Intent} to launch
+     * @param launchIntent   {@link Intent} to launch
      * @param sharedElements {@link List} of {@link View} {@link String} {@link Pair}s for
-     *                                   transition animations
+     *                       transition animations
      * @return Animation {@link Bundle} or null if old platform
      */
     @Nullable
@@ -277,8 +288,9 @@ public class UIUtils {
     }
 
     /**
-     * Transforms a {@link List} of {@link View} {@link String} {@link Pair}s into an array.
-     * Used for building material transformation animations.
+     * Transforms a {@link List} of {@link View} {@link String} {@link Pair}s into an array. Used
+     * for building material transformation animations.
+     *
      * @param list {@link List} to convert into array
      * @return array
      */
