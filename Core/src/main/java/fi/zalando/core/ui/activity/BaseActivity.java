@@ -111,8 +111,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     @Override
     protected void onDestroy() {
 
-        super.onDestroy();
         getPresenter().destroy();
+        super.onDestroy();
     }
 
     /**
