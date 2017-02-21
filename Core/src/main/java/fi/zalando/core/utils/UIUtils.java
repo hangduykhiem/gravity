@@ -3,19 +3,11 @@ package fi.zalando.core.utils;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityOptions;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Pair;
@@ -94,148 +86,6 @@ public class UIUtils {
         }
         //Restore original selection:
         passwordEditText.setSelection(selectionStart, selectionEnd);
-    }
-
-    /**
-     * Shows styled {@link Snackbar} with the given text.
-     *
-     * @param parent   parent {@link View}
-     * @param resId    text to show
-     * @param duration {@link Snackbar.Duration} of the snackbar
-     * @return Snackbar that is shown
-     */
-    public static Snackbar showSnack(@NonNull View parent,
-                                     @StringRes int resId,
-                                     @Snackbar.Duration int duration) {
-
-        final Snackbar snackbar = Snackbar.make(parent, resId, duration);
-        styleSnackbar(parent.getContext(), snackbar);
-        snackbar.show();
-        return snackbar;
-    }
-
-    /**
-     * Shows styled {@link Snackbar} with the given text and style it with given parameters
-     *
-     * @param parent          parent {@link View}
-     * @param textColor       {@link ColorRes} for the Snackbar text color
-     * @param backgroundColor {@link ColorRes} for the Snackbar background
-     * @param resId           text to show
-     * @param duration        {@link Snackbar.Duration} of the snackbar
-     * @return Snackbar that is shown
-     */
-    public static Snackbar showSnack(@NonNull View parent,
-                                     @StringRes int resId,
-                                     @ColorRes int textColor,
-                                     @ColorRes int backgroundColor,
-                                     @Snackbar.Duration int duration) {
-
-        final Snackbar snackbar = Snackbar.make(parent, resId, duration);
-        // We first style it, and then change the needed params
-        styleSnackbar(parent.getContext(), snackbar);
-        snackbar.getView()
-                .setBackgroundColor(ContextCompat.getColor(parent.getContext(), backgroundColor));
-        ((TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
-                .setTextColor(ContextCompat.getColor(parent.getContext(), textColor));
-        ((TextView) snackbar.getView().findViewById(R.id.snackbar_text)).setMaxLines(10);
-        snackbar.show();
-        return snackbar;
-    }
-
-    /**
-     * Shows styled {@link Snackbar} with the given text and button
-     *
-     * @param parent        parent {@link View}
-     * @param resId         text resource id
-     * @param buttonTextId  button text resource id
-     * @param onClickAction {@link Runnable} to execute on button press
-     * @param duration      {@link Snackbar.Duration} of the snackbar
-     * @return Snackbar that is shown
-     */
-    public static Snackbar showSnack(@NonNull View parent,
-                                     @StringRes int resId,
-                                     @StringRes int buttonTextId,
-                                     @NonNull Runnable onClickAction,
-                                     @Snackbar.Duration int duration) {
-
-        final Snackbar snackbar = Snackbar.make(parent, resId, duration);
-        snackbar.setAction(buttonTextId, (v) -> onClickAction.run());
-        styleSnackbar(parent.getContext(), snackbar);
-        snackbar.show();
-        return snackbar;
-    }
-
-    /**
-     * Shows styled {@link Snackbar} with the given text and button, styling it with the given
-     * parameters
-     *
-     * @param parent          parent {@link View}
-     * @param resId           text resource id
-     * @param buttonTextId    button text resource id
-     * @param textColor       {@link ColorRes} for the Snackbar text color
-     * @param backgroundColor {@link ColorRes} for the Snackbar background
-     * @param actionColor     {@link ColorRes} for the color of the action button text
-     * @param onClickAction   {@link Runnable} to execute on button press
-     * @param duration        {@link Snackbar.Duration} of the snackbar
-     * @return Snackbar that is shown
-     */
-    public static Snackbar showSnack(@NonNull View parent,
-                                     @StringRes int resId,
-                                     @StringRes int buttonTextId,
-                                     @ColorRes int textColor,
-                                     @ColorRes int backgroundColor,
-                                     @ColorRes int actionColor,
-                                     @NonNull Runnable onClickAction,
-                                     @Snackbar.Duration int duration) {
-
-        final Snackbar snackbar = Snackbar.make(parent, resId, duration);
-        snackbar.setAction(buttonTextId, (v) -> onClickAction.run());
-        // no need to style it first... everything styleable will override
-        snackbar.setActionTextColor(ContextCompat.getColor(parent.getContext(), actionColor));
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(parent.getContext(),
-                backgroundColor));
-        ((TextView) snackbar.getView().findViewById(R.id.snackbar_text))
-                .setTextColor(ContextCompat.getColor(parent.getContext(), textColor));
-        ((TextView) snackbar.getView().findViewById(R.id.snackbar_text)).setMaxLines(10);
-        snackbar.show();
-        return snackbar;
-    }
-
-    /**
-     * Styles the given Snackbar based on the styles defined in application styles with a name
-     * "SnackbarStyle".
-     *
-     * @param context  {@link Context}
-     * @param snackbar {@link Snackbar}
-     */
-    @SuppressWarnings("ResourceType") //Solves lint bug
-    private static void styleSnackbar(Context context, Snackbar snackbar) {
-        View snackView = snackbar.getView();
-
-        //Get the styles defined in the XML:
-        int[] attrs = {android.R.attr.textColor, android.R.attr.background};
-        int textColor = Color.BLACK;
-        int backgroundColor = Color.WHITE;
-
-        int resID = context.getResources().getIdentifier("SnackbarStyle", "style",
-                context.getPackageName());
-
-        //Try to fetch the style attributes
-        try {
-            TypedArray ta = context.getTheme().obtainStyledAttributes(resID, attrs);
-            try {
-                textColor = ta.getColor(0, Color.BLACK);
-                backgroundColor = ta.getColor(1, Color.WHITE);
-            } finally {
-                ta.recycle();
-            }
-        } catch (Resources.NotFoundException e) { //Attributes could not be found
-            //ignore
-        }
-
-        //Apply the styles:
-        snackView.setBackgroundColor(backgroundColor);
-        snackbar.setActionTextColor(textColor);
     }
 
     /**
