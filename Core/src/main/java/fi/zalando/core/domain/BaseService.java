@@ -33,13 +33,13 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
     }
 
     /**
-     * Provides an {@link rx.Completable.CompletableTransformer} to apply correct schedulers to
+     * Provides an {@link rx.Completable.Transformer} to apply correct schedulers to
      * Completables
      *
-     * @return {@link rx.Completable.CompletableTransformer} that will apply correctly the right
+     * @return {@link rx.Completable.Transformer} that will apply correctly the right
      * schedulers
      */
-    public Completable.CompletableTransformer applySchedulersToCompletable() {
+    public Completable.Transformer applySchedulersToCompletable() {
 
         return completable ->
                 completable.subscribeOn(Schedulers.io())
