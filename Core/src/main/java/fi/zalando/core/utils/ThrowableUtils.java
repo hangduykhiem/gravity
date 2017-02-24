@@ -1,6 +1,6 @@
 package fi.zalando.core.utils;
 
-import retrofit2.adapter.rxjava.HttpException;
+import retrofit2.HttpException;
 
 /**
  * Utility class to help handling {@link Exception}s and {@link Throwable}s
@@ -25,8 +25,8 @@ public class ThrowableUtils {
      */
     public static boolean isRetrofitHttpThrowable(Throwable throwableToCheck, int codeToCheck) {
 
-        return throwableToCheck instanceof HttpException && ((HttpException) throwableToCheck)
-                .code() == codeToCheck;
+        return throwableToCheck instanceof retrofit2.HttpException
+                && ((retrofit2.HttpException) throwableToCheck).code() == codeToCheck;
     }
 
 }

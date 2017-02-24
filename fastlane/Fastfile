@@ -38,7 +38,7 @@ platform :android do
 
   desc "Runs all unit tests"
   lane :test do
-    gradle(task: 'test', flags: '--stacktrace')
+    gradle(task: 'test', flags: '--no-daemon')
   end
 
   desc "Runs all instrumentation tests"

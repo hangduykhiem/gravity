@@ -33,9 +33,11 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
     }
 
     /**
-     * Provides an {@link rx.Completable.Transformer} to apply correct schedulers to Completables
+     * Provides an {@link rx.Completable.Transformer} to apply correct schedulers to
+     * Completables
      *
-     * @return {@link rx.Completable.Transformer} that will apply correctly the right schedulers
+     * @return {@link rx.Completable.Transformer} that will apply correctly the right
+     * schedulers
      */
     public Completable.Transformer applySchedulersToCompletable() {
 

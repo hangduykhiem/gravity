@@ -1,10 +1,12 @@
 package fi.zalando.core.ui.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.AnimRes;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,11 +16,13 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import dagger.Lazy;
+import fi.zalando.core.BuildConfig;
 import fi.zalando.core.R;
 import fi.zalando.core.ui.Navigator;
 import fi.zalando.core.ui.fragment.BaseFragment;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
+import fi.zalando.core.utils.OnReadyForTransitionListener;
 import timber.log.Timber;
 
 /**
@@ -28,6 +32,8 @@ import timber.log.Timber;
  * Created by jduran on 17/11/15.
  */
 public abstract class BaseActivity extends AppCompatActivity implements BaseView {
+
+    public static final String HAS_SHARED_ELEMENTS = BuildConfig.APPLICATION_ID+".shared.elements";
 
     /**
      * Internal private objects
@@ -39,6 +45,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
      */
     @Inject
     protected Lazy<Navigator> navigator;
+
+    private OnReadyForTransitionListener onReadyForTransitionListener;
 
     /**
      * Lifecycle method
@@ -103,8 +111,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     @Override
     protected void onDestroy() {
 
-        super.onDestroy();
         getPresenter().destroy();
+        super.onDestroy();
     }
 
     /**
@@ -115,8 +123,21 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         //Swallow state exceptions caused by fragments in this case:
         try {
             if (fragmentManager.getBackStackEntryCount() > 0) {
+                FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(
+                        fragmentManager.getBackStackEntryCount()-1);
+                final Fragment fragment = fragmentManager
+                        .findFragmentByTag(backEntry.getName());
+                if (fragment != null && fragment instanceof BaseFragment) {
+                    ((BaseFragment)fragment).onBackStackPop();
+                }
                 fragmentManager.popBackStack();
             } else {
+                if (fragmentManager.getFragments() != null) {
+                    final Fragment fragment = fragmentManager.getFragments().get(0);
+                    if (fragment != null && fragment instanceof BaseFragment) {
+                        ((BaseFragment) fragment).onBackStackPop();
+                    }
+                }
                 super.onBackPressed();
             }
         } catch (IllegalStateException exception) {
@@ -157,6 +178,31 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
                 .getSimpleName());
         ft.commitAllowingStateLoss();
         fragmentManager.executePendingTransactions();
+    }
+
+    /**
+     * Set the {@link OnReadyForTransitionListener} to listen for the event when the transition
+     * is ready.
+     * @param onReadyForTransitionListener {@link OnReadyForTransitionListener}
+     */
+    public void setOnReadyForTransitionListener(OnReadyForTransitionListener
+                                                        onReadyForTransitionListener) {
+        this.onReadyForTransitionListener = onReadyForTransitionListener;
+    }
+
+    /**
+     * @return {@link OnReadyForTransitionListener} if one is set
+     */
+    @Nullable
+    public OnReadyForTransitionListener getOnReadyForTransitionListener() {
+        return onReadyForTransitionListener;
+    }
+
+    /**
+     * @return true, if this {@link Activity} was launched with shared elements animation
+     */
+    public boolean hasSharedElements() {
+        return getIntent().getBooleanExtra(HAS_SHARED_ELEMENTS, false);
     }
 
     /**

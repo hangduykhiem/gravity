@@ -77,13 +77,12 @@ public abstract class BaseFragment extends Fragment implements BaseView {
      * Lifecycle method
      */
     @Override
-    public void onDestroy() {
-
+    public void onDestroyView() {
         //Seemingly redundant null check that is actually not redundant:
         if (getPresenter() != null) {
             getPresenter().destroy();
         }
-        super.onDestroy();
+        super.onDestroyView();
     }
 
     /**
@@ -100,6 +99,12 @@ public abstract class BaseFragment extends Fragment implements BaseView {
         }
         super.onSaveInstanceState(outState);
     }
+
+    /**
+     * Called right before the fragment back stack is popped. Useful for preparing fragments for
+     * transition animations.
+     */
+    public void onBackStackPop() {}
 
     /**
      * Provides the {@link Application} instance

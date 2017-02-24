@@ -3,6 +3,7 @@ package fi.zalando.core.exception;
 import java.net.HttpURLConnection;
 
 import fi.zalando.core.utils.ThrowableUtils;
+import retrofit2.adapter.rxjava.HttpException;
 
 /**
  * Base class to wrap errors thrown by the domain layer, so UI can react easily to errors
@@ -30,6 +31,7 @@ public class BaseThrowable extends Throwable {
 
     private final Throwable sourceThrowable;
     private final int type;
+    private final int code;
 
     /**
      * Constructor
@@ -39,6 +41,13 @@ public class BaseThrowable extends Throwable {
     public BaseThrowable(Throwable sourceThrowable) {
 
         this.sourceThrowable = sourceThrowable;
+
+        // Get error code
+        if (sourceThrowable instanceof HttpException){
+            code = ((HttpException) sourceThrowable).code();
+        } else {
+            code = 0;
+        }
 
         // Parse the error with a known type
 
@@ -91,5 +100,14 @@ public class BaseThrowable extends Throwable {
     public int getType() {
         return type;
     }
+
+    /**
+     * Get the code of the throwable
+     * @return int
+     */
+    public int getCode() {
+        return code;
+    }
+
 
 }
