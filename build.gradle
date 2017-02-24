@@ -53,16 +53,16 @@ ext.coreDeps = [
         rxlocation    : 'pl.charmas.android:android-reactive-location:0.8@aar',
         butterknife   : 'com.jakewharton:butterknife:8.5.1',
         buttercompiler: 'com.jakewharton:butterknife-compiler:8.5.1',
-        rxjava        : 'io.reactivex:rxjava:1.1.8',
+        rxjava        : 'io.reactivex:rxjava:1.2.6',
         rxandroid     : 'io.reactivex:rxandroid:1.2.1',
         retrolambda   : 'net.orfjackal.retrolambda:retrolambda:2.3.0',
         daggercompiler: 'com.google.dagger:dagger-compiler:2.9',
         dagger        : 'com.google.dagger:dagger:2.9',
         timber        : 'com.jakewharton.timber:timber:4.5.1',
-        retrofit      : 'com.squareup.retrofit2:retrofit:2.1.0',
-        retrogson     : 'com.squareup.retrofit2:converter-gson:2.1.0',
-        retrorxjava   : 'com.squareup.retrofit2:adapter-rxjava:2.1.0',
-        okinterceptor : 'com.squareup.okhttp3:logging-interceptor:3.3.1',
+        retrofit      : 'com.squareup.retrofit2:retrofit:2.2.0',
+        retrogson     : 'com.squareup.retrofit2:converter-gson:2.2.0',
+        retrorxjava   : 'com.squareup.retrofit2:adapter-rxjava:2.2.0',
+        okinterceptor : 'com.squareup.okhttp3:logging-interceptor:3.6.0',
 ]
 
 ext.coreTestDeps = [
