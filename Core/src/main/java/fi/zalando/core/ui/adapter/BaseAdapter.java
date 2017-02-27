@@ -116,9 +116,7 @@ public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends Recycl
         final DiffUtilCallback<T> diffCallback =
                 new DiffUtilCallback<T>(items, newItems, comparator);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
-
-        items.clear();
-        items.addAll(newItems);
+        this.items = newItems;
         diffResult.dispatchUpdatesTo(this);
     }
 
