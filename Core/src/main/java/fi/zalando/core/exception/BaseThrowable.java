@@ -3,7 +3,7 @@ package fi.zalando.core.exception;
 import java.net.HttpURLConnection;
 
 import fi.zalando.core.utils.ThrowableUtils;
-import retrofit2.adapter.rxjava.HttpException;
+import retrofit2.HttpException;
 
 /**
  * Base class to wrap errors thrown by the domain layer, so UI can react easily to errors
