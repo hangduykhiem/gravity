@@ -74,8 +74,10 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         fragmentManager = getSupportFragmentManager();
         // Force injection of dependencies
         injectDependencies();
-        // Init content view
-        setContentView(getSubActivityLayoutId());
+        // Init content view (if set)
+        if (getSubActivityLayoutId() != -1) {
+            setContentView(getSubActivityLayoutId());
+        }
         // Force ButterKnife to bind all the view and resources
         ButterKnife.bind(this);
         // Set the view to the presenter
@@ -208,7 +210,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     /**
      * Abstract method that provides which is the content view of the activity
      *
-     * @return Layout content view resource id
+     * @return Layout content view resource id, or -1 to set no content at all.
      */
     @LayoutRes
     protected abstract int getSubActivityLayoutId();
