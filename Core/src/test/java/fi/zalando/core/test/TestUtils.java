@@ -1,9 +1,9 @@
 package fi.zalando.core.test;
 
-import fi.zalando.core.domain.BaseService;
-import rx.Observable;
-
 import static org.powermock.api.mockito.PowerMockito.doAnswer;
+
+import fi.zalando.core.domain.BaseService;
+import io.reactivex.ObservableTransformer;
 
 /**
  * Utility class to help in test cases
@@ -19,12 +19,12 @@ public class TestUtils {
     }
 
     /**
-     * Creates a {@link Observable.Transformer} that does nothing in order to use for mocking
+     * Creates a {@link ObservableTransformer} that does nothing in order to use for mocking
      * purposes
      *
-     * @return {@link Observable.Transformer} to mock
+     * @return {@link ObservableTransformer} to mock
      */
-    public static Observable.Transformer createDummyTransformer() {
+    public static ObservableTransformer createDummyTransformer() {
 
         return transformer -> transformer;
     }

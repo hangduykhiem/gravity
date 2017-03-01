@@ -1,8 +1,8 @@
 package fi.zalando.core.utils;
 
-import rx.Observable;
-import rx.subjects.BehaviorSubject;
-import rx.subjects.Subject;
+import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * Class to help with RxJava operations
@@ -28,7 +28,7 @@ public class RxUtils {
      */
     public static <T> Observable<T> createObservingSubject(Observable<T> observable) {
 
-        Subject<T, T> behaviorSubject = BehaviorSubject.create();
+        Subject<T> behaviorSubject = BehaviorSubject.create();
         observable.subscribe(behaviorSubject::onNext, behaviorSubject::onError);
         return behaviorSubject;
     }

@@ -36,10 +36,6 @@ dependencies {
         exclude module: "support-v4"
     }
     compile coreDeps.design
-    // Google Play Services
-    compile coreDeps.gplayservices
-    // RxLocation library
-    compile coreDeps.rxlocation
     // Butterknife library to ease the access to inject views in activities and fragments
     compile coreDeps.butterknife
     apt coreDeps.buttercompiler

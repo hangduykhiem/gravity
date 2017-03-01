@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 
-import fi.zalando.core.domain.helper.SubscriptionHelper;
+import fi.zalando.core.domain.helper.DisposableHelper;
 import fi.zalando.core.ui.view.BaseView;
 import fi.zalando.core.utils.Preconditions;
 
@@ -22,24 +22,24 @@ public abstract class BasePresenter<T extends BaseView> {
     /**
      * Injected objects
      */
-    protected SubscriptionHelper subscriptionHelper;
+    protected DisposableHelper disposableHelper;
 
     /**
      * Constructor
      */
-    protected BasePresenter(SubscriptionHelper subscriptionHelper) {
+    protected BasePresenter(DisposableHelper disposableHelper) {
 
-        this.subscriptionHelper = subscriptionHelper;
+        this.disposableHelper = disposableHelper;
     }
 
     /**
-     * Provides the {@link SubscriptionHelper} instance linked with the {@link BasePresenter}
+     * Provides the {@link DisposableHelper} instance linked with the {@link BasePresenter}
      *
-     * @return {@link SubscriptionHelper} instance
+     * @return {@link DisposableHelper} instance
      */
-    public SubscriptionHelper getSubscriptionHelper() {
+    public DisposableHelper getDisposableHelper() {
 
-        return subscriptionHelper;
+        return disposableHelper;
     }
 
     /**
@@ -86,7 +86,7 @@ public abstract class BasePresenter<T extends BaseView> {
     @CallSuper
     public void destroy() {
 
-        subscriptionHelper.unsubscribeAll();
+        disposableHelper.clear();
     }
 
     /**

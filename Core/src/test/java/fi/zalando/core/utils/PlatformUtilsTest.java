@@ -8,14 +8,14 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import fi.zalando.core.BuildConfig;
-import fi.zalando.core.domain.helper.SubscriptionHelper;
+import fi.zalando.core.domain.helper.DisposableHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Tests for {@link SubscriptionHelper} class
+ * Tests for {@link DisposableHelper} class
  *
  * Created by jduran on 03/12/15.
  */
