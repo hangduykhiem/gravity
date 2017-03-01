@@ -6,12 +6,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fi.zalando.core.utils.Preconditions;
 import fi.zalando.core.utils.ValidationUtils;
+import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.CallAdapter;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
@@ -52,6 +55,7 @@ public final class RestApiFactory {
         baseUrl,
         interceptors,
         null,
+        RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()),
         gson != null ? gson : new GsonBuilder().create(),
         logs).create(restInterface);
   }
@@ -75,6 +79,7 @@ public final class RestApiFactory {
         baseUrl,
         null,
         null,
+        RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()),
         new GsonBuilder().create(),
         logs).create(restInterface);
   }
@@ -100,6 +105,7 @@ public final class RestApiFactory {
         baseUrl,
         interceptors,
         networkInterceptors,
+        RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()),
         gson != null ? gson : new GsonBuilder().create(),
         logs).create(restInterface);
   }
@@ -110,6 +116,7 @@ public final class RestApiFactory {
    * @param url {@link String} with the Base Url
    * @param interceptors {@link List} of {@link Interceptor} to add to the rest api
    * @param networkInterceptors {@link List} of {@link Interceptor} as NetworkInterceptor
+   * @param callAdapterFactory   {@link retrofit2.CallAdapter.Factory}
    * @param gsonConverterFactory {@link Gson} converter to use for serialising
    * @param logs {@link Boolean} indicating if logs are required
    * @return {@link Retrofit} object with the given settings
@@ -117,6 +124,7 @@ public final class RestApiFactory {
   private static Retrofit setupRetrofit(@NonNull String url,
       @Nullable List<Interceptor> interceptors,
       @Nullable List<Interceptor> networkInterceptors,
+      @NonNull CallAdapter.Factory callAdapterFactory,
       @NonNull Gson gsonConverterFactory,
       boolean logs) {
 
@@ -152,6 +160,7 @@ public final class RestApiFactory {
     // Finally create the client
     return new Retrofit.Builder().client(okHttpClientBuilder.build()).baseUrl(url)
         .addConverterFactory(GsonConverterFactory.create(gsonConverterFactory))
+        .addCallAdapterFactory(callAdapterFactory)
         .build();
   }
 
