@@ -10,7 +10,7 @@ import io.reactivex.disposables.Disposable;
  *
  * Created by jduran on 11/01/16.
  */
-public class SubscriberAdapter<T> implements Observer<T> {
+public class ObserverAdapter<T> implements Observer<T> {
 
   @Override
   public void onSubscribe(Disposable d) {
