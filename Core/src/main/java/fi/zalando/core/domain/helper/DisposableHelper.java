@@ -35,7 +35,6 @@ public class DisposableHelper {
     // Check preconditions
     Preconditions.checkNotNull(disposablesToAdd);
     for (Disposable disposable : disposablesToAdd) {
-      disposable.dispose();
       disposables.add(disposable);
     }
   }
