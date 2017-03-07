@@ -18,12 +18,12 @@ import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 
+import fi.zalando.core.domain.helper.DisposableHelper;
 import java.lang.reflect.Constructor;
 import java.util.List;
 
 import fi.zalando.core.BuildConfig;
 import fi.zalando.core.R;
-import fi.zalando.core.domain.helper.SubscriptionHelper;
 import fi.zalando.core.ui.fragment.BaseFragment;
 import fi.zalando.core.ui.presenter.StubPresenter;
 import fi.zalando.core.ui.view.ReusableFragmentActivityView;
@@ -321,7 +321,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
     @CallSuper
     protected void injectDependencies() {
         sb.append("inject ");
-        stubPresenter = new StubPresenter(new SubscriptionHelper());
+        stubPresenter = new StubPresenter(new DisposableHelper());
     }
 
     @Override

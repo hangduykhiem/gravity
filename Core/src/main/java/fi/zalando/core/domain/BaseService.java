@@ -2,11 +2,14 @@ package fi.zalando.core.domain;
 
 import fi.zalando.core.exception.BaseThrowable;
 import fi.zalando.core.helper.CleaningHelper;
-import rx.Completable;
-import rx.Observable;
-import rx.Single;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Completable;
+import io.reactivex.CompletableTransformer;
+import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.Single;
+import io.reactivex.SingleTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Base class that will host common methods for all the domain service definitions
@@ -33,13 +36,13 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
     }
 
     /**
-     * Provides an {@link rx.Completable.Transformer} to apply correct schedulers to
+     * Provides an {@link io.reactivex.CompletableTransformer} to apply correct schedulers to
      * Completables
      *
-     * @return {@link rx.Completable.Transformer} that will apply correctly the right
+     * @return {@link  io.reactivex.CompletableTransformer} that will apply correctly the right
      * schedulers
      */
-    public Completable.Transformer applySchedulersToCompletable() {
+    public CompletableTransformer applySchedulersToCompletable() {
 
         return completable ->
                 completable.subscribeOn(Schedulers.io())
@@ -54,12 +57,12 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
     }
 
     /**
-     * Provides an {@link rx.Single.Transformer} to apply correct schedulers to Singles
+     * Provides an {@link SingleTransformer} to apply correct schedulers to Singles
      *
      * @param <T> {@link T} type to create the transformer
-     * @return {@link rx.Single.Transformer} that will apply correctly the right schedulers
+     * @return {@link SingleTransformer} that will apply correctly the right schedulers
      */
-    public <T> Single.Transformer<T, T> applySchedulersToSingle() {
+    public <T> SingleTransformer<T, T> applySchedulersToSingle() {
 
         return completable ->
                 completable.subscribeOn(Schedulers.io())
@@ -74,12 +77,12 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
     }
 
     /**
-     * Provides an {@link rx.Observable.Transformer} to apply correct schedulers to Observables
+     * Provides an {@link ObservableTransformer} to apply correct schedulers to Observables
      *
      * @param <T> {@link T} type to create the transformer
-     * @return {@link rx.Observable.Transformer} that will apply correctly the right schedulers
+     * @return {@link ObservableTransformer} that will apply correctly the right schedulers
      */
-    public <T> Observable.Transformer<T, T> applySchedulersToObservable() {
+    public <T> ObservableTransformer<T, T> applySchedulersToObservable() {
 
         return observable ->
                 observable.subscribeOn(Schedulers.io())

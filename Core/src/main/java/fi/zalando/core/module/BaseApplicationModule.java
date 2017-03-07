@@ -68,16 +68,4 @@ public class BaseApplicationModule {
         return application.getApplicationContext();
     }
 
-    /**
-     * Provides the {@link LocationManager} of the app for dependency injections
-     *
-     * @return {@link LocationManager} of the app
-     */
-    @Provides
-    @Singleton
-    public LocationManager provideLocationManager() {
-
-        return (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
-    }
-
 }
