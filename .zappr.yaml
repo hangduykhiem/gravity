@@ -1,0 +1,24 @@
+commit:
+  message:
+    patterns:
+      - '#[0-9+]' #GitHub issues
+approvals:
+  minimum: 2
+  pattern: "^(:\\+1:|👍)$"
+  veto:
+    pattern: "^(:\\-1:|👎)$"
+specification:
+  title:
+    minimum-length:
+      enabled: true
+      length: 8
+  body:
+    minimum-length:
+      enabled: true
+      length: 8
+    contains-url: true
+    contains-issue-number: true
+    template:
+      differs-from-body: true
+X-Zalando-Team: "zeus"
+X-Zalando-Type: code

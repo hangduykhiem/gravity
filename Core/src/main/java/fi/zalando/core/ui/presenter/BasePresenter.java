@@ -3,12 +3,10 @@ package fi.zalando.core.ui.presenter;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import fi.zalando.core.domain.helper.SubscriptionHelper;
+import fi.zalando.core.domain.helper.DisposableHelper;
 import fi.zalando.core.ui.view.BaseView;
 import fi.zalando.core.utils.Preconditions;
-import icepick.Icepick;
 
 /**
  * Class responsible of holding common methods for all Presenters in the App.
@@ -24,50 +22,39 @@ public abstract class BasePresenter<T extends BaseView> {
     /**
      * Injected objects
      */
-    protected SubscriptionHelper subscriptionHelper;
+    protected DisposableHelper disposableHelper;
 
     /**
      * Constructor
      */
-    protected BasePresenter(SubscriptionHelper subscriptionHelper) {
+    protected BasePresenter(DisposableHelper disposableHelper) {
 
-        this.subscriptionHelper = subscriptionHelper;
+        this.disposableHelper = disposableHelper;
     }
 
     /**
-     * Provides the {@link SubscriptionHelper} instance linked with the {@link BasePresenter}
+     * Provides the {@link DisposableHelper} instance linked with the {@link BasePresenter}
      *
-     * @return {@link SubscriptionHelper} instance
+     * @return {@link DisposableHelper} instance
      */
-    public SubscriptionHelper getSubscriptionHelper() {
+    public DisposableHelper getDisposableHelper() {
 
-        return subscriptionHelper;
-    }
-
-    /**
-     * Release the {@link BasePresenter}
-     */
-    @CallSuper
-    public void destroy() {
-
-        subscriptionHelper.unsubscribeAll();
+        return disposableHelper;
     }
 
     /**
      * Initialises the presenter. Linked to Activity onCreate() and Fragment onActivityCreated
      * lifecycle methods
      *
-     * @param savedInstanceState {@link Bundle} to restore the instance of the presenter
+     * @param state {@link Bundle} to restore or start the instance of the presenter
      */
     @CallSuper
-    public void initialise(@Nullable Bundle savedInstanceState) {
+    public void initialise(@NonNull Bundle state) {
 
         Preconditions.checkState(isViewSet, "Call setView before initialising presenter");
         isPresenterInitialised = true;
-        // Restore saved values using IcePick
-        Icepick.restoreInstanceState(this, savedInstanceState);
         // Init View
-        view.initView();
+        view.initView(state);
     }
 
     /**
@@ -75,17 +62,11 @@ public abstract class BasePresenter<T extends BaseView> {
      *
      * @param outState {@link Bundle} to save the state
      */
+    @SuppressWarnings("UnusedParameters")
+    @CallSuper
     public void onSaveInstanceState(Bundle outState) {
 
-        // Save instance state using IcePick
-        Icepick.saveInstanceState(this, outState);
     }
-
-    /**
-     * Gets called when the Fragment/Activity is paused.
-     */
-    @CallSuper
-    public void pause() {}
 
     /**
      * Gets a callback when the Fragment/Activity where the presenter is linked appears on the
@@ -97,6 +78,15 @@ public abstract class BasePresenter<T extends BaseView> {
         Preconditions.checkState(isViewSet, "Call setView before resuming presenter");
         Preconditions.checkState(isPresenterInitialised, "Call initialise before resuming " +
                 "presenter");
+    }
+
+    /**
+     * Release the {@link BasePresenter}
+     */
+    @CallSuper
+    public void destroy() {
+
+        disposableHelper.clear();
     }
 
     /**

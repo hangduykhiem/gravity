@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+            android:id="@+id/reusablefragmentactivity_appbarlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <!-- Toolbar -->
+        <include layout="@layout/toolbar"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <!-- The main content view -->
+    <FrameLayout
+            android:id="@+id/reusablefragmentactivity_fragmentcontainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/reusablefragmentactivity_appbarlayout"/>
+
+</RelativeLayout>

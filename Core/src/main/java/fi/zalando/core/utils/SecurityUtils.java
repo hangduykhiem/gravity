@@ -2,7 +2,7 @@ package fi.zalando.core.utils;
 
 import android.os.Build;
 import android.os.Process;
-import android.support.v4.util.Pair;
+import android.util.Pair;
 import android.util.Base64;
 import android.util.Log;
 
@@ -35,6 +35,8 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import timber.log.Timber;
 
 /**
  * Utility class used to provide security related functionalities
@@ -77,8 +79,7 @@ public class SecurityUtils {
      */
     public static String generateRandomKey() throws GeneralSecurityException {
 
-        return AesCbcWithIntegrity.generateKeyFromPassword(generateRandomString(),
-                generateRandomString()).toString();
+        return AesCbcWithIntegrity.generateKeyFromPassword(generateRandomString()).toString();
     }
 
     /**
@@ -267,12 +268,11 @@ public class SecurityUtils {
          * A function that generates password-based AES & HMAC keys. See generateKeyFromPassword.
          *
          * @param password The password to derive the AES/HMAC keys from
-         * @param salt     A string version of the salt; base64 encoded.
          * @return The AES & HMAC keys.
          */
-        public static SecretKeys generateKeyFromPassword(String password, String salt) throws
+        public static SecretKeys generateKeyFromPassword(String password) throws
                 GeneralSecurityException {
-            return generateKeyFromPassword(password, Base64.decode(salt, BASE64_FLAGS));
+            return generateKeyFromPassword(password, generateSalt());
         }
 
         /**
@@ -533,12 +533,15 @@ public class SecurityUtils {
 
             @Override
             public boolean equals(Object obj) {
-                if (this == obj)
+                if (this == obj) {
                     return true;
-                if (obj == null)
+                }
+                if (obj == null) {
                     return false;
-                if (getClass() != obj.getClass())
+                }
+                if (getClass() != obj.getClass()) {
                     return false;
+                }
                 SecretKeys other = (SecretKeys) obj;
                 return integrityKey.equals(other.integrityKey) && confidentialityKey.equals(other
                         .confidentialityKey);
@@ -658,12 +661,15 @@ public class SecurityUtils {
 
             @Override
             public boolean equals(Object obj) {
-                if (this == obj)
+                if (this == obj) {
                     return true;
-                if (obj == null)
+                }
+                if (obj == null) {
                     return false;
-                if (getClass() != obj.getClass())
+                }
+                if (getClass() != obj.getClass()) {
                     return false;
+                }
                 CipherTextIvMac other = (CipherTextIvMac) obj;
                 return Arrays.equals(cipherText, other.cipherText) && Arrays.equals(iv, other.iv)
                         && Arrays.equals(mac, other.mac);
@@ -906,8 +912,7 @@ public class SecurityUtils {
                     } catch (IOException e) {
                         // On a small fraction of devices /dev/urandom is not
                         // writable Log and ignore.
-                        Log.w(PrngFixes.class.getSimpleName(), "Failed to mix seed into "
-                                + URANDOM_FILE);
+                        Timber.w("Failed to mix seed into %s", URANDOM_FILE);
                     } finally {
                         mSeeded = true;
                     }

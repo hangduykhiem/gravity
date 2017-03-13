@@ -1,8 +1,11 @@
 package fi.zalando.core.utils;
 
-import java.util.HashMap;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Utilities method to convert units.
@@ -10,9 +13,6 @@ import java.util.Map;
  * Created by hduykhiem on 29/01/16.
  */
 public class ConvertUtils {
-
-    //Holds a list of country names and their country codes
-    private static Map<String, String> countries;
 
     public enum DistanceUnit {
         /**
@@ -309,17 +309,30 @@ public class ConvertUtils {
 
     /**
      * Converts the given country code to legible format.
+     *
      * @param countryCode Country code to convert
      * @return Country name
      */
+    @Nullable
     public static String getDisplayCountry(String countryCode) {
-        if (countries == null) {
-            countries = new HashMap<>();
-            for (String iso : Locale.getISOCountries()) {
-                Locale l = new Locale("", iso);
-                countries.put(iso, l.getDisplayCountry());
-            }
+        Locale locale = LocaleUtils.getCountryLocale(countryCode);
+        return locale != null ? locale.getDisplayCountry() : null;
+    }
+
+    /**
+     * Transforms a {@link java.util.List} with a subclass of {@link U} into pure {@link U} {@link
+     * List}
+     *
+     * @param <U> Superclass type
+     * @param <T> Subclass type
+     * @return {@link List} transformed
+     */
+    public static <U, T extends U> List<U> convertList(@NonNull List<T> listToTransform) {
+
+        final List<U> transformedList = new ArrayList<>(listToTransform.size());
+        for (T item : listToTransform) {
+            transformedList.add(item);
         }
-        return countries.get(countryCode);
+        return transformedList;
     }
 }

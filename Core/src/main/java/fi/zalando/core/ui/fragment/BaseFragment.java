@@ -12,9 +12,6 @@ import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
-import fi.zalando.core.utils.UIUtils;
-import rx.Observable;
-import rx.subjects.BehaviorSubject;
 
 /**
  * Base fragment to wrap all together some utility methods for fragments
@@ -24,23 +21,13 @@ import rx.subjects.BehaviorSubject;
 public abstract class BaseFragment extends Fragment implements BaseView {
 
     /**
-     * Flag to tell the UI tests that an error within the Fragment happened. Has to be set manually,
-     * but is automatically cleared when a Fragment is created.
-     */
-    public static boolean FLAG_ERROR_HAPPENED = false;
-    /**
-     * Internal private objects
-     */
-    private final BehaviorSubject<Void> onViewReadyObservable = BehaviorSubject.create();
-
-    /**
      * Lifecycle method
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Reset the error flag:
-        FLAG_ERROR_HAPPENED = false;
+        // Force injection of dependencies
+        injectDependencies();
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(getSubFragmentLayoutId(), container, false);
         // Inject fragment views
@@ -58,26 +45,19 @@ public abstract class BaseFragment extends Fragment implements BaseView {
 
         super.onActivityCreated(savedInstanceState);
 
-        // Force injection of dependencies
-        injectDependencies();
         // Set the view to the presenter
         getPresenter().setView(this);
         // init objects
-        getPresenter().initialise(savedInstanceState != null ? savedInstanceState : getArguments());
-        // Notify the Observable when the UI is ready:
-        if (getView() != null) {
-            UIUtils.runOnGlobalLayout(getView(), () -> onViewReadyObservable.onNext(null));
+        final Bundle initBundle;
+        if (savedInstanceState != null && !savedInstanceState.isEmpty()) {
+            initBundle = savedInstanceState;
+        } else if (getArguments() != null) {
+            initBundle = getArguments();
         }
-    }
-
-    /**
-     * Lifecycle method
-     */
-    @Override
-    public void onPause() {
-
-        super.onPause();
-        getPresenter().pause();
+        else {
+            initBundle = new Bundle();
+        }
+        getPresenter().initialise(initBundle);
     }
 
     /**
@@ -87,17 +67,22 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     public void onResume() {
 
         super.onResume();
-        getPresenter().resume();
+        //Seemingly redundant null check that is actually not redundant:
+        if (getPresenter() != null) {
+            getPresenter().resume();
+        }
     }
 
     /**
      * Lifecycle method
      */
     @Override
-    public void onDestroy() {
-
-        super.onDestroy();
-        getPresenter().destroy();
+    public void onDestroyView() {
+        //Seemingly redundant null check that is actually not redundant:
+        if (getPresenter() != null) {
+            getPresenter().destroy();
+        }
+        super.onDestroyView();
     }
 
     /**
@@ -108,9 +93,18 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
+        //Seemingly redundant null check that is actually not redundant:
+        if (getPresenter() != null) {
+            getPresenter().onSaveInstanceState(outState);
+        }
         super.onSaveInstanceState(outState);
-        getPresenter().onSaveInstanceState(outState);
     }
+
+    /**
+     * Called right before the fragment back stack is popped. Useful for preparing fragments for
+     * transition animations.
+     */
+    public void onBackStackPop() {}
 
     /**
      * Provides the {@link Application} instance
@@ -151,10 +145,5 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     protected boolean isFragmentVisible() {
 
         return isAdded() && !getActivity().isFinishing();
-    }
-
-    @Override
-    public Observable<Void> getOnViewReady() {
-        return onViewReadyObservable;
     }
 }

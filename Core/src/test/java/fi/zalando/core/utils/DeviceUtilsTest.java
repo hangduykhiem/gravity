@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.location.LocationManager;
 import android.os.Build;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +20,6 @@ import fi.zalando.core.BuildConfig;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -49,8 +49,8 @@ public class DeviceUtilsTest {
     @Test
     public void testGetUserCountry() {
 
-        // Robolectric provides null since it doesn't have sim
-        assertNull(DeviceUtils.getUserCountry(RuntimeEnvironment.application));
+        // Robolectric provides empty since it doesn't have sim
+        assertTrue(TextUtils.isEmpty(DeviceUtils.getUserCountry(RuntimeEnvironment.application)));
 
         // mock get telephony manager from the context
         Context mockContext = mock(Context.class);
@@ -73,14 +73,14 @@ public class DeviceUtilsTest {
         doAnswer(invocation -> TelephonyManager.PHONE_TYPE_CDMA).when(telephonyManager)
                 .getPhoneType();
         doAnswer(invocation -> "ES").when(telephonyManager).getNetworkCountryIso();
-        assertNull(DeviceUtils.getUserCountry(mockContext));
+        assertTrue(TextUtils.isEmpty(DeviceUtils.getUserCountry(mockContext)));
 
         // setup telephony manager mock when getNetworkCountryIso null
         doAnswer(invocation -> null).when(telephonyManager).getSimCountryIso();
         doAnswer(invocation -> TelephonyManager.PHONE_TYPE_CDMA).when(telephonyManager)
                 .getPhoneType();
         doAnswer(invocation -> null).when(telephonyManager).getNetworkCountryIso();
-        assertNull(DeviceUtils.getUserCountry(mockContext));
+        assertTrue(TextUtils.isEmpty(DeviceUtils.getUserCountry(mockContext)));
     }
 
     @Test
@@ -122,12 +122,20 @@ public class DeviceUtilsTest {
     @Test
     public void testDeviceScreenResolution() {
 
-        Point testSize = DeviceUtils.screenResolution(RuntimeEnvironment.application);
+        Point testSize = DeviceUtils.getScreenResolution(RuntimeEnvironment.application);
         // Check that is not null
         assertNotNull(testSize);
         // Check that size is actually bigger than 0
         assertTrue(testSize.x > 0);
         assertTrue(testSize.y > 0);
+    }
+
+    @Test
+    public void testAspectRatio() {
+
+        float aspectRatio = DeviceUtils.getAspectRatio(RuntimeEnvironment.application);
+        // Check that aspect ratio is actually bigger than 0
+        assertTrue(aspectRatio > 0);
     }
 
     @Test
@@ -137,7 +145,7 @@ public class DeviceUtilsTest {
         float density = RuntimeEnvironment.application.getResources().getDisplayMetrics().density;
         // Check that density is valid:
         assertTrue(density > 0);
-        float result = DeviceUtils.dpToPx(RuntimeEnvironment.application, testValue);
+        float result = DeviceUtils.dpToPx(testValue);
         // Check that the result is valid:
         assertTrue(result == testValue * density);
     }
@@ -149,8 +157,34 @@ public class DeviceUtilsTest {
         float density = RuntimeEnvironment.application.getResources().getDisplayMetrics().density;
         // Check that density is valid:
         assertTrue(density > 0);
-        float result = DeviceUtils.pxToDp(RuntimeEnvironment.application, testValue);
+        float result = DeviceUtils.pxToDp(testValue);
         // Check that the result is valid:
         assertTrue(result == testValue / density);
+    }
+
+    @Test
+    public void testPxToSp() throws Exception {
+
+        float testValue = 100f;
+        float scaledDensity = RuntimeEnvironment.application.getResources().getDisplayMetrics()
+                .scaledDensity;
+        // Check that scaledDensity is valid:
+        assertTrue(scaledDensity > 0);
+        float result = DeviceUtils.spToPx(testValue);
+        // Check that the result is valid:
+        assertTrue(result == testValue * scaledDensity);
+    }
+
+    @Test
+    public void testSpToPx() throws Exception {
+
+        float testValue = 100f;
+        float scaledDensity = RuntimeEnvironment.application.getResources().getDisplayMetrics()
+                .scaledDensity;
+        // Check that scaledDensity is valid:
+        assertTrue(scaledDensity > 0);
+        float result = DeviceUtils.pxToSp(testValue);
+        // Check that the result is valid:
+        assertTrue(result == testValue / scaledDensity);
     }
 }

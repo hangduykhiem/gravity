@@ -1,43 +1,107 @@
 package fi.zalando.core.domain;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subjects.BehaviorSubject;
-import rx.subjects.Subject;
+import fi.zalando.core.exception.BaseThrowable;
+import fi.zalando.core.helper.CleaningHelper;
+import io.reactivex.Completable;
+import io.reactivex.CompletableTransformer;
+import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.Single;
+import io.reactivex.SingleTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Base class that will host common methods for all the domain service definitions
  *
  * Created by jduran on 30/11/15.
  */
-public abstract class BaseService {
+public abstract class BaseService implements CleaningHelper.Cleanable {
 
     /**
-     * Provides an {@link rx.Observable.Transformer} to apply correct schedulers
-     *
-     * @param <T> {@link T} type to create the transformer
-     * @return {@link rx.Observable.Transformer} that will apply correctly the right schedulers
+     * Default constructor, not making use of cleaning helper at all.
      */
-    public <T> Observable.Transformer<T, T> applySchedulers() {
+    protected BaseService() {
 
-        return observable -> observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
-                .mainThread());
     }
 
     /**
-     * Creates a {@link BehaviorSubject} to use within services using the given {@link Observable}
-     * as a reference in order to cache results for faster delivery
+     * Constructor to enforce adding itself to {@link CleaningHelper}
      *
-     * @param observable {@link Observable} to use as reference in the {@link Subject}
-     * @param <T>        {@link T} of the {@link Observable}
-     * @return {@link Subject} that listens and emits the given {@link Observable}
+     * @param cleaningHelper {@link CleaningHelper} to add itself to
      */
-    protected <T> Subject<T, T> createObservingSubject(Observable<T> observable) {
+    protected BaseService(CleaningHelper cleaningHelper) {
 
-        Subject<T, T> behaviorSubject = BehaviorSubject.create();
-        observable.subscribe(behaviorSubject::onNext);
-        return behaviorSubject;
+        cleaningHelper.addCleanables(this);
+    }
+
+    /**
+     * Provides an {@link io.reactivex.CompletableTransformer} to apply correct schedulers to
+     * Completables
+     *
+     * @return {@link  io.reactivex.CompletableTransformer} that will apply correctly the right
+     * schedulers
+     */
+    public CompletableTransformer applySchedulersToCompletable() {
+
+        return completable ->
+                completable.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .onErrorResumeNext(throwable -> {
+                            if (!(throwable instanceof BaseThrowable)) {
+                                return Completable.error(new BaseThrowable(throwable));
+                            } else {
+                                return Completable.error(throwable);
+                            }
+                        });
+    }
+
+    /**
+     * Provides an {@link SingleTransformer} to apply correct schedulers to Singles
+     *
+     * @param <T> {@link T} type to create the transformer
+     * @return {@link SingleTransformer} that will apply correctly the right schedulers
+     */
+    public <T> SingleTransformer<T, T> applySchedulersToSingle() {
+
+        return completable ->
+                completable.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .onErrorResumeNext(throwable -> {
+                            if (!(throwable instanceof BaseThrowable)) {
+                                return Single.error(new BaseThrowable(throwable));
+                            } else {
+                                return Single.error(throwable);
+                            }
+                        });
+    }
+
+    /**
+     * Provides an {@link ObservableTransformer} to apply correct schedulers to Observables
+     *
+     * @param <T> {@link T} type to create the transformer
+     * @return {@link ObservableTransformer} that will apply correctly the right schedulers
+     */
+    public <T> ObservableTransformer<T, T> applySchedulersToObservable() {
+
+        return observable ->
+                observable.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .onErrorResumeNext(throwable -> {
+                            if (!(throwable instanceof BaseThrowable)) {
+                                return Observable.error(new BaseThrowable(throwable));
+                            } else {
+                                return Observable.error(throwable);
+                            }
+                        });
+    }
+
+    /**
+     * Executes the cleaning tasks. Override if needed
+     */
+    @Override
+    public void clean() {
+
     }
 
 }

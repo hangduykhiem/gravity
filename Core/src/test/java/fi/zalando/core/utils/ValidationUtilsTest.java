@@ -53,4 +53,35 @@ public class ValidationUtilsTest {
         assertFalse(ValidationUtils.isValidEmail(invalidEmail));
     }
 
+    @Test
+    public void testValidUrl() {
+
+        String validUrl = "http://www.google.com";
+        assertTrue(ValidationUtils.isValidURL(validUrl));
+
+        validUrl = "http://www.google.com/another?param=aParam";
+        assertTrue(ValidationUtils.isValidURL(validUrl));
+
+        validUrl = "www.invalid.com";
+        assertTrue(ValidationUtils.isValidURL(validUrl));
+
+        validUrl = "invalid.com";
+        assertTrue(ValidationUtils.isValidURL(validUrl));
+    }
+
+    @Test
+    public void testInvalidUrl() {
+
+        assertFalse(ValidationUtils.isValidURL(null));
+
+        String invalidUrl = "";
+        assertFalse(ValidationUtils.isValidURL(invalidUrl));
+
+        invalidUrl = "invalid";
+        assertFalse(ValidationUtils.isValidURL(invalidUrl));
+
+        invalidUrl = "http://invalid";
+        assertFalse(ValidationUtils.isValidURL(invalidUrl));
+    }
+
 }
