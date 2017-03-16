@@ -119,6 +119,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
   /**
    * Lifecycle method
    */
+  @SuppressWarnings("RestrictedApi")
   @Override
   public void onBackPressed() {
     //Swallow state exceptions caused by fragments in this case:
