@@ -84,8 +84,8 @@ public class ReusableFragmentActivity extends BaseActivity implements
 
     //Logs:
     sb = new StringBuilder(); //Clear the builder
-    sb.append("Launching Activity: " + launchActivity.getLocalClassName() +
-        " Fragment: " + fragmentClass.getName() + " ");
+    sb.append("Launching Activity: " + launchActivity.getLocalClassName()
+        + " Fragment: " + fragmentClass.getName() + " ");
 
     //Pack the Fragment name and Bundle to the Intent:
     final Intent intent = new Intent(launchActivity, activityClass);
