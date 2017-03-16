@@ -1,6 +1,6 @@
 apply plugin: "com.android.library"
-apply plugin: "com.neenbedankt.android-apt"
 apply plugin: "me.tatarka.retrolambda"
+apply from: "../quality/quality.gradle"
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -23,7 +23,6 @@ android {
     }
     packagingOptions {
         pickFirst 'META-INF/services/javax.annotation.processing.Processor'
-        return null;
     }
 }
 
@@ -38,7 +37,7 @@ dependencies {
     compile coreDeps.design
     // Butterknife library to ease the access to inject views in activities and fragments
     compile coreDeps.butterknife
-    apt coreDeps.buttercompiler
+    annotationProcessor coreDeps.buttercompiler
     // RxJava and RxAndroid libraries
     compile coreDeps.rxjava
     compile(coreDeps.rxandroid) {
@@ -47,7 +46,7 @@ dependencies {
     // Retrolambda library
     retrolambdaConfig coreDeps.retrolambda
     // Dagger 2 dependency injector requirements
-    apt coreDeps.daggercompiler
+    annotationProcessor coreDeps.daggercompiler
     compile coreDeps.dagger
     provided "javax.annotation:jsr250-api:1.0"
 

@@ -38,7 +38,7 @@ public abstract class BaseRepository {
     private int retryDelayMillis;
     private int retryCount;
 
-    public RetryWithExponentialDelay(final int maxRetries, final int retryDelayMillis) {
+    RetryWithExponentialDelay(final int maxRetries, final int retryDelayMillis) {
       this.maxRetries = maxRetries;
       this.retryDelayMillis = retryDelayMillis;
       this.retryCount = 0;

@@ -12,37 +12,37 @@ import io.reactivex.ObservableTransformer;
  */
 public class TestUtils {
 
-    /**
-     * Private constructor to avoid object instances
-     */
-    private TestUtils() {
-    }
+  /**
+   * Private constructor to avoid object instances
+   */
+  private TestUtils() {
+  }
 
-    /**
-     * Creates a {@link ObservableTransformer} that does nothing in order to use for mocking
-     * purposes
-     *
-     * @return {@link ObservableTransformer} to mock
-     */
-    public static ObservableTransformer createDummyTransformer() {
+  /**
+   * Creates a {@link ObservableTransformer} that does nothing in order to use for mocking
+   * purposes
+   *
+   * @return {@link ObservableTransformer} to mock
+   */
+  public static ObservableTransformer createDummyTransformer() {
 
-        return transformer -> transformer;
-    }
+    return transformer -> transformer;
+  }
 
-    /**
-     * Setups the modcked {@link BaseService}
-     *
-     * @param domainService {@link BaseService} to add the mocked apply schedulers logic
-     */
-    public static void setupMockedDomainService(BaseService domainService) {
+  /**
+   * Setups the modcked {@link BaseService}
+   *
+   * @param domainService {@link BaseService} to add the mocked apply schedulers logic
+   */
+  public static void setupMockedDomainService(BaseService domainService) {
 
-        // Mock the apply schedulers so the call to real object won't crash
-        doAnswer(invocation -> TestUtils.createDummyTransformer()).when(domainService)
-                .applySchedulersToObservable();
-        doAnswer(invocation -> TestUtils.createDummyTransformer()).when(domainService)
-                .applySchedulersToCompletable();
-        doAnswer(invocation -> TestUtils.createDummyTransformer()).when(domainService)
-                .applySchedulersToSingle();
-    }
+    // Mock the apply schedulers so the call to real object won't crash
+    doAnswer(invocation -> TestUtils.createDummyTransformer()).when(domainService)
+        .applySchedulersToObservable();
+    doAnswer(invocation -> TestUtils.createDummyTransformer()).when(domainService)
+        .applySchedulersToCompletable();
+    doAnswer(invocation -> TestUtils.createDummyTransformer()).when(domainService)
+        .applySchedulersToSingle();
+  }
 
 }

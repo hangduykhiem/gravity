@@ -116,7 +116,7 @@ public final class RestApiFactory {
    * @param url {@link String} with the Base Url
    * @param interceptors {@link List} of {@link Interceptor} to add to the rest api
    * @param networkInterceptors {@link List} of {@link Interceptor} as NetworkInterceptor
-   * @param callAdapterFactory   {@link retrofit2.CallAdapter.Factory}
+   * @param callAdapterFactory {@link retrofit2.CallAdapter.Factory}
    * @param gsonConverterFactory {@link Gson} converter to use for serialising
    * @param logs {@link Boolean} indicating if logs are required
    * @return {@link Retrofit} object with the given settings

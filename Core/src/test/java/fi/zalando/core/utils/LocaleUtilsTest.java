@@ -1,11 +1,10 @@
 package fi.zalando.core.utils;
 
-import org.junit.Test;
-
-import java.util.Locale;
-
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
+
+import java.util.Locale;
+import org.junit.Test;
 
 /**
  * Test class for {@link LocaleUtils} utility class
@@ -14,15 +13,15 @@ import static junit.framework.Assert.assertNull;
  */
 public class LocaleUtilsTest {
 
-    @Test
-    public void testLocaliseCurrency() {
+  @Test
+  public void testLocaliseCurrency() {
 
-        assertEquals("23,15 €", LocaleUtils.localiseCurrency(23.15, "EUR", Locale.GERMANY));
-        assertEquals("23,15 €", LocaleUtils.localiseCurrency(23.15, "eur", Locale.GERMANY));
+    assertEquals("23,15 €", LocaleUtils.localiseCurrency(23.15, "EUR", Locale.GERMANY));
+    assertEquals("23,15 €", LocaleUtils.localiseCurrency(23.15, "eur", Locale.GERMANY));
 
-        assertEquals("23,15 USD", LocaleUtils.localiseCurrency(23.15, "USD", Locale.GERMANY));
-        assertEquals("23,15 USD", LocaleUtils.localiseCurrency(23.15, "usd", Locale.GERMANY));
+    assertEquals("23,15 USD", LocaleUtils.localiseCurrency(23.15, "USD", Locale.GERMANY));
+    assertEquals("23,15 USD", LocaleUtils.localiseCurrency(23.15, "usd", Locale.GERMANY));
 
-        assertNull(LocaleUtils.localiseCurrency(23.15, "another currency", Locale.GERMANY));
-    }
+    assertNull(LocaleUtils.localiseCurrency(23.15, "another currency", Locale.GERMANY));
+  }
 }

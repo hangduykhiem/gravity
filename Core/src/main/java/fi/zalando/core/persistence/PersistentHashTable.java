@@ -182,8 +182,8 @@ public class PersistentHashTable {
           }
         };
 
-        sharedPreferences.registerOnSharedPreferenceChangeListener
-            (preferenceChangeListener);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(
+            preferenceChangeListener);
         emitter.setCancellable(() ->
             sharedPreferences.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener));
 
@@ -361,8 +361,8 @@ public class PersistentHashTable {
    */
   public void reset() {
 
-    Timber.w("reset: %s", (TextUtils.isEmpty(persistentHashTableId) ? "Default" :
-        persistentHashTableId));
+    Timber.w("reset: %s", (TextUtils.isEmpty(persistentHashTableId) ? "Default"
+        : persistentHashTableId));
 
     sharedPreferences.edit().clear().apply();
   }
@@ -376,8 +376,8 @@ public class PersistentHashTable {
   public synchronized void switchStorage(@NonNull String persistentHashTableId) {
 
     // Check preconditions
-    Preconditions.checkArgument(!TextUtils.isEmpty(persistentHashTableId), "Provided " +
-        "HashTableId is empty");
+    Preconditions.checkArgument(!TextUtils.isEmpty(persistentHashTableId), "Provided "
+        + "HashTableId is empty");
 
     Timber.w("switchStorage: %s", persistentHashTableId);
 
@@ -398,8 +398,8 @@ public class PersistentHashTable {
     // Remove empty spaces and break lines from beginning and end of lines
     // SharedPreferences has a bug -> http://bit.ly/1ooQ7wE
     String keyToUse = key.trim();
-    Preconditions.checkArgument(!TextUtils.isEmpty(keyToUse), String.format("%s key is not " +
-        "supported", key));
+    Preconditions.checkArgument(!TextUtils.isEmpty(keyToUse), String.format("%s key is not "
+        + "supported", key));
     return keyToUse;
   }
 

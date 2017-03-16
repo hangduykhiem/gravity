@@ -8,9 +8,11 @@ import android.view.View;
  * Created by vraisanen on 11.1.2017.
  */
 public interface OnReadyForTransitionListener {
-    /**
-     * Called when UI is ready for transition animation
-     * @param sharedElement View that is doing a transformation. Can be null.
-     */
-    public void onReadyForTransition(@Nullable View sharedElement);
+
+  /**
+   * Called when UI is ready for transition animation
+   *
+   * @param sharedElement View that is doing a transformation. Can be null.
+   */
+  void onReadyForTransition(@Nullable View sharedElement);
 }

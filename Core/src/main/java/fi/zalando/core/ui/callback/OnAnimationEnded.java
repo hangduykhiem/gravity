@@ -7,6 +7,6 @@ package fi.zalando.core.ui.callback;
  */
 public interface OnAnimationEnded {
 
-    public void onAnimationEnded();
+  void onAnimationEnded();
 
 }
