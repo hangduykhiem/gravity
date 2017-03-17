@@ -17,12 +17,9 @@ package fi.zalando.core.module;
 
 import android.app.Application;
 import android.content.Context;
-import android.location.LocationManager;
-
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Singleton;
 
 /**
  * Dagger module used to inject application context or generic dependencies.
@@ -32,40 +29,40 @@ import dagger.Provides;
 @Module
 public class BaseApplicationModule {
 
-    private final Application application;
+  private final Application application;
 
-    /**
-     * Constructor
-     *
-     * @param application Application instance
-     */
-    public BaseApplicationModule(Application application) {
+  /**
+   * Constructor
+   *
+   * @param application Application instance
+   */
+  public BaseApplicationModule(Application application) {
 
-        this.application = application;
-    }
+    this.application = application;
+  }
 
-    /**
-     * Provides the {@link Application} instance for dependency injections
-     *
-     * @return {@link Application} instance
-     */
-    @Provides
-    @Singleton
-    public Application provideApplication() {
+  /**
+   * Provides the {@link Application} instance for dependency injections
+   *
+   * @return {@link Application} instance
+   */
+  @Provides
+  @Singleton
+  public Application provideApplication() {
 
-        return application;
-    }
+    return application;
+  }
 
-    /**
-     * Provides the {@link Context} of the app for dependency injections
-     *
-     * @return {@link Context} of the app
-     */
-    @Provides
-    @Singleton
-    public Context provideApplicationContext() {
+  /**
+   * Provides the {@link Context} of the app for dependency injections
+   *
+   * @return {@link Context} of the app
+   */
+  @Provides
+  @Singleton
+  public Context provideApplicationContext() {
 
-        return application.getApplicationContext();
-    }
+    return application.getApplicationContext();
+  }
 
 }

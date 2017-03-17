@@ -9,4 +9,5 @@ import fi.zalando.core.ui.activity.BaseActivity;
  * Created by jduran on 21/02/16.
  */
 public interface Navigator {
+
 }
