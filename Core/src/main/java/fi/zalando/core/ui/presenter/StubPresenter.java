@@ -1,9 +1,8 @@
 package fi.zalando.core.ui.presenter;
 
-import javax.inject.Inject;
-
 import fi.zalando.core.domain.helper.DisposableHelper;
 import fi.zalando.core.ui.view.StubView;
+import javax.inject.Inject;
 
 /**
  * Presenter implementation to support simple activities and fragments.
@@ -12,12 +11,12 @@ import fi.zalando.core.ui.view.StubView;
  */
 public class StubPresenter extends BasePresenter<StubView> {
 
-    /**
-     * Constructor
-     */
-    @Inject
-    public StubPresenter(DisposableHelper disposableHelper) {
+  /**
+   * Constructor
+   */
+  @Inject
+  public StubPresenter(DisposableHelper disposableHelper) {
 
-        super(disposableHelper);
-    }
+    super(disposableHelper);
+  }
 }

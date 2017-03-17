@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import butterknife.ButterKnife;
 import fi.zalando.core.ui.presenter.BasePresenter;
 import fi.zalando.core.ui.view.BaseView;
@@ -20,130 +19,130 @@ import fi.zalando.core.ui.view.BaseView;
  */
 public abstract class BaseFragment extends Fragment implements BaseView {
 
-    /**
-     * Lifecycle method
-     */
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Force injection of dependencies
-        injectDependencies();
-        // Inflate the layout for this fragment
-        View fragmentView = inflater.inflate(getSubFragmentLayoutId(), container, false);
-        // Inject fragment views
-        ButterKnife.bind(this, fragmentView);
-        // return inflated view
-        return fragmentView;
+  /**
+   * Lifecycle method
+   */
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    // Force injection of dependencies
+    injectDependencies();
+    // Inflate the layout for this fragment
+    View fragmentView = inflater.inflate(getSubFragmentLayoutId(), container, false);
+    // Inject fragment views
+    ButterKnife.bind(this, fragmentView);
+    // return inflated view
+    return fragmentView;
+  }
+
+  /**
+   * Lifecycle method
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+
+    super.onActivityCreated(savedInstanceState);
+
+    // Set the view to the presenter
+    getPresenter().setView(this);
+    // init objects
+    final Bundle initBundle;
+    if (savedInstanceState != null && !savedInstanceState.isEmpty()) {
+      initBundle = savedInstanceState;
+    } else if (getArguments() != null) {
+      initBundle = getArguments();
+    } else {
+      initBundle = new Bundle();
     }
+    getPresenter().initialise(initBundle);
+  }
 
-    /**
-     * Lifecycle method
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+  /**
+   * Lifecycle method
+   */
+  @Override
+  public void onResume() {
 
-        super.onActivityCreated(savedInstanceState);
-
-        // Set the view to the presenter
-        getPresenter().setView(this);
-        // init objects
-        final Bundle initBundle;
-        if (savedInstanceState != null && !savedInstanceState.isEmpty()) {
-            initBundle = savedInstanceState;
-        } else if (getArguments() != null) {
-            initBundle = getArguments();
-        }
-        else {
-            initBundle = new Bundle();
-        }
-        getPresenter().initialise(initBundle);
+    super.onResume();
+    //Seemingly redundant null check that is actually not redundant:
+    if (getPresenter() != null) {
+      getPresenter().resume();
     }
+  }
 
-    /**
-     * Lifecycle method
-     */
-    @Override
-    public void onResume() {
-
-        super.onResume();
-        //Seemingly redundant null check that is actually not redundant:
-        if (getPresenter() != null) {
-            getPresenter().resume();
-        }
+  /**
+   * Lifecycle method
+   */
+  @Override
+  public void onDestroyView() {
+    //Seemingly redundant null check that is actually not redundant:
+    if (getPresenter() != null) {
+      getPresenter().destroy();
     }
+    super.onDestroyView();
+  }
 
-    /**
-     * Lifecycle method
-     */
-    @Override
-    public void onDestroyView() {
-        //Seemingly redundant null check that is actually not redundant:
-        if (getPresenter() != null) {
-            getPresenter().destroy();
-        }
-        super.onDestroyView();
+  /**
+   * Lifecycle method
+   *
+   * @param outState {@link Bundle} where the state of the activity is stored
+   */
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+
+    //Seemingly redundant null check that is actually not redundant:
+    if (getPresenter() != null) {
+      getPresenter().onSaveInstanceState(outState);
     }
+    super.onSaveInstanceState(outState);
+  }
 
-    /**
-     * Lifecycle method
-     *
-     * @param outState {@link Bundle} where the state of the activity is stored
-     */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
+  /**
+   * Called right before the fragment back stack is popped. Useful for preparing fragments for
+   * transition animations.
+   */
+  public void onBackStackPop() {
+  }
 
-        //Seemingly redundant null check that is actually not redundant:
-        if (getPresenter() != null) {
-            getPresenter().onSaveInstanceState(outState);
-        }
-        super.onSaveInstanceState(outState);
-    }
+  /**
+   * Provides the {@link Application} instance
+   *
+   * @return {@link Application} instance
+   */
+  protected final Application getApplication() {
 
-    /**
-     * Called right before the fragment back stack is popped. Useful for preparing fragments for
-     * transition animations.
-     */
-    public void onBackStackPop() {}
+    return (Application) getContext().getApplicationContext();
+  }
 
-    /**
-     * Provides the {@link Application} instance
-     *
-     * @return {@link Application} instance
-     */
-    protected final Application getApplication() {
+  /**
+   * Abstract method that provides which is the content view of the activity
+   *
+   * @return Layout content view resource id
+   */
+  @LayoutRes
+  protected abstract int getSubFragmentLayoutId();
 
-        return (Application) getContext().getApplicationContext();
-    }
+  /**
+   * Provides the {@link BasePresenter} that controls the Activity
+   *
+   * @return {@link BasePresenter} responsible of controlling the Activity
+   */
+  @NonNull
+  protected abstract BasePresenter getPresenter();
 
-    /**
-     * Abstract method that provides which is the content view of the activity
-     *
-     * @return Layout content view resource id
-     */
-    @LayoutRes
-    protected abstract int getSubFragmentLayoutId();
+  /**
+   * Force subclasses to inject dependencies accordingly
+   */
+  protected abstract void injectDependencies();
 
-    /**
-     * Provides the {@link BasePresenter} that controls the Activity
-     *
-     * @return {@link BasePresenter} responsible of controlling the Activity
-     */
-    @NonNull
-    protected abstract BasePresenter getPresenter();
+  /**
+   * Returns whether or not the fragment is still visible
+   *
+   * @return If fragment is still visible
+   */
+  protected boolean isFragmentVisible() {
 
-    /**
-     * Force subclasses to inject dependencies accordingly
-     */
-    protected abstract void injectDependencies();
-
-    /**
-     * Returns whether or not the fragment is still visible
-     *
-     * @return If fragment is still visible
-     */
-    protected boolean isFragmentVisible() {
-
-        return isAdded() && !getActivity().isFinishing();
-    }
+    return isAdded() && !getActivity().isFinishing();
+  }
 }

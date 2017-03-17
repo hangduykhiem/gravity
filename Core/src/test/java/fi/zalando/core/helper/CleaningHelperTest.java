@@ -1,11 +1,11 @@
 package fi.zalando.core.helper;
 
+import static org.mockito.Mockito.verify;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import static org.mockito.Mockito.verify;
 
 /**
  * Test class for {@link CleaningHelper}
@@ -14,35 +14,35 @@ import static org.mockito.Mockito.verify;
  */
 public class CleaningHelperTest {
 
-    @Mock
-    public CleaningHelper.Cleanable cleanable1;
-    @Mock
-    public CleaningHelper.Cleanable cleanable2;
+  @Mock
+  public CleaningHelper.Cleanable cleanable1;
+  @Mock
+  public CleaningHelper.Cleanable cleanable2;
 
-    private CleaningHelper cleaningHelper;
+  private CleaningHelper cleaningHelper;
 
-    @Before
-    public void setup() {
+  @Before
+  public void setup() {
 
-        MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.initMocks(this);
 
-        CleaningHelper.Cleanable[] cleanables = new CleaningHelper.Cleanable[2];
-        cleanables[0] = cleanable1;
-        cleanables[1] = cleanable2;
+    CleaningHelper.Cleanable[] cleanables = new CleaningHelper.Cleanable[2];
+    cleanables[0] = cleanable1;
+    cleanables[1] = cleanable2;
 
-        cleaningHelper = new CleaningHelper();
-        cleaningHelper.addCleanables(cleanables);
-    }
+    cleaningHelper = new CleaningHelper();
+    cleaningHelper.addCleanables(cleanables);
+  }
 
-    @Test
-    public void testClean() {
+  @Test
+  public void testClean() {
 
-        // make the call
-        cleaningHelper.clean();
+    // make the call
+    cleaningHelper.clean();
 
-        // check all the items are cleaned
-        verify(cleanable1).clean();
-        verify(cleanable2).clean();
-    }
+    // check all the items are cleaned
+    verify(cleanable1).clean();
+    verify(cleanable2).clean();
+  }
 
 }

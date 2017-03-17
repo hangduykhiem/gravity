@@ -9,16 +9,16 @@ import android.support.annotation.Nullable;
  */
 public class EqualUtils {
 
-    /**
-     * Checks if two {@link Object}s are equal. Null safe.
-     *
-     * @param aThis {@link Object} to compare
-     * @param aThat {@link Object} to compare
-     * @return {@link Boolean} indicating if the objects are equal
-     */
-    public static boolean areEqual(@Nullable Object aThis, @Nullable Object aThat) {
+  /**
+   * Checks if two {@link Object}s are equal. Null safe.
+   *
+   * @param aThis {@link Object} to compare
+   * @param aThat {@link Object} to compare
+   * @return {@link Boolean} indicating if the objects are equal
+   */
+  public static boolean areEqual(@Nullable Object aThis, @Nullable Object aThat) {
 
-        return aThis == null ? aThat == null : aThis.equals(aThat);
-    }
+    return aThis == null ? aThat == null : aThis.equals(aThat);
+  }
 
 }

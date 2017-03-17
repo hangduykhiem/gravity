@@ -11,37 +11,42 @@ import fi.zalando.core.utils.EqualUtils;
  */
 public class PermissionSecurityException extends SecurityException {
 
-    private final String requiredPermission;
+  private final String requiredPermission;
 
-    /**
-     * Constructor
-     *
-     * @param requiredPermission {@link String} with the required permission name
-     */
-    public PermissionSecurityException(String requiredPermission) {
+  /**
+   * Constructor
+   *
+   * @param requiredPermission {@link String} with the required permission name
+   */
+  public PermissionSecurityException(String requiredPermission) {
 
-        super();
-        this.requiredPermission = requiredPermission;
+    super();
+    this.requiredPermission = requiredPermission;
+  }
+
+  /**
+   * Provides the name of the required permission
+   *
+   * @return {@link String} with the name of the required permission
+   */
+  public String getRequiredPermission() {
+    return requiredPermission;
+  }
+
+  @Override
+  public boolean equals(Object other) {
+
+    if (other instanceof PermissionSecurityException) {
+      PermissionSecurityException otherPermissionSecurityException =
+          (PermissionSecurityException) other;
+      return EqualUtils.areEqual(getRequiredPermission(), otherPermissionSecurityException
+          .getRequiredPermission());
     }
+    return false;
+  }
 
-    /**
-     * Provides the name of the required permission
-     *
-     * @return {@link String} with the name of the required permission
-     */
-    public String getRequiredPermission() {
-        return requiredPermission;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-
-        if (other instanceof PermissionSecurityException) {
-            PermissionSecurityException otherPermissionSecurityException =
-                    (PermissionSecurityException) other;
-            return EqualUtils.areEqual(getRequiredPermission(), otherPermissionSecurityException
-                    .getRequiredPermission());
-        }
-        return false;
-    }
+  @Override
+  public int hashCode() {
+    return requiredPermission != null ? requiredPermission.hashCode() : 0;
+  }
 }

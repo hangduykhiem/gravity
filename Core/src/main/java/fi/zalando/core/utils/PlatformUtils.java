@@ -7,26 +7,26 @@ package fi.zalando.core.utils;
  */
 public class PlatformUtils {
 
-    /**
-     * Returns the currently running OS version SDK version on the phone
-     *
-     * @return Running SDK Version
-     */
-    public static int getOSVersion() {
+  /**
+   * Returns the currently running OS version SDK version on the phone
+   *
+   * @return Running SDK Version
+   */
+  public static int getOSVersion() {
 
-        return android.os.Build.VERSION.SDK_INT;
-    }
+    return android.os.Build.VERSION.SDK_INT;
+  }
 
-    /**
-     * Returns the currently running OS version SDK version on the phone is newer or equal than the
-     * given one in the parameter
-     *
-     * @param version Int value of the SDK version to check {@link android.os.Build.VERSION_CODES}
-     * @return If running version is newer or equal than the given one
-     */
-    public static boolean isNewerOrEqualSDKVersion(int version) {
+  /**
+   * Returns the currently running OS version SDK version on the phone is newer or equal than the
+   * given one in the parameter
+   *
+   * @param version Int value of the SDK version to check {@link android.os.Build.VERSION_CODES}
+   * @return If running version is newer or equal than the given one
+   */
+  public static boolean isNewerOrEqualSDKVersion(int version) {
 
-        return getOSVersion() >= version;
-    }
+    return getOSVersion() >= version;
+  }
 
 }
