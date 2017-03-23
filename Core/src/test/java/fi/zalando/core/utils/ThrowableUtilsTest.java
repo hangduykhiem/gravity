@@ -2,14 +2,11 @@ package fi.zalando.core.utils;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
 import java.net.HttpURLConnection;
+import okhttp3.ResponseBody;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import retrofit2.HttpException;
 import retrofit2.Response;
 
@@ -18,21 +15,18 @@ import retrofit2.Response;
  *
  * Created by jduran on 11/02/16.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(Response.class)
 public class ThrowableUtilsTest {
 
   @Test
   public void testIsRetrofitHttpThrowable() {
 
     // Build a mock response
-    Response mockResponse = mock(Response.class);
-    doAnswer(invocation -> 404).when(mockResponse).code();
+    Response response = Response.error(404, mock(ResponseBody.class));
     // Check that the comparison is right when 404
-    assertTrue(ThrowableUtils.isRetrofitHttpThrowable(new HttpException(mockResponse),
+    assertTrue(ThrowableUtils.isRetrofitHttpThrowable(new HttpException(response),
         HttpURLConnection.HTTP_NOT_FOUND));
     // Check that returns false when wrong number
-    assertFalse(ThrowableUtils.isRetrofitHttpThrowable(new HttpException(mockResponse),
+    assertFalse(ThrowableUtils.isRetrofitHttpThrowable(new HttpException(response),
         HttpURLConnection.HTTP_UNAUTHORIZED));
     // Check that returns false when another exception is provided
     assertFalse(ThrowableUtils.isRetrofitHttpThrowable(new Exception(), HttpURLConnection

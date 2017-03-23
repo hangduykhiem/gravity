@@ -15,9 +15,6 @@ import org.robolectric.annotation.Config;
  *
  * Created by jduran on 12/02/16.
  */
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, manifest =
-    "src/main/AndroidManifest.xml")
 public class ValidationUtilsTest {
 
   @Test
