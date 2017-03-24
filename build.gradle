@@ -15,6 +15,8 @@ buildscript {
         classpath "me.tatarka:gradle-retrolambda:$RETROLAMBDA_VERSION"
         // Required to make lint compatible with lambda expressions
         classpath "me.tatarka.retrolambda.projectlombok:lombok.ast:$LOMBOK_VERSION"
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
+
     }
 
     // Exclude the version that the android plugin depends on.
