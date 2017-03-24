@@ -1,7 +1,5 @@
 package fi.zalando.core.utils;
 
-import android.text.TextUtils;
-
 /**
  * Utility class to help validating data
  *
