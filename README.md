@@ -1,81 +1,50 @@
-# Android Core project
+### Project Name/Intro
 
-This document describes the setup instructions, tools, libraries, style and naming conventions, best practices, CI and CD practices, etc. for the project.
+- Describe very briefly but clearly what the project does.
+- State if it is out-of-the-box user-friendly, so it’s clear to the user.
+- List its most useful/innovative/noteworthy features.
+- State its goals/what problem(s) it solves.
+- Note and briefly describe any key concepts (technical, philosophical, or both) important to the user’s understanding.
+- Link to any supplementary blog posts or project main pages.
+- Note its development status.
+- Include badges.
+- If possible, include screenshots and demo videos.
 
-## GIT strategy
+### Core Technical Concepts/Inspiration
 
-[Forking workflow is followed](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
+- Why does it exist?
+- Frame your project for the potential user. 
+- Compare/contrast your project with other, similar projects so the user knows how it is different from those projects.
+- Highlight the technical concepts that your project demonstrates or supports. Keep it very brief.
+- Keep it useful.
 
-- Forking the team-level repository
-- Git clone your own repository
-- [Configure a remote for a fork](https://help.github.com/articles/configuring-a-remote-for-a-fork/)
-- Commits your changes to YOUR repos. Every commit should include the Github issue code it is related with. For example, "#XYZ: This is a commit" where XYZ is the ticket number.
-- Create a pull request to merge your changes to team repos
-- Ask team members to check, once they are happy they need to add :+1: in the comments.
-- Once at least one colleague have added the validation comment, the PR opener can merge the PR.
-- Three different repositories exist on team-level repository. Development; where under development code resides. Staging; where last built used for staging resides. Master; where last published code is located. 
+### Getting Started/Requirements/Prerequisites/Dependencies
+Include any essential instructions for:
+- Getting it
+- Installing It
+- Configuring It
+- Running it
 
-## Creating a Pull Request
+### More Specific Topics (+ sample sub-categories)
+- Versioning: Services, APIs, Systems
+- Common Error Messages/related details
+- Tests
+- Is it a Swift project? Please take a look at Mattt Thompson & Nate Cook's [Swift documentation](http://nshipster.com/swift-documentation/) guide
 
-Please, follow this steps before creating a pull requests with your changes to the main repository:
+### Contributing
+- Contributor Guidelines
+- Code Style/Reqts
+- Format for commit messages
+- Thank you (name contributors)
 
-- Fetch all content from upstream (master android repositories)
-- Pull changes from upstream and add the changes to the branch you are gonna push for the PR.
-- ENSURE that the code compiles, run the tests and executes properly.
-- Push changes to your GitHub forked repository.
-- Create PR.
+### TODO
+- Next steps
+- Features planned
+- Known bugs (shortlist)
 
-## Coding Style
+### Contact
+- Email address
+- Google Group/mailing list (if applicable)
+- IRC or Slack (if applicable)
 
-[Follow Google Java coding guidelines](https://google.github.io/styleguide/javaguide.html#s3.3-import-statements). Column limit is 100 characters for a better readability. Take [Intellij google formatting XML](https://raw.githubusercontent.com/google/styleguide/gh-pages/intellij-java-google-style.xml) and install it in Android Studio. Copy it into your config/codestyles folder in your intellij settings folder. Under Settings/Code Style select the google-styleguide as current code style for the project. Then, following changes are done to coding style in settings:
-
-- To avoid having extra lines after field annotations
-    - Preferences → Editor → Code Style → Java → Wrapping and Braces tab
-    - Locate the section Field annotations
-    - Check the option Do not wrap after single annotation
-
-- To force not exceeding right margin
-    - Preferences → Editor → Code Style → Java → Wrapping and Braces tab
-    - Check the option "Ensure right margin is not exceeded"
-
-All files must finish with an empty line. You can setup Android Studio to add it automatically every time the file is saved. [Check](http://stackoverflow.com/a/28660298) for instructions.
-
-## Good Practices in Android
-
-[Read this guide](https://github.com/futurice/android-best-practices) that briefly describes best practices, naming conventions, etc. in Android Development.
-
-## Setup Android Studio
-
-Nowadays Android Studio includes SDK, no need for external installation. SDK manager can be accessed from the IDE directly. To setup the project follow this steps:
-
-- Install JDK 8 (Retrolambda library uses it)
-- Install Android Studio
-- Checkout code from github.
-- Open Module Settings (Right click on project root in Android studio) and ensure JDK8 path is selected
-- File/Open and select the folder you just checkout from repository.
-- Done!
-
-## CI
-
-Jenkins is used as CI system. There are three different main branches, each of them executing different actions on Jenkins.
-
-Development Branch:
-
-- Pull changes from Development branch
-- gradle test -> Executes all the unit tests for debug build type. Included those in the core library
-- gradle connectedAndroidTest -> Executes all the instrumentations tests (requires a device running or connected)
-- Post result (success or failure) to Fleek Android HipChat channel
-
-Staging Branch:
-
-- Pull changes from Staging branch
-- gradle test -> Executes all the unit tests for debug build type. Included those in the core library
-- gradle connectedAndroidTest -> Executes all the instrumentations tests (requires a device running or connected)
-- Post result (success or failure) to Fleek Android HipChat channel
-
-Master Branch:
-
-- Pull changes from Master branch
-- gradle test -> Executes all the unit tests for debug build type. Included those in the core library
-- gradle connectedAndroidTest -> Executes all the instrumentations tests (requires a device running or connected)
-- Post result (success or failure) to Fleek Android HipChat channel
+###License
