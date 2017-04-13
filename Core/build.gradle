@@ -1,5 +1,6 @@
 apply plugin: "com.android.library"
 apply plugin: "me.tatarka.retrolambda"
+apply plugin: 'com.github.ben-manes.versions'
 apply from: "../quality/quality.gradle"
 
 android {
@@ -78,9 +79,4 @@ dependencies {
     testCompile coreTestDeps.robolectric
     testCompile coreTestDeps.mockito
     testCompile coreTestDeps.assertj
-    // Powermock to mock static dependencies
-    testCompile coreTestDeps.powermockJunit
-    testCompile coreTestDeps.powermockRule
-    testCompile coreTestDeps.powermockMockito
-    testCompile coreTestDeps.powermockXtream
 }
