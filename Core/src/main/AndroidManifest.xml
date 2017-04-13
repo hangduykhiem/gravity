@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="fi.zalando.core">
+  package="org.zalando.core">
 
   <application>
     <activity android:name=".ui.activity.ReusableFragmentActivity" />
