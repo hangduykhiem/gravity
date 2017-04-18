@@ -1,29 +1,61 @@
-### Project Name/Intro
+### Android MVP Core Library
 
-- Describe very briefly but clearly what the project does.
-- State if it is out-of-the-box user-friendly, so it’s clear to the user.
-- List its most useful/innovative/noteworthy features.
-- State its goals/what problem(s) it solves.
-- Note and briefly describe any key concepts (technical, philosophical, or both) important to the user’s understanding.
-- Link to any supplementary blog posts or project main pages.
-- Note its development status.
-- Include badges.
-- If possible, include screenshots and demo videos.
+This library helps you to establish a good practice to use the Model View Presenter (MVP) pattern in your project following a [Clean Architecture approach](https://fernandocejas.com/2014/09/03/architecting-android-the-clean-way/). This library includes basic setup for Dagger2 and Butterknife dependency injection, isolating the basic logic on your fragments and activities. A good architectural skeleton will help your application to grow consistently without adding complexities.
 
-### Core Technical Concepts/Inspiration
+Besides the base architecture guidelines, it includes many utility methods that were found useful for several projects. Feel free to contribute by adding your own in the appropriate utility class. Read [Contributing](#contributing) section. 
 
-- Why does it exist?
-- Frame your project for the potential user. 
-- Compare/contrast your project with other, similar projects so the user knows how it is different from those projects.
-- Highlight the technical concepts that your project demonstrates or supports. Keep it very brief.
-- Keep it useful.
+### Why use Android MVP Core Library
 
-### Getting Started/Requirements/Prerequisites/Dependencies
-Include any essential instructions for:
-- Getting it
-- Installing It
-- Configuring It
-- Running it
+The library helps you using MVP along a clean architecture approach. MVP pattern separates the presentation layer from the logic, letting you focusing purely on UI implementation delegating the business logic to presenters. [Here](https://antonioleiva.com/mvp-android/) you can find a good explanation of the MVP pattern:
+
+![alt tag](https://informatechcr.files.wordpress.com/2013/03/mvp-diagram.png)
+
+Besides that, this base library will provide you a good skeleton to use RxJava2 as a base for all your data loading operations. Provides several utility methods to notify on domain layer to apply correct schedulers for each operation or presenters will include helpers to unsubscribe whenever their attach view is destroyed. This library also eases the use of Retrofit2 for accesing network operations adding some factory methods to access easily REST APIs.
+
+If you are looking for a base library to help you following consistently a clean architecture approach, this can be a good starting point.
+
+### Installation
+
+At this moment, you need to clone the repository and run a gradlew build yourself, adding later the generated AAR into your own gradle dependencies. In near future we will add the library to maven so it should be easy for you to add it as dependency into your own projects.
+
+- Clone this repository
+- Run gradle build command on project's root folder `./gradlew assembleRelease`
+- Move the generated AAR folder into your project's lib folder. The library is located in `./Core/RealmDAO/build/outputs/aar/` 
+- Add Core as dependency into your gradle file.
+```
+compile name: 'Core-release', ext: 'aar' // Name "Core-release" must match the name of your file without .aar extension
+```
+- Ensure you allow have `libs/` folder in your application module and added the correct setup in your gradle file.
+```
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+    dependencies {
+    ...
+    }
+}
+```
+
+On the other hand, the library make use of different dependencies to inject views and dependencies into Fragments, add utility base view holder and other utilities on recyclerViews, make use of RxJava2, etc.:
+
+```
+compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
+compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
+compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
+apt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
+compile "io.reactivex.rxjava2:rxjava:$RXJAVA2_VERSION"
+compile "io.reactivex.rxjava2:rxandroid:$RXANDROID2_VERSION"
+annotationProcessor "com.google.dagger:dagger-compiler:$DAGGER2"
+compile "com.google.dagger:dagger:$DAGGER2"
+provided "javax.annotation:jsr250-api:1.0"
+compile "com.jakewharton.timber:timber:$TIMBER"
+compile "com.squareup.retrofit2:retrofit:$RETROFIT"
+compile "com.squareup.retrofit2:converter-gson:$RETROFIT"
+compile "com.squareup.retrofit2:adapter-rxjava2:$RETROFIT"
+compile "com.squareup.okhttp3:logging-interceptor:$OKHTTP"
+```
 
 ### More Specific Topics (+ sample sub-categories)
 - Versioning: Services, APIs, Systems
