@@ -19,7 +19,7 @@ import android.support.annotation.Nullable;
 /**
  * Preconditions utility class taken from Guava.
  *
- * @see "https://google.github.io/guava/releases/19.0/api/docs/com/google/common/base/Preconditions.html"
+ * @see http://bit.ly/2oHufPG
  */
 public final class Preconditions {
 
