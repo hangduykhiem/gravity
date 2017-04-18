@@ -81,21 +81,21 @@ public abstract class BasePresenter<T extends BaseView> {
    */
   @CallSuper
   public void destroy() {
-
     disposableHelper.clear();
   }
 
   /**
-   * Sets the {@link T} instance to link the {@link BasePresenter} with the UI so that the
-   * presenter can hold a reference to the view it will be interacting with.
+   * Sets the {@link T} instance to link the {@link BasePresenter} with the UI so that the presenter
+   * can hold a reference to the view it will be interacting with. Override if need to set view for
+   * SubPresenter
    *
    * @param view {@link T} to link the {@link BasePresenter} with the UI
    */
-  public final void setView(@NonNull T view) {
+  @CallSuper
+  public void setView(@NonNull T view) {
 
     Preconditions.checkNotNull(view);
     isViewSet = true;
     this.view = view;
   }
-
 }
