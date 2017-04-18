@@ -1,6 +1,4 @@
 apply plugin: "com.android.library"
-apply plugin: "me.tatarka.retrolambda"
-apply plugin: 'com.github.ben-manes.versions'
 apply from: "../quality/quality.gradle"
 
 android {
@@ -21,8 +19,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility rootProject.ext.sourceCompatibilityVersion
+        targetCompatibility rootProject.ext.targetCompatibilityVersion
     }
 
     packagingOptions {
@@ -51,8 +49,6 @@ dependencies {
     compile(coreDeps.rxandroid) {
         exclude module: "rxjava"
     }
-    // Retrolambda library
-    retrolambdaConfig coreDeps.retrolambda
     // Dagger 2 dependency injector requirements
     annotationProcessor coreDeps.daggercompiler
     compile coreDeps.dagger
@@ -78,5 +74,4 @@ dependencies {
     testCompile coreTestDeps.junit
     testCompile coreTestDeps.robolectric
     testCompile coreTestDeps.mockito
-    testCompile coreTestDeps.assertj
 }

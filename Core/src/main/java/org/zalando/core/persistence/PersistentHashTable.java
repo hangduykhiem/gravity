@@ -2,12 +2,14 @@ package org.zalando.core.persistence;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.functions.Cancellable;
 import java.util.Date;
 import java.util.Map;
 import javax.inject.Inject;
@@ -167,23 +169,31 @@ public class PersistentHashTable {
    * @param <T> {@link T} type to retrieve
    * @return {@link Observable} to load the matching given key
    */
-  private <T> Observable<T> load(String key, T defaultValue, Class<T> clazz) {
+  private <T> Observable<T> load(final String key, final T defaultValue, final Class<T> clazz) {
 
     return Observable.create(new ObservableOnSubscribe<T>() {
       @Override
-      public void subscribe(ObservableEmitter<T> emitter) throws Exception {
+      public void subscribe(final ObservableEmitter<T> emitter) throws Exception {
 
-        SharedPreferences.OnSharedPreferenceChangeListener
-            preferenceChangeListener = (sharedPreferencesInstance, changedKey) -> {
-          if (key.equals(changedKey)) {
-            emitter.onNext(get(key, defaultValue, clazz));
+        final SharedPreferences.OnSharedPreferenceChangeListener
+            preferenceChangeListener = new OnSharedPreferenceChangeListener() {
+          @Override
+          public void onSharedPreferenceChanged(SharedPreferences sharedPreferencesInstance,
+              String changedKey) {
+            if (key.equals(changedKey)) {
+              emitter.onNext(get(key, defaultValue, clazz));
+            }
           }
         };
 
         sharedPreferences.registerOnSharedPreferenceChangeListener(
             preferenceChangeListener);
-        emitter.setCancellable(() ->
-            sharedPreferences.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener));
+        emitter.setCancellable(new Cancellable() {
+          @Override
+          public void cancel() throws Exception {
+            sharedPreferences.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
+          }
+        });
 
         emitter.onNext(get(key, defaultValue, clazz));
       }

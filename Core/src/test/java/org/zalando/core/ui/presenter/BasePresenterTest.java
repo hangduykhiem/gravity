@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import android.os.Build;
@@ -99,7 +98,7 @@ public class BasePresenterTest {
     basePresenter.initialise(new Bundle());
     basePresenter.resume();
 
-    verify(baseView, times(1)).initView(any());
+    verify(baseView).initView(any(Bundle.class));
   }
 
   @SuppressWarnings("all")

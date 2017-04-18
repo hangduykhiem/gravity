@@ -20,10 +20,15 @@ public abstract class BaseRepository {
    * @param <T> {@link T} type of the {@link Observable}
    * @return {@link ObservableTransformer} to modify the {@link Observable}
    */
-  public <T> ObservableTransformer<T, T> applyExponentialBackoff(int maxRetries,
-      int initialDelayInMillis) {
-    return observable -> observable
-        .retryWhen(new RetryWithExponentialDelay(maxRetries, initialDelayInMillis));
+  public <T> ObservableTransformer<T, T> applyExponentialBackoff(final int maxRetries,
+      final int initialDelayInMillis) {
+    return new ObservableTransformer<T, T>() {
+      @Override
+      public ObservableSource<T> apply(Observable<T> observable) {
+        return observable
+            .retryWhen(new RetryWithExponentialDelay(maxRetries, initialDelayInMillis));
+      }
+    };
   }
 
   /**
@@ -40,25 +45,29 @@ public abstract class BaseRepository {
       this.maxRetries = maxRetries;
       this.retryDelayMillis = retryDelayMillis;
       this.retryCount = 0;
+
     }
 
     @Override
     public ObservableSource<?> apply(@NonNull Observable<Throwable> attempts) throws Exception {
 
       return attempts
-          .flatMap((Function<Throwable, ObservableSource<?>>) throwable -> {
-            if (++retryCount < maxRetries) {
+          .flatMap(new Function<Throwable, ObservableSource<?>>() {
+            @Override
+            public ObservableSource<?> apply(@NonNull Throwable throwable) throws Exception {
+              if (++retryCount < maxRetries) {
 
-              // apply the exponential backoff
-              retryDelayMillis *= retryCount;
+                // apply the exponential backoff
+                retryDelayMillis *= retryCount;
 
-              // When this Observable calls onNext, the original
-              // Observable will be retried (i.e. re-subscribed).
-              return Observable.timer(retryDelayMillis, TimeUnit.MILLISECONDS);
+                // When this Observable calls onNext, the original
+                // Observable will be retried (i.e. re-subscribed).
+                return Observable.timer(retryDelayMillis, TimeUnit.MILLISECONDS);
+              }
+
+              // Max retries hit. Just pass the error along.
+              return Observable.error(throwable);
             }
-
-            // Max retries hit. Just pass the error along.
-            return Observable.error(throwable);
           });
     }
   }

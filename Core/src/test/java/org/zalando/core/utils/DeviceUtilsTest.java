@@ -13,14 +13,16 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import org.zalando.core.BuildConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.zalando.core.BuildConfig;
 
 /**
  * Test class for {@link DeviceUtils}
@@ -50,32 +52,83 @@ public class DeviceUtilsTest {
 
     // mock get telephony manager from the context
     Context mockContext = mock(Context.class);
-    doAnswer(invocation -> telephonyManager).when(mockContext).getSystemService(Context
-        .TELEPHONY_SERVICE);
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return telephonyManager;
+      }
+    }).when(mockContext).getSystemService(Context.TELEPHONY_SERVICE);
 
     // Setup the telephony manager mock
-    doAnswer(invocation -> "ES").when(telephonyManager).getSimCountryIso();
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return "ES";
+      }
+    }).when(telephonyManager).getSimCountryIso();
     assertEquals(DeviceUtils.getUserCountry(mockContext), "ES".toLowerCase());
 
     // setup telephony manager mock when fetched from network country iso code
-    doAnswer(invocation -> null).when(telephonyManager).getSimCountryIso();
-    doAnswer(invocation -> TelephonyManager.PHONE_TYPE_GSM).when(telephonyManager)
-        .getPhoneType();
-    doAnswer(invocation -> "ES").when(telephonyManager).getNetworkCountryIso();
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return null;
+      }
+    }).when(telephonyManager).getSimCountryIso();
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return TelephonyManager.PHONE_TYPE_GSM;
+      }
+    }).when(telephonyManager).getPhoneType();
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return "ES";
+      }
+    }).when(telephonyManager).getNetworkCountryIso();
     assertEquals(DeviceUtils.getUserCountry(mockContext), "ES".toLowerCase());
 
     // setup telephony manager mock when PHONE_TYPE_CDMA phone
-    doAnswer(invocation -> null).when(telephonyManager).getSimCountryIso();
-    doAnswer(invocation -> TelephonyManager.PHONE_TYPE_CDMA).when(telephonyManager)
-        .getPhoneType();
-    doAnswer(invocation -> "ES").when(telephonyManager).getNetworkCountryIso();
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return null;
+      }
+    }).when(telephonyManager).getSimCountryIso();
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return TelephonyManager.PHONE_TYPE_CDMA;
+      }
+    }).when(telephonyManager).getPhoneType();
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return "ES";
+      }
+    }).when(telephonyManager).getNetworkCountryIso();
     assertTrue(TextUtils.isEmpty(DeviceUtils.getUserCountry(mockContext)));
 
     // setup telephony manager mock when getNetworkCountryIso null
-    doAnswer(invocation -> null).when(telephonyManager).getSimCountryIso();
-    doAnswer(invocation -> TelephonyManager.PHONE_TYPE_CDMA).when(telephonyManager)
-        .getPhoneType();
-    doAnswer(invocation -> null).when(telephonyManager).getNetworkCountryIso();
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return null;
+      }
+    }).when(telephonyManager).getSimCountryIso();
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return TelephonyManager.PHONE_TYPE_CDMA;
+      }
+    }).when(telephonyManager).getPhoneType();
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return null;
+      }
+    }).when(telephonyManager).getNetworkCountryIso();
     assertTrue(TextUtils.isEmpty(DeviceUtils.getUserCountry(mockContext)));
   }
 
@@ -83,10 +136,18 @@ public class DeviceUtilsTest {
   public void testWhenGPSEnabled() {
 
     // Setup the mock
-    doAnswer(invocation -> true).when(locationManager).isProviderEnabled(LocationManager
-        .GPS_PROVIDER);
-    doAnswer(invocation -> false).when(locationManager).isProviderEnabled(LocationManager
-        .NETWORK_PROVIDER);
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return true;
+      }
+    }).when(locationManager).isProviderEnabled(LocationManager.GPS_PROVIDER);
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return false;
+      }
+    }).when(locationManager).isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
     assertTrue(DeviceUtils.isLocationEnabled(locationManager));
   }
@@ -95,10 +156,18 @@ public class DeviceUtilsTest {
   public void testWhenNetworkEnabled() {
 
     // Setup the mock
-    doAnswer(invocation -> false).when(locationManager).isProviderEnabled(LocationManager
-        .GPS_PROVIDER);
-    doAnswer(invocation -> true).when(locationManager).isProviderEnabled(LocationManager
-        .NETWORK_PROVIDER);
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return false;
+      }
+    }).when(locationManager).isProviderEnabled(LocationManager.GPS_PROVIDER);
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return true;
+      }
+    }).when(locationManager).isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
     assertTrue(DeviceUtils.isLocationEnabled(locationManager));
   }
@@ -107,10 +176,18 @@ public class DeviceUtilsTest {
   public void testWhenNoLocationEnabled() {
 
     // Setup the mock
-    doAnswer(invocation -> false).when(locationManager).isProviderEnabled(LocationManager
-        .GPS_PROVIDER);
-    doAnswer(invocation -> false).when(locationManager).isProviderEnabled(LocationManager
-        .NETWORK_PROVIDER);
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return false;
+      }
+    }).when(locationManager).isProviderEnabled(LocationManager.GPS_PROVIDER);
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        return false;
+      }
+    }).when(locationManager).isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
     assertFalse(DeviceUtils.isLocationEnabled(locationManager));
   }

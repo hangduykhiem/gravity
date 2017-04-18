@@ -10,6 +10,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 import java.util.Arrays;
 import org.zalando.core.R;
@@ -160,7 +161,12 @@ public class SnackBarBuilder {
     styleSnackbar(parentView.getContext(), snackbar);
 
     if (action != null) {
-      snackbar.setAction(buttonText, (v) -> action.run());
+      snackbar.setAction(buttonText, new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          action.run();
+        }
+      });
 
       if (actionColorRes != 0) {
         snackbar.setActionTextColor(ContextCompat.getColor(parentView.getContext(),
