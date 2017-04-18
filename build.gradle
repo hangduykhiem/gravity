@@ -5,22 +5,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-
         final GRADLE_VERSION = "2.3.0"
-        final RETROLAMBDA_VERSION = "3.2.5"
-        final LOMBOK_VERSION = "0.2.3.a2"
-
         classpath "com.android.tools.build:gradle:$GRADLE_VERSION"
-        // Retrolambda plugins
-        classpath "me.tatarka:gradle-retrolambda:$RETROLAMBDA_VERSION"
-        // Required to make lint compatible with lambda expressions
-        classpath "me.tatarka.retrolambda.projectlombok:lombok.ast:$LOMBOK_VERSION"
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
-
     }
-
-    // Exclude the version that the android plugin depends on.
-    configurations.classpath.exclude group: 'com.android.tools.external.lombok'
 }
 
 allprojects {
@@ -39,8 +26,8 @@ ext {
     targetSdkVersion = 25
     versionCode = 1
     buildToolsVersion = '25.0.2'
-    sourceCompatibilityVersion = JavaVersion.VERSION_1_8
-    targetCompatibilityVersion = JavaVersion.VERSION_1_8
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_7
+    targetCompatibilityVersion = JavaVersion.VERSION_1_7
     testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
 }
 
@@ -66,5 +53,4 @@ ext.coreTestDeps = [
         junit           : 'junit:junit:4.12',
         robolectric     : 'org.robolectric:robolectric:3.3.1',
         mockito         : 'org.mockito:mockito-core:2.7.19',
-        assertj         : 'org.assertj:assertj-core:3.6.2'
 ]

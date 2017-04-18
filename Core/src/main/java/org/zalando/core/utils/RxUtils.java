@@ -1,6 +1,8 @@
 package org.zalando.core.utils;
 
 import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.Subject;
 
@@ -25,8 +27,18 @@ public class RxUtils {
    */
   public static <T> Observable<T> createObservingSubject(Observable<T> observable) {
 
-    Subject<T> behaviorSubject = BehaviorSubject.create();
-    observable.subscribe(behaviorSubject::onNext, behaviorSubject::onError);
+    final Subject<T> behaviorSubject = BehaviorSubject.create();
+    observable.subscribe(new Consumer<T>() {
+      @Override
+      public void accept(@NonNull T t) throws Exception {
+        behaviorSubject.onNext(t);
+      }
+    }, new Consumer<Throwable>() {
+      @Override
+      public void accept(@NonNull Throwable e) throws Exception {
+        behaviorSubject.onError(e);
+      }
+    });
     return behaviorSubject;
   }
 

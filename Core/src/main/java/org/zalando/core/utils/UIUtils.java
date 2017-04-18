@@ -40,7 +40,7 @@ public class UIUtils {
    * @param view View or Layout whose view hierarchy onGlobalLayout to monitor.
    * @param runnable Runnable to be run once the layout is finished.
    */
-  public static void runOnGlobalLayout(@NonNull View view, @NonNull Runnable runnable) {
+  public static void runOnGlobalLayout(final @NonNull View view, final @NonNull Runnable runnable) {
     view.getViewTreeObserver().addOnGlobalLayoutListener(
         new ViewTreeObserver.OnGlobalLayoutListener() {
 

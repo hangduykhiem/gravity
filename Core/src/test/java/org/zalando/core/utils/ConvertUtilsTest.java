@@ -1,7 +1,8 @@
 package org.zalando.core.utils;
 
 import static junit.framework.Assert.assertEquals;
-import static org.assertj.core.api.Assertions.assertThat;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,7 +150,7 @@ public class ConvertUtilsTest {
   public void shouldConvertEmptyList() {
 
     List<String> listToTest = new ArrayList<>();
-    assertThat(ConvertUtils.convertList(listToTest)).isEmpty();
+    assertTrue(ConvertUtils.convertList(listToTest).isEmpty());
   }
 
   @Test
@@ -158,7 +159,7 @@ public class ConvertUtilsTest {
     List<String> listToTest = new ArrayList<>();
     listToTest.add("String");
     List<Object> convertedList = ConvertUtils.convertList(listToTest);
-    assertThat(convertedList).isNotEmpty();
-    assertThat(convertedList).contains("String");
+    assertFalse(convertedList.isEmpty());
+    assertTrue(convertedList.contains("String"));
   }
 }
