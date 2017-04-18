@@ -6,8 +6,6 @@ import java.util.Set;
 
 /**
  * Utility class to help when using {@link android.net.Uri}
- *
- * Created by jduran on 02/02/17.
  */
 public class UriUtils {
 

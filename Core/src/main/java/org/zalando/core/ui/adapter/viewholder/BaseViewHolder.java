@@ -8,8 +8,6 @@ import butterknife.ButterKnife;
 
 /**
  * Base class to hold common {@link RecyclerView.ViewHolder}
- *
- * Created by jduran on 12/01/16.
  */
 public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder {
 

@@ -10,8 +10,6 @@ import timber.log.Timber;
 
 /**
  * Utility class to ease the localisation tasks
- *
- * Created by jduran on 26/04/16.
  */
 public class LocaleUtils {
 

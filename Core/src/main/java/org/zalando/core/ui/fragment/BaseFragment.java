@@ -14,8 +14,6 @@ import org.zalando.core.ui.view.BaseView;
 
 /**
  * Base fragment to wrap all together some utility methods for fragments
- *
- * Created by jduran on 03/12/15.
  */
 public abstract class BaseFragment extends Fragment implements BaseView {
 
@@ -65,7 +63,6 @@ public abstract class BaseFragment extends Fragment implements BaseView {
   public void onResume() {
 
     super.onResume();
-    //Seemingly redundant null check that is actually not redundant:
     if (getPresenter() != null) {
       getPresenter().resume();
     }
@@ -76,7 +73,6 @@ public abstract class BaseFragment extends Fragment implements BaseView {
    */
   @Override
   public void onDestroyView() {
-    //Seemingly redundant null check that is actually not redundant:
     if (getPresenter() != null) {
       getPresenter().destroy();
     }
@@ -91,7 +87,6 @@ public abstract class BaseFragment extends Fragment implements BaseView {
   @Override
   public void onSaveInstanceState(Bundle outState) {
 
-    //Seemingly redundant null check that is actually not redundant:
     if (getPresenter() != null) {
       getPresenter().onSaveInstanceState(outState);
     }

@@ -8,10 +8,7 @@ import timber.log.Timber;
 
 /**
  * Utility class to provide information about the app
- *
- * Created by jduran on 26/08/16.
  */
-
 public class ApplicationUtil {
 
   /**

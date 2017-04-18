@@ -7,8 +7,6 @@ import org.junit.Test;
 
 /**
  * Test class for {@link ValidationUtils}
- *
- * Created by jduran on 12/02/16.
  */
 public class ValidationUtilsTest {
 

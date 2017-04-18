@@ -1,7 +1,7 @@
 package org.zalando.core.exception;
 
-import org.zalando.core.utils.ThrowableUtils;
 import java.net.HttpURLConnection;
+import org.zalando.core.utils.ThrowableUtils;
 import retrofit2.HttpException;
 
 /**
@@ -22,10 +22,6 @@ public class BaseThrowable extends Throwable {
     int NO_NETWORK = 0;
     int RECOVERABLE = 1;
     int AUTHORIZATION = 2;
-
-    // platform errors
-    int PERMISSION = 10;
-    int SERVICE_DISABLED = 11;
   }
 
   private final Throwable sourceThrowable;
@@ -59,9 +55,9 @@ public class BaseThrowable extends Throwable {
     // Network errors
     if (sourceThrowable instanceof java.net.SocketTimeoutException
         || ThrowableUtils.isRetrofitHttpThrowable(sourceThrowable,
-            HttpURLConnection.HTTP_INTERNAL_ERROR)
+        HttpURLConnection.HTTP_INTERNAL_ERROR)
         || ThrowableUtils.isRetrofitHttpThrowable(sourceThrowable,
-            HttpURLConnection.HTTP_UNAVAILABLE)
+        HttpURLConnection.HTTP_UNAVAILABLE)
         ) {
       type = Type.RECOVERABLE;
       return;
@@ -71,17 +67,6 @@ public class BaseThrowable extends Throwable {
       type = Type.AUTHORIZATION;
       return;
     }
-
-    // Platform errors
-    if (sourceThrowable instanceof PermissionSecurityException) {
-      type = Type.PERMISSION;
-      return;
-    }
-    if (sourceThrowable instanceof ServiceDisabledException) {
-      type = Type.SERVICE_DISABLED;
-      return;
-    }
-
     // Something else
     type = Type.UNKNOWN;
   }

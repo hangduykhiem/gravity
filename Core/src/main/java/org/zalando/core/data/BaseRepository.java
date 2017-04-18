@@ -9,8 +9,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Base implementation of {@link org.zalando.core.data.BaseRepository}
- *
- * Created by jduran on 30/11/15.
  */
 public abstract class BaseRepository {
 

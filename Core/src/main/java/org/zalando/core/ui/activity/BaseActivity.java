@@ -13,21 +13,19 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import butterknife.ButterKnife;
 import dagger.Lazy;
+import javax.inject.Inject;
 import org.zalando.core.BuildConfig;
 import org.zalando.core.R;
 import org.zalando.core.ui.Navigator;
+import org.zalando.core.ui.callback.OnReadyForTransitionListener;
 import org.zalando.core.ui.fragment.BaseFragment;
 import org.zalando.core.ui.presenter.BasePresenter;
 import org.zalando.core.ui.view.BaseView;
-import org.zalando.core.utils.OnReadyForTransitionListener;
-import javax.inject.Inject;
 import timber.log.Timber;
 
 /**
  * Abstract activity that holds common methods usable by all the {@link android.app.Activity} on the
  * app. It extends {@link AppCompatActivity} to ensure the usage of UI compatibility library.
- *
- * Created by jduran on 17/11/15.
  */
 public abstract class BaseActivity extends AppCompatActivity implements BaseView {
 

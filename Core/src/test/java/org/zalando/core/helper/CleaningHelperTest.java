@@ -9,8 +9,6 @@ import org.mockito.MockitoAnnotations;
 
 /**
  * Test class for {@link CleaningHelper}
- *
- * Created by jduran on 01/03/16.
  */
 public class CleaningHelperTest {
 

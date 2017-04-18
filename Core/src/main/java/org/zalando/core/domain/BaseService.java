@@ -1,7 +1,5 @@
 package org.zalando.core.domain;
 
-import org.zalando.core.exception.BaseThrowable;
-import org.zalando.core.helper.CleaningHelper;
 import io.reactivex.Completable;
 import io.reactivex.CompletableTransformer;
 import io.reactivex.Observable;
@@ -10,11 +8,11 @@ import io.reactivex.Single;
 import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import org.zalando.core.exception.BaseThrowable;
+import org.zalando.core.helper.CleaningHelper;
 
 /**
  * Base class that will host common methods for all the domain service definitions
- *
- * Created by jduran on 30/11/15.
  */
 public abstract class BaseService implements CleaningHelper.Cleanable {
 
@@ -101,7 +99,6 @@ public abstract class BaseService implements CleaningHelper.Cleanable {
    */
   @Override
   public void clean() {
-
   }
 
 }

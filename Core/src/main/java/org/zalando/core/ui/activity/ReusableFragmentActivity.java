@@ -17,6 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
+import java.lang.reflect.Constructor;
+import java.util.List;
 import org.zalando.core.BuildConfig;
 import org.zalando.core.R;
 import org.zalando.core.domain.helper.DisposableHelper;
@@ -24,12 +26,10 @@ import org.zalando.core.ui.fragment.BaseFragment;
 import org.zalando.core.ui.presenter.StubPresenter;
 import org.zalando.core.ui.view.ReusableFragmentActivityView;
 import org.zalando.core.utils.UIUtils;
-import java.lang.reflect.Constructor;
-import java.util.List;
 import timber.log.Timber;
 
 /**
- * An empty, reusable Activity to host Fragments. Created by vraisanen on 14.4.2016.
+ * An empty, reusable Activity to host Fragments
  */
 public class ReusableFragmentActivity extends BaseActivity implements
     ReusableFragmentActivityView {

@@ -4,8 +4,6 @@ import android.support.annotation.Nullable;
 
 /**
  * Utility class to ease the check of equals when comparing objects
- *
- * Created by jduran on 11/01/16.
  */
 public class EqualUtils {
 

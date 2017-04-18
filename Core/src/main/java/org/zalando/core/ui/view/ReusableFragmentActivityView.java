@@ -3,10 +3,11 @@ package org.zalando.core.ui.view;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import org.zalando.core.ui.activity.ReusableFragmentActivity;
 import org.zalando.core.ui.fragment.BaseFragment;
 
-/*
- * Created by vraisanen on 14.4.2016.
+/**
+ * View definition for {@link ReusableFragmentActivity}
  */
 public interface ReusableFragmentActivityView extends BaseView {
 

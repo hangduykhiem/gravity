@@ -1,17 +1,15 @@
 package org.zalando.core.helper;
 
 import android.support.annotation.NonNull;
-import org.zalando.core.utils.Preconditions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.zalando.core.utils.Preconditions;
 
 /**
  * Class responsible of cleaning objects
- *
- * Created by jduran on 01/03/16.
  */
 @Singleton
 public class CleaningHelper {

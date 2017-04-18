@@ -9,8 +9,6 @@ import org.zalando.core.utils.Preconditions;
 
 /**
  * Class responsible of holding common methods for all Presenters in the App.
- *
- * Created by jduran on 24/11/15.
  */
 public abstract class BasePresenter<T extends BaseView> {
 

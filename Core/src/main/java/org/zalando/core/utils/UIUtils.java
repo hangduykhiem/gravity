@@ -16,14 +16,12 @@ import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import java.util.List;
 import org.zalando.core.R;
 import org.zalando.core.ui.activity.BaseActivity;
-import java.util.List;
 
 /**
  * Utility class to help with UI related tasks
- *
- * Created by vraisanen on 16/02/16.
  */
 public class UIUtils {
 
@@ -139,7 +137,7 @@ public class UIUtils {
    * @return array
    */
   @SuppressWarnings("unchecked")
-  public static Pair<View, String>[] toTransitionArray(List<Pair<View, String>> list) {
+  private static Pair<View, String>[] toTransitionArray(List<Pair<View, String>> list) {
     final Pair[] varargs = new Pair[list.size()];
     list.toArray(varargs);
     return varargs;

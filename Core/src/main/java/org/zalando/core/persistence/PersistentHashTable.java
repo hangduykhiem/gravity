@@ -5,19 +5,17 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import org.zalando.core.utils.Preconditions;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import java.util.Date;
 import java.util.Map;
 import javax.inject.Inject;
+import org.zalando.core.utils.Preconditions;
 import timber.log.Timber;
 
 /**
  * Thread safe class that stores key/value primitive data in the persistent storage
- *
- * Created by jduran on 23/11/15.
  */
 public class PersistentHashTable {
 

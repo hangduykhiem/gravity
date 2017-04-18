@@ -37,8 +37,6 @@ import timber.log.Timber;
 
 /**
  * Utility class used to provide security related functionalities
- *
- * Created by jduran on 09/02/16.
  */
 public class SecurityUtils {
 
@@ -137,7 +135,6 @@ public class SecurityUtils {
   /**
    * Utility class used for encryption and decryption. Source: http://bit.ly/1EJijAI
    */
-  @SuppressWarnings({"unused"})
   private static class AesCbcWithIntegrity {
 
     // If the PRNG fix would not succeed for some reason, we normally will throw an exception.

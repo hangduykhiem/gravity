@@ -19,8 +19,6 @@ import timber.log.Timber;
 
 /**
  * Utility class to provide Device related information
- *
- * Created by jduran on 21/01/16.
  */
 public class DeviceUtils {
 
@@ -268,16 +266,12 @@ public class DeviceUtils {
    * @param context Application Context
    * @return Device Board Pseudo ID
    */
-  @SuppressWarnings("deprecation")
   private static String getDeviceIdPseudo(Context context) {
-    String result = "";
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
-      result += Build.SERIAL;
-      result += "::" + (Build.PRODUCT.length() % 10) + (Build.BOARD.length() % 10) + (
-          Build.BRAND.length() % 10) + (Build.CPU_ABI.length() % 10) + (
-          Build.DEVICE.length() % 10) + (Build.MANUFACTURER.length() % 10) + (
-          Build.MODEL.length() % 10);
-    }
+    String result = Build.SERIAL;
+    result += "::" + (Build.PRODUCT.length() % 10) + (Build.BOARD.length() % 10) + (
+        Build.BRAND.length() % 10) + (Build.CPU_ABI.length() % 10) + (
+        Build.DEVICE.length() % 10) + (Build.MANUFACTURER.length() % 10) + (
+        Build.MODEL.length() % 10);
     return result;
   }
 

@@ -5,15 +5,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import java.util.List;
 import org.zalando.core.ui.adapter.viewholder.BaseViewHolder;
 import org.zalando.core.ui.callback.DiffUtilCallback;
-import java.util.List;
 
 /**
  * Abstract activity that holds common methods usable by all the {@link RecyclerView.Adapter} on the
  * app.
- *
- * Created by jduran on 12/01/16.
  */
 public abstract class BaseAdapter<T, U extends BaseViewHolder<T>> extends RecyclerView.Adapter<U> {
 

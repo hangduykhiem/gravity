@@ -23,8 +23,6 @@ import javax.inject.Singleton;
 
 /**
  * Dagger module used to inject application context or generic dependencies.
- *
- * Created by jduran on 30/11/15.
  */
 @Module
 public class BaseApplicationModule {

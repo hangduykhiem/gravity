@@ -12,9 +12,6 @@ import static org.mockito.Mockito.verify;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import org.zalando.core.BuildConfig;
-import org.zalando.core.domain.helper.DisposableHelper;
-import org.zalando.core.ui.view.BaseView;
 import io.reactivex.Observable;
 import java.io.Serializable;
 import org.junit.Before;
@@ -23,11 +20,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.zalando.core.BuildConfig;
+import org.zalando.core.domain.helper.DisposableHelper;
+import org.zalando.core.ui.view.BaseView;
 
 /**
  * Tests for {@link BasePresenter} class
- *
- * Created by jduran on 29/11/15.
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class,

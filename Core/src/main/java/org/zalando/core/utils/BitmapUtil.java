@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 
 /**
  * Utility class for working with Bitmaps.
- * Created by vraisanen on 10.5.2016.
  */
 public class BitmapUtil {
 

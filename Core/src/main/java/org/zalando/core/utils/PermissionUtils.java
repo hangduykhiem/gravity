@@ -8,8 +8,6 @@ import android.support.v4.app.ActivityCompat;
 
 /**
  * Utility class to validate if runtime permissions are granted
- *
- * Created by jduran on 19/01/16.
  */
 public class PermissionUtils {
 

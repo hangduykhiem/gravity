@@ -14,8 +14,6 @@ import org.robolectric.annotation.Config;
 
 /**
  * Tests for {@link DisposableHelper} class
- *
- * Created by jduran on 03/12/15.
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = PlatformUtilsTest.SDK_LEVEL_TO_TEST, manifest =

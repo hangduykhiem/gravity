@@ -7,8 +7,6 @@ import java.util.List;
 
 /**
  * Abstract DiffUtilCallback to use {@link DiffUtil} functionality on recyclerView adapters
- *
- * Created by jduran on 21/10/16.
  */
 public class DiffUtilCallback<T> extends DiffUtil.Callback {
 
