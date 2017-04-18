@@ -14,8 +14,6 @@ import org.zalando.core.ui.view.BaseView;
 
 /**
  * Base fragment to wrap all together some utility methods for DialogFragments
- *
- * Created by jduran on 03/11/16.
  */
 public abstract class BaseDialogFragment extends DialogFragment implements BaseView {
 
@@ -58,7 +56,6 @@ public abstract class BaseDialogFragment extends DialogFragment implements BaseV
   public void onResume() {
 
     super.onResume();
-    //Seemingly redundant null check that is actually not redundant:
     if (getPresenter() != null) {
       getPresenter().resume();
     }
@@ -70,7 +67,6 @@ public abstract class BaseDialogFragment extends DialogFragment implements BaseV
   @Override
   public void onDestroy() {
 
-    //Seemingly redundant null check that is actually not redundant:
     if (getPresenter() != null) {
       getPresenter().destroy();
     }
@@ -85,7 +81,6 @@ public abstract class BaseDialogFragment extends DialogFragment implements BaseV
   @Override
   public void onSaveInstanceState(Bundle outState) {
 
-    //Seemingly redundant null check that is actually not redundant:
     if (getPresenter() != null) {
       getPresenter().onSaveInstanceState(outState);
     }

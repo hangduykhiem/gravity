@@ -1,16 +1,14 @@
 package org.zalando.core.domain.helper;
 
 import android.support.annotation.NonNull;
-import org.zalando.core.utils.Preconditions;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import javax.inject.Inject;
+import org.zalando.core.utils.Preconditions;
 
 /**
  * Definition of methods to handle disposes of {@link Disposable}s when {@link
  * android.app.Activity}s of {@link android.app.Fragment}s are stopped
- *
- * Created by jduran on 19/11/15.
  */
 public class DisposableHelper {
 

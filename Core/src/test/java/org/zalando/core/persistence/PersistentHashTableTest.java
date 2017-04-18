@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import android.os.Build;
-import org.zalando.core.BuildConfig;
 import io.reactivex.observers.TestObserver;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,11 +16,10 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.zalando.core.BuildConfig;
 
 /**
  * Test for {@link PersistentHashTable}
- *
- * Created by jduran on 23/11/15.
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, manifest =

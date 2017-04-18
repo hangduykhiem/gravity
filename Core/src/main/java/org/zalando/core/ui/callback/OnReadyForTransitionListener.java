@@ -1,11 +1,10 @@
-package org.zalando.core.utils;
+package org.zalando.core.ui.callback;
 
 import android.support.annotation.Nullable;
 import android.view.View;
 
 /**
  * Listener for reporting back to UI when the components are ready for transition.
- * Created by vraisanen on 11.1.2017.
  */
 public interface OnReadyForTransitionListener {
 

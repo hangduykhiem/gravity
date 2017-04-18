@@ -7,8 +7,6 @@ import org.junit.Test;
 
 /**
  * Test class for {@link EqualUtils} utility class
- *
- * Created by jduran on 12/01/16.
  */
 public class EqualUtilsTest {
 

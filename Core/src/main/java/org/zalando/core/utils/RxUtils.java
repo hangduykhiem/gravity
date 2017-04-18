@@ -6,8 +6,6 @@ import io.reactivex.subjects.Subject;
 
 /**
  * Class to help with RxJava operations
- *
- * Created by jduran on 17/07/16.
  */
 public class RxUtils {
 
@@ -15,7 +13,6 @@ public class RxUtils {
    * Private constructor to avoid object instance
    */
   private RxUtils() {
-
   }
 
   /**

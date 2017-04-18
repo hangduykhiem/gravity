@@ -1,16 +1,14 @@
 package org.zalando.core.network;
 
-import org.zalando.core.utils.ValidationUtils;
 import java.io.IOException;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.zalando.core.utils.ValidationUtils;
 
 /**
  * Base class to let subclass interceptors to override retrofit host urls on the fly
- *
- * Created by jduran on 27/05/16.
  */
 public abstract class BaseUrlInterceptor implements Interceptor {
 

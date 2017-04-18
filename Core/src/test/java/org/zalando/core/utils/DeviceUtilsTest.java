@@ -24,8 +24,6 @@ import org.robolectric.annotation.Config;
 
 /**
  * Test class for {@link DeviceUtils}
- *
- * Created by jduran on 21/01/16.
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, manifest =

@@ -12,8 +12,6 @@ import org.robolectric.annotation.Config;
 
 /**
  * Test class for {@link URLUtils}
- *
- * Created by jduran on 17/03/16.
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, manifest =

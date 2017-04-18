@@ -8,8 +8,6 @@ import org.junit.Test;
 
 /**
  * Test class for {@link LocaleUtils} utility class
- *
- * Created by jduran on 26/04/16.
  */
 public class LocaleUtilsTest {
 

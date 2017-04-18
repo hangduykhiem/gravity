@@ -2,8 +2,6 @@ package org.zalando.core.utils;
 
 /**
  * Utility class to provide Android platform related information
- *
- * Created by jduran on 27/10/14.
  */
 public class PlatformUtils {
 

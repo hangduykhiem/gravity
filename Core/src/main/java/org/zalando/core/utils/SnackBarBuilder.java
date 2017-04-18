@@ -11,15 +11,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
-import org.zalando.core.R;
 import java.util.Arrays;
+import org.zalando.core.R;
 
 /**
  * Untils to create and display a {@link Snackbar}
- *
- * Created by hduykhiem on 17/02/2017.
  */
-
 public class SnackBarBuilder {
 
   private final View parentView;

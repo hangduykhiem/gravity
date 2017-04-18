@@ -2,8 +2,6 @@ package org.zalando.core.utils;
 
 /**
  * Utility class to help validating data
- *
- * Created by jduran on 12/02/16.
  */
 public class ValidationUtils {
 

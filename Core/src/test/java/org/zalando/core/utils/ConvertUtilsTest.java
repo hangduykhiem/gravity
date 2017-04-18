@@ -9,8 +9,6 @@ import org.junit.Test;
 
 /**
  * Test class for {@link ConvertUtils}
- *
- * Created by hduykhiem on 29/01/16.
  */
 public class ConvertUtilsTest {
 

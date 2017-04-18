@@ -12,8 +12,6 @@ import retrofit2.Response;
 
 /**
  * Test class for {@link ThrowableUtils}
- *
- * Created by jduran on 11/02/16.
  */
 public class ThrowableUtilsTest {
 

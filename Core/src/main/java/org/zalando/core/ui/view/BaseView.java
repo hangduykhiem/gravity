@@ -8,8 +8,6 @@ import android.support.annotation.NonNull;
  * they are able to provide to presenters to render and react with the data.
  *
  * Examples: - showProgress() - hideProgress() - navigateToHome()
- *
- * Created by jduran on 24/11/15.
  */
 public interface BaseView {
 

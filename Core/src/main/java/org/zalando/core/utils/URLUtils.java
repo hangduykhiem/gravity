@@ -10,8 +10,6 @@ import timber.log.Timber;
 
 /**
  * Utility class to help when using URLs
- *
- * Created by jduran on 17/03/16.
  */
 public class URLUtils {
 

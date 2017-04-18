@@ -8,8 +8,6 @@ import android.text.TextUtils;
 
 /**
  * Utility class to launch intent for different purposes
- *
- * Created by jonduran on 08/07/15.
  */
 public class IntentUtil {
 

@@ -11,8 +11,6 @@ import android.view.View;
 
 /**
  * ItemDecoration to be used between items in RecyclerView.
- *
- * Created by vraisanen on 13.1.2016.
  */
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 

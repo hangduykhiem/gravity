@@ -10,8 +10,6 @@ import org.junit.Test;
 
 /**
  * Tests for {@link DisposableHelper} class
- *
- * Created by jduran on 19/11/15.
  */
 public class DisposableHelperTest {
 

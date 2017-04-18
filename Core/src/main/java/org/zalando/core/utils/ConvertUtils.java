@@ -8,8 +8,6 @@ import java.util.Locale;
 
 /**
  * Utilities method to convert units.
- *
- * Created by hduykhiem on 29/01/16.
  */
 public class ConvertUtils {
 

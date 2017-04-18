@@ -4,14 +4,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.zalando.core.utils.Preconditions;
-import org.zalando.core.utils.ValidationUtils;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.zalando.core.utils.Preconditions;
+import org.zalando.core.utils.ValidationUtils;
 import retrofit2.CallAdapter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -20,8 +20,6 @@ import timber.log.Timber;
 
 /**
  * Factory class that helps building Rest Api interfaces using RetroFit.
- *
- * Created by jduran on 07/12/15.
  */
 public final class RestApiFactory {
 
