@@ -10,6 +10,8 @@ The library helps you using MVP along a clean architecture approach. MVP pattern
 
 ![alt tag](https://informatechcr.files.wordpress.com/2013/03/mvp-diagram.png)
 
+In addition to MVP, presenters can hold as well PresenterModule to delegate logic handling to those. This will make your presenters logic smaller and enhance re-usability of code.
+
 Besides that, this base library will provide you a good skeleton to use RxJava2 as a base for all your data loading operations. Provides several utility methods to notify on domain layer to apply correct schedulers for each operation or presenters will include helpers to unsubscribe whenever their attach view is destroyed. This library also eases the use of Retrofit2 for accesing network operations adding some factory methods to access easily REST APIs.
 
 If you are looking for a base library to help you following consistently a clean architecture approach, this can be a good starting point.
@@ -57,27 +59,23 @@ compile "com.squareup.retrofit2:adapter-rxjava2:$RETROFIT"
 compile "com.squareup.okhttp3:logging-interceptor:$OKHTTP"
 ```
 
-### More Specific Topics (+ sample sub-categories)
-- Versioning: Services, APIs, Systems
-- Common Error Messages/related details
-- Tests
-- Is it a Swift project? Please take a look at Mattt Thompson & Nate Cook's [Swift documentation](http://nshipster.com/swift-documentation/) guide
+### Sample app
+
+TODO Explain here sample app!
 
 ### Contributing
-- Contributor Guidelines
-- Code Style/Reqts
-- Format for commit messages
-- Thank you (name contributors)
+
+Feel free to open issues and send pull requests to this project. It's currently used in couple Zalando internal projects, but it is possible that does not cover all the use cases for every single project.
+
+When contributing, please, ensure that you [follow Google Java coding guidelines](https://google.github.io/styleguide/javaguide.html#s3.3-import-statements) and your project passes the java checkstyle task. There is a gradle task to verify it, just run in the project root `./gradlew check` task.
 
 ### TODO
-- Next steps
-- Features planned
-- Known bugs (shortlist)
+- We will keep adding utility methods while we identify needs to provide them to common apps.
 
 ### Contact
-- Email address
-- Google Group/mailing list (if applicable)
-- IRC or Slack (if applicable)
+This software was originally written by Gravity team in Zalando SE. Please, check MAINTAINERS.md file to contact directly a developer in case you have any questions.
+
+Bug reports and feature requests are more likely to be addressed if posted as issues here on GitHub.
 
 
 ## License
