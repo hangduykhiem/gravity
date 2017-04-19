@@ -5,7 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 import android.os.Build;
@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.zalando.core.BuildConfig;
@@ -36,11 +37,19 @@ public class BasePresenterTest {
 
   @Mock
   private BaseView baseView;
+  @Mock
+  private PresenterModule<BaseView> mockPresenterModule;
 
   @Before
   public void setUp() {
-    basePresenter = new MockBasePresenter(new DisposableHelper());
-    baseView = mock(BaseView.class);
+    MockitoAnnotations.initMocks(this);
+    basePresenter = new MockBasePresenter(new DisposableHelper(), mockPresenterModule);
+  }
+
+  @Test
+  public void shouldSetViewToModule() {
+    basePresenter.setView(baseView);
+    verify(mockPresenterModule).setView(eq(baseView));
   }
 
   @Test
@@ -151,9 +160,12 @@ public class BasePresenterTest {
     /**
      * Constructor
      */
-    MockBasePresenter(DisposableHelper disposableHelper) {
-      super(disposableHelper);
+    @SafeVarargs
+    MockBasePresenter(DisposableHelper disposableHelper,
+        PresenterModule<? extends BaseView>... subPresenters) {
+      super(disposableHelper, subPresenters);
     }
+
 
     @Override
     public void initialise(@NonNull Bundle savedInstanceState) {

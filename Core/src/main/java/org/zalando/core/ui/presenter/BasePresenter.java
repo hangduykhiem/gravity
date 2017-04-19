@@ -3,6 +3,9 @@ package org.zalando.core.ui.presenter;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import org.zalando.core.domain.helper.DisposableHelper;
 import org.zalando.core.ui.view.BaseView;
 import org.zalando.core.utils.Preconditions;
@@ -15,6 +18,7 @@ public abstract class BasePresenter<T extends BaseView> {
   protected T view;
   private boolean isViewSet;
   private boolean isPresenterInitialised;
+  private Set<PresenterModule<? extends BaseView>> subPresenters;
 
   /**
    * Injected objects
@@ -24,9 +28,11 @@ public abstract class BasePresenter<T extends BaseView> {
   /**
    * Constructor
    */
-  protected BasePresenter(DisposableHelper disposableHelper) {
+  protected BasePresenter(DisposableHelper disposableHelper,
+      PresenterModule<? extends BaseView>... subPresenters) {
 
     this.disposableHelper = disposableHelper;
+    this.subPresenters = new HashSet<>(Arrays.asList(subPresenters));
   }
 
   /**
@@ -71,7 +77,6 @@ public abstract class BasePresenter<T extends BaseView> {
    */
   @CallSuper
   public void resume() {
-
     Preconditions.checkState(isViewSet, "Call setView before resuming presenter");
     Preconditions.checkState(isPresenterInitialised, "Call initialise before resuming presenter");
   }
@@ -95,7 +100,10 @@ public abstract class BasePresenter<T extends BaseView> {
   public void setView(@NonNull T view) {
 
     Preconditions.checkNotNull(view);
-    isViewSet = true;
+    this.isViewSet = true;
     this.view = view;
+    for (PresenterModule<? extends BaseView> subPresenter : subPresenters) {
+      subPresenter.setView(this.view);
+    }
   }
 }
