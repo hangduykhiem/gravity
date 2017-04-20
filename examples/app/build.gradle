@@ -1,0 +1,107 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+        applicationId "org.zalando.weatherapp"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        // Enabling multidex support.
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_7
+        targetCompatibility = JavaVersion.VERSION_1_7
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
+    packagingOptions{
+        exclude 'META-INF/rxjava.properties'
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+
+    dependencies {
+        compile fileTree(include: ['*.jar'], dir: 'libs')
+
+        /**
+         * Comment if we want to add the project as directory dependency
+         */
+        compile(name: 'Core', ext: 'aar') {
+            exclude module: "play-services-location"
+        }
+
+        ext {
+            support_library_version = '25.2.0'
+            google_play_services_version = '10.2.0'
+        }
+
+        // Google Android Dependencies
+        compile 'com.android.support:mediarouter-v7:25.3.0'
+        compile 'com.android.support:appcompat-v7:25.3.0'
+        compile 'com.google.android.gms:play-services-location:10.2.1'
+        compile 'com.android.support:recyclerview-v7:25.3.0'
+
+        compile 'com.android.support:multidex:1.0.1'
+
+        // Testing Dependencies
+        testCompile 'junit:junit:4.12'
+        androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+            exclude group: 'com.android.support', module: 'support-annotations'
+        })
+
+        // 3rd Party Dependencies
+
+        // https://github.com/google/dagger
+        compile 'com.google.dagger:dagger:2.10'
+        annotationProcessor "com.google.dagger:dagger-compiler:2.10"
+
+        // rxjava
+        compile 'io.reactivex.rxjava2:rxjava:2.0.7'
+
+        // rxandroid
+        compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+        // http://square.github.io/retrofit/
+        compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+
+        // http://square.github.io/retrofit/
+        compile 'com.squareup.retrofit2:retrofit:2.2.0'
+
+        // http://square.github.io/retrofit/
+        compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
+
+        // okinterceptor : https://github.com/square/okhttp
+        compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+
+        // https://github.com/JakeWharton/timber
+        compile 'com.jakewharton.timber:timber:4.5.1'
+
+        // http://jakewharton.github.io/butterknife/
+        compile 'com.jakewharton:butterknife:8.5.1'
+        annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+
+        // https://github.com/patloew/RxLocation
+        compile 'com.patloew.rxlocation:rxlocation:1.0.3'
+    }
+}
