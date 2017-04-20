@@ -10,8 +10,9 @@ import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import javax.inject.Inject;
+import org.zalando.core.data.BaseRepository;
 
-public class AddressRepository {
+public class AddressRepository extends BaseRepository {
 
   private Context context;
 
@@ -20,7 +21,7 @@ public class AddressRepository {
     this.context = context;
   }
 
-  public Observable<Address> fetchCurrentAddress() {
+  public Observable<Address> fetchCurrentAddress() throws SecurityException{
 
     LocationRequest request = LocationRequest.create()
         .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)

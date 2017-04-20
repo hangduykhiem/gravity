@@ -3,7 +3,6 @@ package org.zalando.core.utils;
 import android.os.Build;
 import android.os.Process;
 import android.util.Base64;
-import android.util.Log;
 import android.util.Pair;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -755,7 +754,7 @@ public class SecurityUtils {
           }
         } catch (Exception e) {
           if (ALLOW_BROKEN_PRNG) {
-            Log.w(PrngFixes.class.getSimpleName(), "Failed to seed OpenSSL PRNG", e);
+            Timber.w(e, "Failed to seed OpenSSL PRNG");
           } else {
             throw new SecurityException("Failed to seed OpenSSL PRNG", e);
           }
@@ -799,8 +798,8 @@ public class SecurityUtils {
           if (!rng1.getProvider().getClass().getSimpleName().equals(
               "LinuxPRNGSecureRandomProvider")) {
             if (ALLOW_BROKEN_PRNG) {
-              Log.w(PrngFixes.class.getSimpleName(),
-                  "new SecureRandom() backed by wrong Provider: " + rng1.getProvider().getClass());
+              Timber.w("new SecureRandom() backed by wrong Provider: %s",
+                  rng1.getProvider().getClass());
               return;
             } else {
               throw new SecurityException("new SecureRandom() backed by wrong "
@@ -814,7 +813,7 @@ public class SecurityUtils {
             rng2 = SecureRandom.getInstance("SHA1PRNG");
           } catch (NoSuchAlgorithmException e) {
             if (ALLOW_BROKEN_PRNG) {
-              Log.w(PrngFixes.class.getSimpleName(), "SHA1PRNG not available", e);
+              Timber.w(e, "SHA1PRNG not available");
               return;
             } else {
               throw new SecurityException("SHA1PRNG not available", e);
@@ -823,10 +822,8 @@ public class SecurityUtils {
           if (!rng2.getProvider().getClass().getSimpleName().equals(
               "LinuxPRNGSecureRandomProvider")) {
             if (ALLOW_BROKEN_PRNG) {
-              Log.w(PrngFixes.class.getSimpleName(),
-                  "SecureRandom.getInstance(\"SHA1PRNG\") backed by wrong" + " "
-                      + "Provider: "
-                      + rng2.getProvider().getClass());
+              Timber.w("SecureRandom.getInstance(\"SHA1PRNG\") backed by wrong Provider: %s",
+                  rng2.getProvider().getClass());
             } else {
               throw new SecurityException(
                   "SecureRandom.getInstance(\"SHA1PRNG\") backed by wrong" + " "
