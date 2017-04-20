@@ -6,13 +6,14 @@ import io.reactivex.functions.Function;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import org.zalando.core.data.BaseRepository;
 import org.zalando.weatherapp.weather.data.entity.CurrentWeatherDataEnvelope;
 import org.zalando.weatherapp.weather.data.entity.WeatherForecastListDataEnvelope;
 import org.zalando.weatherapp.weather.data.network.OpenWeatherRestApi;
 import org.zalando.weatherapp.weather.domain.entity.CurrentWeather;
 import org.zalando.weatherapp.weather.domain.entity.WeatherForecast;
 
-public class WeatherRepository {
+public class WeatherRepository extends BaseRepository {
 
   private final OpenWeatherRestApi openWeatherRestApi;
 

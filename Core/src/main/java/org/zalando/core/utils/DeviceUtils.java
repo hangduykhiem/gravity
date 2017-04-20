@@ -1,5 +1,6 @@
 package org.zalando.core.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
@@ -20,6 +21,7 @@ import timber.log.Timber;
 /**
  * Utility class to provide Device related information
  */
+@SuppressLint("HardwareIds")
 public class DeviceUtils {
 
   @Nullable
@@ -163,7 +165,7 @@ public class DeviceUtils {
 
       if (Build.VERSION.SDK_INT >= 17) {
         display.getRealSize(deviceResolution);
-      } else if (Build.VERSION.SDK_INT >= 14) {
+      } else {
         try {
           deviceResolution.x =
               (Integer) Display.class.getMethod("getRawWidth").invoke(display);
