@@ -6,33 +6,21 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
-import butterknife.BindView;
-import java.util.ArrayList;
-import java.util.List;
 import javax.inject.Inject;
 import org.zalando.core.ui.activity.BaseActivity;
 import org.zalando.core.ui.presenter.BasePresenter;
+import org.zalando.core.ui.presenter.StubPresenter;
+import org.zalando.core.ui.view.StubView;
 import org.zalando.weatherapp.R;
 import org.zalando.weatherapp.WeatherApp;
-import org.zalando.weatherapp.weather.domain.entity.WeatherForecast;
-import org.zalando.weatherapp.weather.ui.adapter.WeatherForecastAdapter;
-import org.zalando.weatherapp.weather.ui.presenter.WeatherForecastActivityPresenter;
-import org.zalando.weatherapp.weather.ui.view.WeatherForecastActivityView;
+import org.zalando.weatherapp.weather.ui.fragment.WeatherForecastFragment;
 
-public class WeatherForecastActivity extends BaseActivity implements WeatherForecastActivityView {
+public class WeatherForecastActivity extends BaseActivity implements StubView {
 
   public static final int PERMISSIONS_RQ_LOCATION = 9999;
 
-  @BindView(R.id.weather_recycler)
-  RecyclerView recyclerView;
-
   @Inject
-  WeatherForecastActivityPresenter presenter;
-
-  private WeatherForecastAdapter recyclerAdapter;
+  StubPresenter presenter;
 
   @Override
   protected void injectDependencies() {
@@ -51,22 +39,11 @@ public class WeatherForecastActivity extends BaseActivity implements WeatherFore
   }
 
   @Override
-  public void showWeatherForecasts(List<WeatherForecast> weatherForecasts) {
-    if (weatherForecasts != null) {
-      recyclerAdapter.setItems(weatherForecasts);
-    }
-  }
-
-  @Override
   public void initView(@NonNull Bundle initBundle) {
-    // ask for location permission
+    /* do something with bundle or initialization */
     askLocationPermission();
-    // initialize recyclerView
-    recyclerAdapter = new WeatherForecastAdapter(new ArrayList<WeatherForecast>());
-    // Attach the adapter to the recyclerview to populate items
-    recyclerView.setAdapter(recyclerAdapter);
-    // Set layout manager to position the items
-    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    // set default fragment
+    setFragment(R.id.fragment_container, new WeatherForecastFragment());
   }
 
   protected void askLocationPermission() {
@@ -91,10 +68,5 @@ public class WeatherForecastActivity extends BaseActivity implements WeatherFore
         }
       }
     }
-  }
-
-  @Override
-  public void showError(Throwable throwable) {
-    Toast.makeText(this, throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
   }
 }

@@ -18,10 +18,10 @@ import org.zalando.weatherapp.WeatherApp;
 import org.zalando.weatherapp.common.AppNavigator;
 import org.zalando.weatherapp.weather.domain.entity.CurrentWeather;
 import org.zalando.weatherapp.weather.ui.presenter.WeatherActivityPresenter;
-import org.zalando.weatherapp.weather.ui.view.WeatherActivityView;
+import org.zalando.weatherapp.weather.ui.view.WeatherForecastFragmentView;
 import org.zalando.weatherapp.weather.util.TemperatureFormatter;
 
-public class WeatherActivity extends BaseActivity implements WeatherActivityView {
+public class WeatherActivity extends BaseActivity implements WeatherForecastFragmentView {
 
   public static final int PERMISSIONS_RQ_LOCATION = 9999;
 

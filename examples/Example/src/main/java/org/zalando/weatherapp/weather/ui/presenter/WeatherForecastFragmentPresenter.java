@@ -12,12 +12,12 @@ import org.zalando.weatherapp.weather.domain.entity.WeatherForecast;
 import org.zalando.weatherapp.weather.ui.view.WeatherForecastActivityView;
 import timber.log.Timber;
 
-public class WeatherForecastActivityPresenter extends BasePresenter<WeatherForecastActivityView> {
+public class WeatherForecastFragmentPresenter extends BasePresenter<WeatherForecastActivityView> {
 
   private WeatherService weatherService;
 
   @Inject
-  public WeatherForecastActivityPresenter(DisposableHelper disposableHelper,
+  public WeatherForecastFragmentPresenter(DisposableHelper disposableHelper,
       WeatherService weatherService) {
     super(disposableHelper);
     this.weatherService = weatherService;
