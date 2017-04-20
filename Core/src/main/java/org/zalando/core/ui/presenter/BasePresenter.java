@@ -18,7 +18,7 @@ public abstract class BasePresenter<T extends BaseView> {
   protected T view;
   private boolean isViewSet;
   private boolean isPresenterInitialised;
-  private Set<PresenterModule<? extends BaseView>> subPresenters;
+  private Set<SubPresenter<? extends BaseView>> subPresenters;
 
   /**
    * Injected objects
@@ -29,7 +29,7 @@ public abstract class BasePresenter<T extends BaseView> {
    * Constructor
    */
   protected BasePresenter(DisposableHelper disposableHelper,
-      PresenterModule<? extends BaseView>... subPresenters) {
+      SubPresenter<? extends BaseView>... subPresenters) {
 
     this.disposableHelper = disposableHelper;
     this.subPresenters = new HashSet<>(Arrays.asList(subPresenters));
@@ -102,7 +102,7 @@ public abstract class BasePresenter<T extends BaseView> {
     Preconditions.checkNotNull(view);
     this.isViewSet = true;
     this.view = view;
-    for (PresenterModule<? extends BaseView> subPresenter : subPresenters) {
+    for (SubPresenter<? extends BaseView> subPresenter : subPresenters) {
       subPresenter.setView(this.view);
     }
   }
