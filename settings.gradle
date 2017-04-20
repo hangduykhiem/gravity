@@ -1,1 +1,1 @@
-include ':Core', ':examples:app'
+include ':Core', ':examples:Example'
