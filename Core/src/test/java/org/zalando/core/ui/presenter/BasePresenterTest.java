@@ -38,18 +38,18 @@ public class BasePresenterTest {
   @Mock
   private BaseView baseView;
   @Mock
-  private PresenterModule<BaseView> mockPresenterModule;
+  private SubPresenter<BaseView> mockSubPresenter;
 
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    basePresenter = new MockBasePresenter(new DisposableHelper(), mockPresenterModule);
+    basePresenter = new MockBasePresenter(new DisposableHelper(), mockSubPresenter);
   }
 
   @Test
   public void shouldSetViewToModule() {
     basePresenter.setView(baseView);
-    verify(mockPresenterModule).setView(eq(baseView));
+    verify(mockSubPresenter).setView(eq(baseView));
   }
 
   @Test
@@ -162,7 +162,7 @@ public class BasePresenterTest {
      */
     @SafeVarargs
     MockBasePresenter(DisposableHelper disposableHelper,
-        PresenterModule<? extends BaseView>... subPresenters) {
+        SubPresenter<? extends BaseView>... subPresenters) {
       super(disposableHelper, subPresenters);
     }
 
