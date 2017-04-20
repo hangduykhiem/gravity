@@ -61,7 +61,7 @@ compile "com.squareup.okhttp3:logging-interceptor:$OKHTTP"
 
 ### Sample app
 
-TODO Explain here sample app!
+This repository includes a sample weather application to demo some of the functionalities of the library. Refer to `examples` folder to get it. On the wiki page of this repository, you can find larger explanations on how to use it using the easy example app as reference.
 
 ### Contributing
 
