@@ -1,0 +1,40 @@
+<resources>
+  <!-- Default screen margins, per the Android Design guidelines. -->
+  <dimen name="activity_horizontal_margin">16dp</dimen>
+  <dimen name="activity_vertical_margin">16dp</dimen>
+
+  <dimen name="current_temperature_text">60sp</dimen>
+
+  <!-- font sizes -->
+  <dimen name="font_largest">26sp</dimen>
+  <dimen name="font_larger">22sp</dimen>
+  <dimen name="font_large">18sp</dimen>
+  <dimen name="font_normal">15sp</dimen>
+  <dimen name="font_small">12sp</dimen>
+  <dimen name="font_smaller">10sp</dimen>
+  <dimen name="font_tiny">9sp</dimen>
+
+  <!-- typical spacing between two views -->
+  <dimen name="spacing_massive">150dp</dimen>
+  <dimen name="spacing_almost_massive">96dp</dimen>
+  <dimen name="spacing_hugest">80dp</dimen>
+  <dimen name="spacing_huger">60dp</dimen>
+  <dimen name="spacing_huge">40dp</dimen>
+  <dimen name="spacing_largest">36dp</dimen>
+  <dimen name="spacing_larger">30dp</dimen>
+  <dimen name="spacing_large">24dp</dimen>
+  <dimen name="spacing_default">16dp</dimen>
+  <dimen name="spacing_normal">14dp</dimen>
+  <dimen name="spacing_small">10dp</dimen>
+  <dimen name="spacing_half_default">8dp</dimen>
+  <dimen name="spacing_smaller">6dp</dimen>
+  <dimen name="spacing_tiny">4dp</dimen>
+
+  <dimen name="tiny_one">2dp</dimen>
+  <dimen name="tiny_two">4dp</dimen>
+  <dimen name="tiny_three">6dp</dimen>
+  <dimen name="tiny_four">8dp</dimen>
+  <dimen name="tiny_five">9dp</dimen>
+  <dimen name="tiny_six">10dp</dimen>
+
+</resources>
