@@ -16,9 +16,9 @@ import org.zalando.weatherapp.WeatherApp;
 import org.zalando.weatherapp.weather.domain.entity.WeatherForecast;
 import org.zalando.weatherapp.weather.ui.adapter.WeatherForecastAdapter;
 import org.zalando.weatherapp.weather.ui.presenter.WeatherForecastFragmentPresenter;
-import org.zalando.weatherapp.weather.ui.view.WeatherForecastActivityView;
+import org.zalando.weatherapp.weather.ui.view.WeatherForecastFragmentView;
 
-public class WeatherForecastFragment extends BaseFragment implements WeatherForecastActivityView {
+public class WeatherForecastFragment extends BaseFragment implements WeatherForecastFragmentView {
 
   @BindView(R.id.weather_recycler)
   RecyclerView recyclerView;

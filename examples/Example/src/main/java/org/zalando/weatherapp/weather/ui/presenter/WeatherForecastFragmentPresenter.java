@@ -9,10 +9,10 @@ import org.zalando.core.domain.helper.DisposableHelper;
 import org.zalando.core.ui.presenter.BasePresenter;
 import org.zalando.weatherapp.weather.domain.WeatherService;
 import org.zalando.weatherapp.weather.domain.entity.WeatherForecast;
-import org.zalando.weatherapp.weather.ui.view.WeatherForecastActivityView;
+import org.zalando.weatherapp.weather.ui.view.WeatherForecastFragmentView;
 import timber.log.Timber;
 
-public class WeatherForecastFragmentPresenter extends BasePresenter<WeatherForecastActivityView> {
+public class WeatherForecastFragmentPresenter extends BasePresenter<WeatherForecastFragmentView> {
 
   private WeatherService weatherService;
 
