@@ -45,21 +45,21 @@ repositories {
 On the other hand, the library make use of different dependencies to inject views and dependencies into Activitys and Fragments, add utility base view holder and other utilities on recyclerViews, make use of RxJava2, etc.:
 
 ```
-  appcompat     : 'com.android.support:appcompat-v7:25.3.0',
-  recyclerview  : 'com.android.support:recyclerview-v7:25.3.0',
-  design        : 'com.android.support:design:25.3.0',
-  butterknife   : 'com.jakewharton:butterknife:8.5.1',
-  buttercompiler: 'com.jakewharton:butterknife-compiler:8.5.1',
-  rxjava        : 'io.reactivex.rxjava2:rxjava:2.0.7',
-  rxandroid     : 'io.reactivex.rxjava2:rxandroid:2.0.1',
-  retrolambda   : 'net.orfjackal.retrolambda:retrolambda:2.5.1',
-  daggercompiler: 'com.google.dagger:dagger-compiler:2.10',
-  dagger        : 'com.google.dagger:dagger:2.10',
-  timber        : 'com.jakewharton.timber:timber:4.5.1',
-  retrofit      : 'com.squareup.retrofit2:retrofit:2.2.0',
-  retrogson     : 'com.squareup.retrofit2:converter-gson:2.2.0',
-  retrorxjava   : 'com.squareup.retrofit2:adapter-rxjava2:2.2.0',
-  okinterceptor : 'com.squareup.okhttp3:logging-interceptor:3.6.0',
+  compile "com.android.support:appcompat-v7:25.3.0"
+  compile "com.android.support:recyclerview-v7:25.3.0"
+  compile "com.android.support:design:25.3.0"
+  compile "com.jakewharton:butterknife:8.5.1"
+  compile "com.jakewharton:butterknife-compiler:8.5.1"
+  compile "io.reactivex.rxjava2:rxjava:2.0.7"
+  compile "io.reactivex.rxjava2:rxandroid:2.0.1"
+  compile "net.orfjackal.retrolambda:retrolambda:2.5.1"
+  compile "com.google.dagger:dagger-compiler:2.10"
+  compile "com.google.dagger:dagger:2.10"
+  compile "com.jakewharton.timber:timber:4.5.1"
+  compile "com.squareup.retrofit2:retrofit:2.2.0"
+  compile "com.squareup.retrofit2:converter-gson:2.2.0"
+  compile "com.squareup.retrofit2:adapter-rxjava2:2.2.0"
+  compile "com.squareup.okhttp3:logging-interceptor:3.6.0"
 ```
 
 ### Sample app
