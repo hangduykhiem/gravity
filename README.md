@@ -1,6 +1,9 @@
-### Android MVP Core Library
+### Android Core Library
 
-This library helps you to establish a good practice to use the Model View Presenter (MVP) pattern in your project following a [Clean Architecture approach](https://fernandocejas.com/2014/09/03/architecting-android-the-clean-way/). This library includes basic setup for Dagger2 and Butterknife dependency injection, isolating the basic logic on your fragments and activities. A good architectural skeleton will help your application to grow consistently without adding complexities.
+**Core library** provides starting point to build skeleton structure of Android app.
+It helps you to establish good practice to use the Model View Presenter (MVP) pattern in your Android project following a [Clean Architecture approach](https://fernandocejas.com/2014/09/03/architecting-android-the-clean-way/). 
+The library includes basic setup for Dagger2 and Butterknife dependency injection, isolating the basic logic on your fragments and activities. 
+A good architectural skeleton will help your application to grow consistently without adding complexities.
 
 Besides the base architecture guidelines, it includes many utility methods that were found useful for several projects. Feel free to contribute by adding your own in the appropriate utility class. Read [Contributing](#contributing) section. 
 
@@ -39,41 +42,43 @@ repositories {
 }
 ```
 
-On the other hand, the library make use of different dependencies to inject views and dependencies into Fragments, add utility base view holder and other utilities on recyclerViews, make use of RxJava2, etc.:
+On the other hand, the library make use of different dependencies to inject views and dependencies into Activitys and Fragments, add utility base view holder and other utilities on recyclerViews, make use of RxJava2, etc.:
 
 ```
-compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
-compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
-compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
-compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
-apt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
-compile "io.reactivex.rxjava2:rxjava:$RXJAVA2_VERSION"
-compile "io.reactivex.rxjava2:rxandroid:$RXANDROID2_VERSION"
-annotationProcessor "com.google.dagger:dagger-compiler:$DAGGER2"
-compile "com.google.dagger:dagger:$DAGGER2"
-provided "javax.annotation:jsr250-api:1.0"
-compile "com.jakewharton.timber:timber:$TIMBER"
-compile "com.squareup.retrofit2:retrofit:$RETROFIT"
-compile "com.squareup.retrofit2:converter-gson:$RETROFIT"
-compile "com.squareup.retrofit2:adapter-rxjava2:$RETROFIT"
-compile "com.squareup.okhttp3:logging-interceptor:$OKHTTP"
+  appcompat     : 'com.android.support:appcompat-v7:25.3.0',
+  recyclerview  : 'com.android.support:recyclerview-v7:25.3.0',
+  design        : 'com.android.support:design:25.3.0',
+  butterknife   : 'com.jakewharton:butterknife:8.5.1',
+  buttercompiler: 'com.jakewharton:butterknife-compiler:8.5.1',
+  rxjava        : 'io.reactivex.rxjava2:rxjava:2.0.7',
+  rxandroid     : 'io.reactivex.rxjava2:rxandroid:2.0.1',
+  retrolambda   : 'net.orfjackal.retrolambda:retrolambda:2.5.1',
+  daggercompiler: 'com.google.dagger:dagger-compiler:2.10',
+  dagger        : 'com.google.dagger:dagger:2.10',
+  timber        : 'com.jakewharton.timber:timber:4.5.1',
+  retrofit      : 'com.squareup.retrofit2:retrofit:2.2.0',
+  retrogson     : 'com.squareup.retrofit2:converter-gson:2.2.0',
+  retrorxjava   : 'com.squareup.retrofit2:adapter-rxjava2:2.2.0',
+  okinterceptor : 'com.squareup.okhttp3:logging-interceptor:3.6.0',
 ```
 
 ### Sample app
 
-This repository includes a sample weather application to demo some of the functionalities of the library. Refer to `examples` folder to get it. On the wiki page of this repository, you can find larger explanations on how to use it using the easy example app as reference.
+For complete example, follows sample weather application to understand the usage of **Core library**. Refer to `examples` folder to get it. On the wiki page of this repository, you can find larger explanations on how to use it using the example app as reference.
 
-### Contributing
+## Getting Help
 
-Feel free to open issues and send pull requests to this project. It's currently used in couple Zalando internal projects, but it is possible that does not cover all the use cases for every single project.
+If you have questions, concerns, bug reports, etc., please file an issue in this repository's [Issue Tracker](../../issues).
+
+### Getting Involved/Contributing
+
+To contribute, simply make a pull request and add a brief description (1-2 sentences) of your addition or change. For more details, check the [contribution guidelines](CONTRIBUTING.md).
 
 When contributing, please, ensure that you [follow Google Java coding guidelines](https://google.github.io/styleguide/javaguide.html#s3.3-import-statements) and your project passes the java checkstyle task. There is a gradle task to verify it, just run in the project root `./gradlew check` task.
 
-### TODO
-- We will keep adding utility methods while we identify needs to provide them to common apps.
-
 ### Contact
-This software was originally written by Gravity team in Zalando SE. Please, check MAINTAINERS.md file to contact directly a developer in case you have any questions.
+
+This software was originally written by Team Gravity in Zalando SE. Please, check MAINTAINERS.md file to contact directly a developer in case you have any questions.
 
 Bug reports and feature requests are more likely to be addressed if posted as issues here on GitHub.
 
