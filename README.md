@@ -69,8 +69,9 @@ For complete example, follows sample weather application to understand the usage
 ### TODO
 
 - Write more documentation
-- Add more sample apps
 - Avoid presenters to die if rotation screen rotation changes
+- Add more utility methods
+- Add more sample apps
 
 ## Getting Help
 
