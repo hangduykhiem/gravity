@@ -66,6 +66,12 @@ On the other hand, the library make use of different dependencies to inject view
 
 For complete example, follows sample weather application to understand the usage of **Core library**. Refer to `examples` folder to get it. On the wiki page of this repository, you can find larger explanations on how to use it using the example app as reference.
 
+### TODO
+
+- Write more documentation
+- Add more sample apps
+- Avoid presenters to die if rotation screen rotation changes
+
 ## Getting Help
 
 If you have questions, concerns, bug reports, etc., please file an issue in this repository's [Issue Tracker](../../issues).
