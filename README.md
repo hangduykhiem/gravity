@@ -1,32 +1,33 @@
 ### Android Core Library
 
-**Core library** provides starting point to build skeleton structure of Android app.
-It helps you to establish good practice to use the Model View Presenter (MVP) pattern in your Android project following a [Clean Architecture approach](https://fernandocejas.com/2014/09/03/architecting-android-the-clean-way/). 
-The library includes basic setup for Dagger2 and Butterknife dependency injection, isolating the basic logic on your fragments and activities. 
-A good architectural skeleton will help your application to grow consistently without adding complexities.
+If you're looking for a base library to help you consistently follow the [clean architecture approach](https://fernandocejas.com/2014/09/03/architecting-android-the-clean-way/) formulated by SoundCloud dev [Fernando Cejas](https://twitter.com/fernando_cejas), **Core Library** is here to help. Created and used in production by [Zalando](https://tech.zalando.com/)'s Android team, this library enables you to quickly create a skeleton structure for your new Android app in a clean architecture way, while following the [Model View Presenter](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) (MVP) pattern. It's out-of-the-box usable for anyone.
 
-Besides the base architecture guidelines, it includes many utility methods that were found useful for several projects. Feel free to contribute by adding your own in the appropriate utility class. Read [Contributing](#contributing) section. 
+A good architectural skeleton will help your application to scale without additional complexities.
 
-### Why use Android MVP Core Library
+### Why Use Android MVP Core Library
 
-The library helps you using MVP along a clean architecture approach. MVP pattern separates the presentation layer from the logic, letting you focusing purely on UI implementation delegating the business logic to presenters. [Here](https://antonioleiva.com/mvp-android/) you can find a good explanation of the MVP pattern:
+Besides the base architecture guidelines [**where are the guidelines, and is this where it draws upon the clean arch approach?**], this lib offers:
+- basic setup for [Dagger 2](https://github.com/google/dagger) and [Butterknife](https://jakewharton.github.io/butterknife) dependency injection, isolating the basic logic on your fragments and activities
+- utility methods to notify on domain layer to apply correct schedulers for each operation or presenters will include helpers to unsubscribe whenever their attach view is destroyed [**this part, which I pulled from below, requires some rewriting for clarity**]. (Contribute your own by adding them to the appropriate utility class; see our [Contributing](#contributing) section for more instructions.) 
+- a foundation for using [RxJava2](https://github.com/ReactiveX/RxJava) as the basis for your data-loading operations. 
+- an easy way to use [Retrofit2](https://square.github.io/retrofit/) to access network operations, including factory methods for easily accessing your REST APIs.
+
+### Quick Note on MVP
+The MVP pattern separates presentation layer from logic, allowing you to focus purely on UI implementation and delegate business logic to [presenters](https://developer.android.com/reference/android/support/v17/leanback/widget/Presenter.html). Antonio Leiva has written up [a great explanation of the MVP pattern](https://antonioleiva.com/mvp-android/). A visual version:
 
 ![alt tag](https://informatechcr.files.wordpress.com/2013/03/mvp-diagram.png)
 
-In addition to MVP, presenters can hold as well PresenterModule to delegate logic handling to those. This will make your presenters logic smaller and enhance re-usability of code.
-
-Besides that, this base library will provide you a good skeleton to use RxJava2 as a base for all your data loading operations. Provides several utility methods to notify on domain layer to apply correct schedulers for each operation or presenters will include helpers to unsubscribe whenever their attach view is destroyed. This library also eases the use of Retrofit2 for accesing network operations adding some factory methods to access easily REST APIs.
-
-If you are looking for a base library to help you following consistently a clean architecture approach, this can be a good starting point.
+In addition to MVP, Presenters can hold PresenterModule [**not super-clear; can you rephrase?**] to delegate logic handling to those [**to what, exactly?**]. This will make your Presenter logic lightweight and enhance code reusability.
 
 ### Installation
 
-At this moment, you need to clone the repository and run a gradlew build yourself, adding later the generated AAR into your own gradle dependencies. In near future we will add the library to maven so it should be easy for you to add it as dependency into your own projects.
-
+We'll soon add this library to Maven so you can add it as dependency into your own projects. For now:
+  
 - Clone this repository
-- Run gradle build command on project's root folder `./gradlew assembleRelease`
-- Move the generated AAR folder into your project's lib folder. The library is located in `./Core/RealmDAO/build/outputs/aar/` 
-- Add Core as dependency into your gradle file.
+- Run a [gradle](https://gradle.org/) build command on the project's root folder, `./gradlew assembleRelease`
+- Move the generated AAR folder into your project's lib folder. The library is located in `./Core/RealmDAO/build/outputs/aar/`.
+- Add it as a dependency into your Gradle file:
+
 ```
 compile name: 'Core-release', ext: 'aar' // Name "Core-release" must match the name of your file without .aar extension
 ```
