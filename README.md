@@ -77,7 +77,7 @@ The library uses different android libraries to provide skeleton structure for y
 
 ### Sample App
 
-To see this library in action, view the sample weather application [**link to it**] in our `examples` folder [**link to this, too**]. More details provided at our Wiki (../../Wiki), which uses the example app as reference.
+To see this library in action, view the sample weather application [**link to it**] in our `examples` folder [**link to this, too**]. More details provided at our [Wiki](../../Wiki), which uses the example app as reference.
 
 ### TODO
 
