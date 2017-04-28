@@ -2,11 +2,11 @@
 
 If you're looking for a base library to help you consistently follow the [clean architecture approach](https://fernandocejas.com/2014/09/03/architecting-android-the-clean-way/) formulated by SoundCloud dev [Fernando Cejas](https://twitter.com/fernando_cejas), **Core Library** is here to help. Created and used in production by [Zalando](https://tech.zalando.com/)'s Android team, this library enables you to quickly create a skeleton structure for your new Android app in a clean architecture way, while following the [Model View Presenter](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) (MVP) pattern. It's out-of-the-box usable for anyone.
 
-A good architectural skeleton will help your application to scale without additional complexities.
+[**It's still not stated how we've used this library to do things faster/better/etc. Why would anyone use this, besides the general descriptive info? Because it's the only thing out there that does what it does? What are some success metrics we could report?**]
 
 ### Why Use Android MVP Core Library
 
-Besides the base architecture guidelines [**where are the guidelines, and is this where it draws upon the clean arch approach?**], this lib offers:
+A good architectural skeleton will help your application to scale without additional complexities. Besides the base architecture guidelines [**where are the guidelines, and is this where it draws upon the clean arch approach?**], this lib offers:
 - basic setup for [Dagger 2](https://github.com/google/dagger) and [Butterknife](https://jakewharton.github.io/butterknife) dependency injection, isolating the basic logic on your fragments and activities
 - utility methods to notify on domain layer to apply correct schedulers for each operation or presenters will include helpers to unsubscribe whenever their attach view is destroyed [**this part, which I pulled from below, requires some rewriting for clarity**]. (Contribute your own by adding them to the appropriate utility class; see our [Contributing](#contributing) section for more instructions.) 
 - a foundation for using [RxJava2](https://github.com/ReactiveX/RxJava) as the basis for your data-loading operations. 
@@ -21,6 +21,8 @@ In addition to MVP, Presenters can hold PresenterModule [**not super-clear; can 
 
 ### Installation
 
+[**What are the technical requirements: versions of Java, build tools, etc.?**]
+
 We'll soon add this library to Maven so you can add it as dependency into your own projects. For now:
   
 - Clone this repository
@@ -29,9 +31,11 @@ We'll soon add this library to Maven so you can add it as dependency into your o
 - Add it as a dependency into your Gradle file:
 
 ```
-compile name: 'Core-release', ext: 'aar' // Name "Core-release" must match the name of your file without .aar extension
+compile name: 'Core-release', ext: 'aar' 
+## Name "Core-release" must match the name of your file without .aar extension
 ```
-- Ensure you allow have `libs/` folder in your application module and added the correct setup in your gradle file.
+
+Next, ensure you have the `libs/` folder in your application module, with the correct setup in your Gradle file added:
 ```
 repositories {
     flatDir {
@@ -43,7 +47,7 @@ repositories {
 }
 ```
 
-On the other hand, the library make use of different dependencies to inject views and dependencies into Activitys and Fragments, add utility base view holder and other utilities on recyclerViews, make use of RxJava2, etc.:
+The library uses [different dependencies to inject views and dependencies] [**dependencies to inject dependencies?**] into Activities and Fragments. Add [**"a," or "the"?**] utility base view holder and other utilities on recyclerViews, make use of RxJava2, etc. [**seems we could break this sentence down a bit further into two steps, then also break down this big code chunk. What are we supposed to notice most, in the code below, and why?**]:
 
 ```
   compile "com.android.support:appcompat-v7:25.3.0"
@@ -63,37 +67,28 @@ On the other hand, the library make use of different dependencies to inject view
   compile "com.squareup.okhttp3:logging-interceptor:3.6.0"
 ```
 
-### Sample app
+### Sample App
 
-For complete example, follows sample weather application to understand the usage of **Core library**. Refer to `examples` folder to get it. On the wiki page of this repository, you can find larger explanations on how to use it using the example app as reference.
+To see this library in action, view the sample weather application [**link to it**] in our `examples` folder [**link to this, too**]. More details provided at our Wiki [**link**], which uses the example app as reference.
 
 ### TODO
 
-- Write more documentation
-- Avoid presenters to die if rotation screen rotation changes
+- Write more documentation [**about?**]
+- Stop Presenters from dying if the rotation screen rotation changes, [**so that ...?**]
 - Add more utility methods
 - Add more sample apps
 
-## Getting Help
+### Getting Help
 
-If you have questions, concerns, bug reports, etc., please file an issue in this repository's [Issue Tracker](../../issues).
+If you have questions, concerns, bug reports, etc., please file an issue in our [Issues Tracker](../../issues). Please check our maintainers file if you need urgent help.
 
 ### Getting Involved/Contributing
 
-To contribute, simply make a pull request and add a brief description (1-2 sentences) of your addition or change. For more details, check the [contribution guidelines](CONTRIBUTING.md).
+Check the [contribution guidelines](CONTRIBUTING.md) for details.
 
-When contributing, please, ensure that you [follow Google Java coding guidelines](https://google.github.io/styleguide/javaguide.html#s3.3-import-statements) and your project passes the java checkstyle task. There is a gradle task to verify it, just run in the project root `./gradlew check` task.
+### License
 
-### Contact
-
-This software was originally written by Team Gravity in Zalando SE. Please, check MAINTAINERS.md file to contact directly a developer in case you have any questions.
-
-Bug reports and feature requests are more likely to be addressed if posted as issues here on GitHub.
-
-
-## License
-
-The MIT License (MIT) Copyright © 2016 Zalando SE, https://tech.zalando.com
+The MIT License (MIT) Copyright © 2016 [Zalando SE](https://tech.zalando.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
