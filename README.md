@@ -1,10 +1,23 @@
-### Android Core Library
+### Gravity Library
 
-If you're looking for a base library to help you consistently follow the [clean architecture approach](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html) formulated by Uncle Bob (Robert C. Martin), **Core Library** is here to help. Created and used in production by [Zalando](https://tech.zalando.com/)'s Android team, this library enables you to quickly create a skeleton structure for your new Android app in a clean architecture way, while following the [Model View Presenter](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) (MVP) pattern. It's out-of-the-box usable for anyone.
+If you're looking for a base library to help you consistently follow the [clean architecture approach](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html) 
+formulated by Uncle Bob (Robert C. Martin), **Gravity library** is here to help. Created and used 
+in production by [Zalando](https://tech.zalando.com/)'s Android team, this library enables you to 
+quickly create a skeleton structure for your new Android app in a clean architecture way, while 
+following the [Model View Presenter](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) (MVP) pattern. 
+It's out-of-the-box usable for anyone.
 
-### Why Use Android Core Library
+**Gravity library** provides scalable architecture for any Android application. The MVP abstraction 
+using clean architecture principle reduces the time require to setup your Android project. The 
+library includes extensible interface which can be easily adaptable to your Android project. The
+library provides radical agility to your Android application. Using this library with feature based 
+approach, you can easily add or remove feature from your application in an agile manner. This 
+library is an attempt to abstract out Android specific common patterns and utilities into single 
+package. 
 
-A good architectural skeleton will help your application to scale without additional complexities. Besides the clean architecture approach, it includes many structure utilities which can be useful for your new Android app. The **Core Library** help you in following ways:
+### Why Use Gravity Library
+
+A good architectural skeleton will help your application to scale without additional complexities. Besides the clean architecture approach, it includes many structure utilities which can be useful for your new Android app. The **Gravity library** help you in following ways:
 
 - a foundation for using [RxJava2](https://github.com/ReactiveX/RxJava) as the basis for your data-loading operations. 
 
@@ -20,7 +33,7 @@ A good architectural skeleton will help your application to scale without additi
 
 - interfaces to hide details for quick setup of view holders and adapters. 
 
-Feel free to contribute by enriching the **Core Library** with your own utilities by adding them to the appropriate utility class. 
+Feel free to contribute by enriching the **Gravity library** with your own utilities by adding them to the appropriate utility class. 
 See our [Contributing](#contributing) section for more instructions.
 
 ### Quick Note on MVP
@@ -31,7 +44,7 @@ A visual representation for MVP as follows:
 
 ### Installation
 
-The **Core Library** dependencies are defined in build.gradle file under root directory. The library is compatible with Java version 7 or higher.
+The **Gravity library** dependencies are defined in build.gradle file under root directory. The library is compatible with Java version 7 or higher.
 
 We'll soon add this library to Maven so you can add it as dependency into your own projects. For now:
   
@@ -57,7 +70,7 @@ repositories {
 }
 ```
 
-The library uses different android libraries to provide skeleton structure for your Android app. Following dependencies are included in the **Core Library**.
+The library uses different android libraries to provide skeleton structure for your Android app. Following dependencies are included in the **Gravity library**.
 
 ```
   compile "com.android.support:appcompat-v7:25.3.0"
