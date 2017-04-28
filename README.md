@@ -20,10 +20,12 @@ A good architectural skeleton will help your application to scale without additi
 
 - interfaces to hide details for quick setup of view holders and adapters. 
 
-Feel free to contribute by enriching the **Core Library** with your own utilities by adding them to the appropriate utility class; see our [Contributing](#contributing) section for more instructions.) 
+Feel free to contribute by enriching the **Core Library** with your own utilities by adding them to the appropriate utility class. 
+See our [Contributing](#contributing) section for more instructions.
 
 ### Quick Note on MVP
-The [MVP pattern](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) separates presentation layer from logic, allowing you to focus purely on UI implementation and delegate business logic to presenters. A visual version:
+The [MVP pattern](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) separates presentation layer from logic, allowing you to focus purely on UI implementation and delegate business logic to presenters. 
+A visual representation for MVP as follows:
 
 ![alt tag](https://informatechcr.files.wordpress.com/2013/03/mvp-diagram.png)
 
@@ -77,7 +79,8 @@ The library uses different android libraries to provide skeleton structure for y
 
 ### Sample App
 
-To see this library in action, view the sample weather application [**link to it**] in our `examples` folder [**link to this, too**]. More details provided at our [Wiki](../../Wiki), which uses the example app as reference.
+To see this library in action, view the sample weather application in our [`examples` folder](https://github.bus.zalan.do/gravity/android-core/tree/master/examples). 
+More details provided at our [Wiki](https://github.bus.zalan.do/gravity/android-core/wiki/How-to-create-project), which uses the example app as reference.
 
 ### TODO
 
@@ -88,7 +91,7 @@ To see this library in action, view the sample weather application [**link to it
 
 ### Getting Help
 
-If you have questions, concerns, bug reports, etc., please file an issue in our [Issues Tracker](../../issues). For urgent help, contact [the maintainers](**add the link**) directly.
+If you have questions, concerns, bug reports, etc., please file an issue in our [Issues Tracker](../../issues). For urgent help, contact [the maintainers](MAINTAINERS.md) directly.
 
 ### Getting Involved/Contributing
 
