@@ -1,27 +1,35 @@
 ### Android Core Library
 
-If you're looking for a base library to help you consistently follow the [clean architecture approach](https://fernandocejas.com/2014/09/03/architecting-android-the-clean-way/) formulated by SoundCloud dev [Fernando Cejas](https://twitter.com/fernando_cejas), **Core Library** is here to help. Created and used in production by [Zalando](https://tech.zalando.com/)'s Android team, this library enables you to quickly create a skeleton structure for your new Android app in a clean architecture way, while following the [Model View Presenter](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) (MVP) pattern. It's out-of-the-box usable for anyone.
+If you're looking for a base library to help you consistently follow the [clean architecture approach](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html) formulated by Uncle Bob (Robert C. Martin), **Core Library** is here to help. Created and used in production by [Zalando](https://tech.zalando.com/)'s Android team, this library enables you to quickly create a skeleton structure for your new Android app in a clean architecture way, while following the [Model View Presenter](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) (MVP) pattern. It's out-of-the-box usable for anyone.
 
-[**It's still not stated how we've used this library to do things faster/better/etc. Why would anyone use this, besides the general descriptive info? Because it's the only thing out there that does what it does? What are some success metrics we could report?**]
+### Why Use Android Core Library
 
-### Why Use Android MVP Core Library
+A good architectural skeleton will help your application to scale without additional complexities. Besides the clean architecture approach, it includes many structure utilities which can be useful for your new Android app. The **Core Library** help you in following ways:
 
-A good architectural skeleton will help your application to scale without additional complexities. Besides the base architecture guidelines [**where are the guidelines, and is this where it draws upon the clean arch approach?**], this lib offers:
-- basic setup for [Dagger 2](https://github.com/google/dagger) and [Butterknife](https://jakewharton.github.io/butterknife) dependency injection, isolating the basic logic on your fragments and activities
-- utility methods to notify on domain layer to apply correct schedulers for each operation or presenters will include helpers to unsubscribe whenever their attach view is destroyed [**this part, which I pulled from below, requires some rewriting for clarity**]. (Contribute your own by adding them to the appropriate utility class; see our [Contributing](#contributing) section for more instructions.) 
 - a foundation for using [RxJava2](https://github.com/ReactiveX/RxJava) as the basis for your data-loading operations. 
+
 - an easy way to use [Retrofit2](https://square.github.io/retrofit/) to access network operations, including factory methods for easily accessing your REST APIs.
 
+- basic setup for [Dagger 2](https://github.com/google/dagger) and [Butterknife](https://jakewharton.github.io/butterknife) dependency injection, isolating the basic logic from your fragments and activities.
+
+- abstract classes to wrap logic into data layer, domain layer and presenter layer. 
+
+- utility methods to notify on domain layer to apply correct schedulers for each operation.
+
+- provides base presenter which includes helpers to subscribe and unsubscribe from fragment or activity lifecyle.
+
+- interfaces to hide details for quick setup of view holders and adapters. 
+
+Feel free to contribute by enriching the **Core Library** with your own utilities by adding them to the appropriate utility class; see our [Contributing](#contributing) section for more instructions.) 
+
 ### Quick Note on MVP
-The MVP pattern separates presentation layer from logic, allowing you to focus purely on UI implementation and delegate business logic to [presenters](https://developer.android.com/reference/android/support/v17/leanback/widget/Presenter.html). Antonio Leiva has written up [a great explanation of the MVP pattern](https://antonioleiva.com/mvp-android/). A visual version:
+The [MVP pattern](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) separates presentation layer from logic, allowing you to focus purely on UI implementation and delegate business logic to presenters. A visual version:
 
 ![alt tag](https://informatechcr.files.wordpress.com/2013/03/mvp-diagram.png)
 
-In addition to MVP, Presenters can hold PresenterModule [**not super-clear; can you rephrase?**] to delegate logic handling to those [**to what, exactly?**]. This will make your Presenter logic lightweight and enhance code reusability.
-
 ### Installation
 
-[**What are the technical requirements: versions of Java, build tools, etc.?**]
+The **Core Library** dependencies are defined in build.gradle file under root directory. The library is compatible with Java version 7 or higher.
 
 We'll soon add this library to Maven so you can add it as dependency into your own projects. For now:
   
@@ -47,7 +55,7 @@ repositories {
 }
 ```
 
-The library uses [different dependencies to inject views and dependencies] [**dependencies to inject dependencies?**] into Activities and Fragments. Add [**"a," or "the"?**] utility base view holder and other utilities on recyclerViews, make use of RxJava2, etc. [**seems we could break this sentence down a bit further into two steps, then also break down this big code chunk. What are we supposed to notice most, in the code below, and why?**]:
+The library uses different android libraries to provide skeleton structure for your Android app. Following dependencies are included in the **Core Library**.
 
 ```
   compile "com.android.support:appcompat-v7:25.3.0"
@@ -69,12 +77,12 @@ The library uses [different dependencies to inject views and dependencies] [**de
 
 ### Sample App
 
-To see this library in action, view the sample weather application [**link to it**] in our `examples` folder [**link to this, too**]. More details provided at our Wiki [**link**], which uses the example app as reference.
+To see this library in action, view the sample weather application [**link to it**] in our `examples` folder [**link to this, too**]. More details provided at our Wiki (../../Wiki), which uses the example app as reference.
 
 ### TODO
 
-- Write more documentation [**about?**]
-- Stop Presenters from dying if the rotation screen rotation changes, [**so that ...?**]
+- Write more API documentation for the library
+- Handle rotation change to enable presenters to work property in the application.
 - Add more utility methods
 - Add more sample apps
 
