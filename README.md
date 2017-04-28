@@ -80,7 +80,7 @@ To see this library in action, view the sample weather application [**link to it
 
 ### Getting Help
 
-If you have questions, concerns, bug reports, etc., please file an issue in our [Issues Tracker](../../issues). Please check our maintainers file if you need urgent help.
+If you have questions, concerns, bug reports, etc., please file an issue in our [Issues Tracker](../../issues). For urgent help, contact [the maintainers](**add the link**) directly.
 
 ### Getting Involved/Contributing
 
