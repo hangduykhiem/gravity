@@ -1,36 +1,49 @@
 ### Android Core Library
 
-**Core library** provides starting point to build skeleton structure of Android app.
-It helps you to establish good practice to use the Model View Presenter (MVP) pattern in your Android project following a [Clean Architecture approach](https://fernandocejas.com/2014/09/03/architecting-android-the-clean-way/). 
-The library includes basic setup for Dagger2 and Butterknife dependency injection, isolating the basic logic on your fragments and activities. 
-A good architectural skeleton will help your application to grow consistently without adding complexities.
+If you're looking for a base library to help you consistently follow the [clean architecture approach](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html) formulated by Uncle Bob (Robert C. Martin), **Core Library** is here to help. Created and used in production by [Zalando](https://tech.zalando.com/)'s Android team, this library enables you to quickly create a skeleton structure for your new Android app in a clean architecture way, while following the [Model View Presenter](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) (MVP) pattern. It's out-of-the-box usable for anyone.
 
-Besides the base architecture guidelines, it includes many utility methods that were found useful for several projects. Feel free to contribute by adding your own in the appropriate utility class. Read [Contributing](#contributing) section. 
+### Why Use Android Core Library
 
-### Why use Android MVP Core Library
+A good architectural skeleton will help your application to scale without additional complexities. Besides the clean architecture approach, it includes many structure utilities which can be useful for your new Android app. The **Core Library** help you in following ways:
 
-The library helps you using MVP along a clean architecture approach. MVP pattern separates the presentation layer from the logic, letting you focusing purely on UI implementation delegating the business logic to presenters. [Here](https://antonioleiva.com/mvp-android/) you can find a good explanation of the MVP pattern:
+- a foundation for using [RxJava2](https://github.com/ReactiveX/RxJava) as the basis for your data-loading operations. 
+
+- an easy way to use [Retrofit2](https://square.github.io/retrofit/) to access network operations, including factory methods for easily accessing your REST APIs.
+
+- basic setup for [Dagger 2](https://github.com/google/dagger) and [Butterknife](https://jakewharton.github.io/butterknife) dependency injection, isolating the basic logic from your fragments and activities.
+
+- abstract classes to wrap logic into data layer, domain layer and presenter layer. 
+
+- utility methods to notify on domain layer to apply correct schedulers for each operation.
+
+- provides base presenter which includes helpers to subscribe and unsubscribe from fragment or activity lifecyle.
+
+- interfaces to hide details for quick setup of view holders and adapters. 
+
+Feel free to contribute by enriching the **Core Library** with your own utilities by adding them to the appropriate utility class; see our [Contributing](#contributing) section for more instructions.) 
+
+### Quick Note on MVP
+The [MVP pattern](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) separates presentation layer from logic, allowing you to focus purely on UI implementation and delegate business logic to presenters. A visual version:
 
 ![alt tag](https://informatechcr.files.wordpress.com/2013/03/mvp-diagram.png)
 
-In addition to MVP, presenters can hold as well PresenterModule to delegate logic handling to those. This will make your presenters logic smaller and enhance re-usability of code.
-
-Besides that, this base library will provide you a good skeleton to use RxJava2 as a base for all your data loading operations. Provides several utility methods to notify on domain layer to apply correct schedulers for each operation or presenters will include helpers to unsubscribe whenever their attach view is destroyed. This library also eases the use of Retrofit2 for accesing network operations adding some factory methods to access easily REST APIs.
-
-If you are looking for a base library to help you following consistently a clean architecture approach, this can be a good starting point.
-
 ### Installation
 
-At this moment, you need to clone the repository and run a gradlew build yourself, adding later the generated AAR into your own gradle dependencies. In near future we will add the library to maven so it should be easy for you to add it as dependency into your own projects.
+The **Core Library** dependencies are defined in build.gradle file under root directory. The library is compatible with Java version 7 or higher.
 
+We'll soon add this library to Maven so you can add it as dependency into your own projects. For now:
+  
 - Clone this repository
-- Run gradle build command on project's root folder `./gradlew assembleRelease`
-- Move the generated AAR folder into your project's lib folder. The library is located in `./Core/RealmDAO/build/outputs/aar/` 
-- Add Core as dependency into your gradle file.
+- Run a [gradle](https://gradle.org/) build command on the project's root folder, `./gradlew assembleRelease`
+- Move the generated AAR folder into your project's lib folder. The library is located in `./Core/RealmDAO/build/outputs/aar/`.
+- Add it as a dependency into your Gradle file:
+
 ```
-compile name: 'Core-release', ext: 'aar' // Name "Core-release" must match the name of your file without .aar extension
+compile name: 'Core-release', ext: 'aar' 
+## Name "Core-release" must match the name of your file without .aar extension
 ```
-- Ensure you allow have `libs/` folder in your application module and added the correct setup in your gradle file.
+
+Next, ensure you have the `libs/` folder in your application module, with the correct setup in your Gradle file added:
 ```
 repositories {
     flatDir {
@@ -42,7 +55,7 @@ repositories {
 }
 ```
 
-On the other hand, the library make use of different dependencies to inject views and dependencies into Activitys and Fragments, add utility base view holder and other utilities on recyclerViews, make use of RxJava2, etc.:
+The library uses different android libraries to provide skeleton structure for your Android app. Following dependencies are included in the **Core Library**.
 
 ```
   compile "com.android.support:appcompat-v7:25.3.0"
@@ -62,37 +75,28 @@ On the other hand, the library make use of different dependencies to inject view
   compile "com.squareup.okhttp3:logging-interceptor:3.6.0"
 ```
 
-### Sample app
+### Sample App
 
-For complete example, follows sample weather application to understand the usage of **Core library**. Refer to `examples` folder to get it. On the wiki page of this repository, you can find larger explanations on how to use it using the example app as reference.
+To see this library in action, view the sample weather application [**link to it**] in our `examples` folder [**link to this, too**]. More details provided at our [Wiki](../../Wiki), which uses the example app as reference.
 
 ### TODO
 
-- Write more documentation
-- Avoid presenters to die if rotation screen rotation changes
+- Write more API documentation for the library
+- Handle rotation change to enable presenters to work property in the application.
 - Add more utility methods
 - Add more sample apps
 
-## Getting Help
+### Getting Help
 
-If you have questions, concerns, bug reports, etc., please file an issue in this repository's [Issue Tracker](../../issues).
+If you have questions, concerns, bug reports, etc., please file an issue in our [Issues Tracker](../../issues). For urgent help, contact [the maintainers](**add the link**) directly.
 
 ### Getting Involved/Contributing
 
-To contribute, simply make a pull request and add a brief description (1-2 sentences) of your addition or change. For more details, check the [contribution guidelines](CONTRIBUTING.md).
+Check the [contribution guidelines](CONTRIBUTING.md) for details.
 
-When contributing, please, ensure that you [follow Google Java coding guidelines](https://google.github.io/styleguide/javaguide.html#s3.3-import-statements) and your project passes the java checkstyle task. There is a gradle task to verify it, just run in the project root `./gradlew check` task.
+### License
 
-### Contact
-
-This software was originally written by Team Gravity in Zalando SE. Please, check MAINTAINERS.md file to contact directly a developer in case you have any questions.
-
-Bug reports and feature requests are more likely to be addressed if posted as issues here on GitHub.
-
-
-## License
-
-The MIT License (MIT) Copyright © 2016 Zalando SE, https://tech.zalando.com
+The MIT License (MIT) Copyright © 2016 [Zalando SE](https://tech.zalando.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
