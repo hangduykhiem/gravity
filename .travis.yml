@@ -5,18 +5,14 @@ jdk: oraclejdk8
 sudo: false
 
 notifications:
-    email:
-        - manni.cse@gmail.com
-
-env:
-    matrix:
-        - ANDROID_TARGET=android-15
-        - ANDROID_ABI=armeabi-v7a
-    global:
-        - ADB_INSTALL_TIMEOUT=10    #Time out to 10 mins
+  email:
+    recipients:
+      - manni.cse@gmail.com
+  on_success: never # default: change
+  on_failure: always # default: always
 
 before_cache:
-    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 
 cache:
   directories:      #Cache all dirs under .gradle folder
@@ -33,28 +29,12 @@ android:
     - extra-android-support
     - extra-android-m2repository
 
-    #system images for emulator
-    - sys-img-armeabi-v7a-android-15
-
-before_script:
-    - chmod +x gradlew      #Grand permissions
-    - android list targets
-    #- echo no | android create avd --force --name test --target $ANDROID_TARGET --abi $ANDROID_ABI #Create AVD for given api
-    #- emulator -avd test -no-skin -no-audio -no-window &    #Start emulator
-    #- android-wait-for-emulator #Run wait for the emulator script.
-    #- adb shell input keyevent 82 &
-
 script:
-    - echo "Travis branch is $TRAVIS_BRANCH"    #Print out which branch it is.
-    - echo "Travis branch is in pull request $TRAVIS_PULL_REQUEST"    #Print out pull request number.
-    - adb devices                           #Display list of devices
-    - ./gradlew connectedAndroidTest -PdisablePreDex --stacktrace
-    - ./gradlew build connectedCheck
-
-before_install:
-    - pip install --user codecov    #Install codecov
+  - echo "Travis branch is $TRAVIS_BRANCH"    #Print out which branch it is.
+  - echo "Travis branch is in pull request $TRAVIS_PULL_REQUEST"    #Print out pull request number.
+  - bash gradlew test jacocoTestReport #Run junit tests and report
 
 after_success:
-    - codecov                       #Run codecov
+  - bash <(curl -s https://codecov.io/bash)
 
 after_failure: "cat $TRAVIS_BUILD_DIR/app/build/outputs/lint-results-debug.xml"
