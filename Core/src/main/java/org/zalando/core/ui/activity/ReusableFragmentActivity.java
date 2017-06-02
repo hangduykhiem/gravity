@@ -238,11 +238,6 @@ public class ReusableFragmentActivity extends BaseActivity implements
     optionFlags = initBundle.getInt(TAG_ACTIVITY_OPTIONS, FLAG_TOOLBAR);
     sb.append("initialiseParsed[").append(className).append(", ")
         .append(fragmentBundle).append("] ");
-
-    if (TextUtils.isEmpty(className)) {
-      Timber.e("Missing fragment classname in activity bundle");
-      finish();
-    }
   }
 
   @Override
@@ -274,6 +269,12 @@ public class ReusableFragmentActivity extends BaseActivity implements
       } else {
         getSupportActionBar().hide();
       }
+    }
+
+    // Close activity if className is null
+    if (TextUtils.isEmpty(className)) {
+      Timber.e("Missing fragment classname in activity bundle");
+      finish();
     }
 
     //Initialise Fragment:
