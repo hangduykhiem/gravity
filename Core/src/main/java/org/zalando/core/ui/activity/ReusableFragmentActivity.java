@@ -275,6 +275,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
     if (TextUtils.isEmpty(className)) {
       Timber.e("Missing fragment classname in activity bundle");
       finish();
+      return;
     }
 
     //Initialise Fragment:
