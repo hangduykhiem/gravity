@@ -156,7 +156,8 @@ public final class RestApiFactory {
     }
 
     // Finally create the client
-    return new Retrofit.Builder().client(okHttpClientBuilder.build()).baseUrl(url)
+    return new Retrofit.Builder().client(okHttpClientBuilder.build())
+        .baseUrl(url.endsWith("/") ? url : url + "/")
         .addConverterFactory(GsonConverterFactory.create(gsonConverterFactory))
         .addCallAdapterFactory(callAdapterFactory)
         .build();
