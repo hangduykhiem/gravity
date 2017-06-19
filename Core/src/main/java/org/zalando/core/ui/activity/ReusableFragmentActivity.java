@@ -25,6 +25,7 @@ import org.zalando.core.domain.helper.DisposableHelper;
 import org.zalando.core.ui.fragment.BaseFragment;
 import org.zalando.core.ui.presenter.StubPresenter;
 import org.zalando.core.ui.view.ReusableFragmentActivityView;
+import org.zalando.core.utils.TextUtils;
 import org.zalando.core.utils.UIUtils;
 import timber.log.Timber;
 
@@ -84,8 +85,8 @@ public class ReusableFragmentActivity extends BaseActivity implements
 
     //Logs:
     sb = new StringBuilder(); //Clear the builder
-    sb.append("Launching Activity: " + launchActivity.getLocalClassName()
-        + " Fragment: " + fragmentClass.getName() + " ");
+    sb.append("Launching Activity: ").append(launchActivity.getLocalClassName())
+        .append(" Fragment: ").append(fragmentClass.getName()).append(" ");
 
     //Pack the Fragment name and Bundle to the Intent:
     final Intent intent = new Intent(launchActivity, activityClass);
@@ -118,8 +119,8 @@ public class ReusableFragmentActivity extends BaseActivity implements
       @Nullable List<Pair<View, String>> sharedElements) {
     //Logs:
     sb = new StringBuilder(); //Clear the builder
-    sb.append("Launching Activity: " + launchActivity.getLocalClassName()
-        + " Fragment: " + fragmentClass.getName() + " ");
+    sb.append("Launching Activity: ").append(launchActivity.getLocalClassName())
+        .append(" Fragment: ").append(fragmentClass.getName()).append(" ");
 
     final Intent intent = createIntent(launchActivity, fragmentClass, bundleForFragment,
         optionFlags);
@@ -153,8 +154,8 @@ public class ReusableFragmentActivity extends BaseActivity implements
       @Nullable List<Pair<View, String>> sharedElements) {
     //Logs:
     sb = new StringBuilder(); //Clear the builder
-    sb.append("Launching Fragment: " + launchFragment.getClass().getSimpleName()
-        + " Fragment: " + fragmentClass.getName() + " ");
+    sb.append("Launching Fragment: ").append(launchFragment.getClass().getSimpleName())
+        .append(" Fragment: ").append(fragmentClass.getName()).append(" ");
 
     final Intent intent = createIntent(launchFragment.getActivity(), fragmentClass,
         bundleForFragment, optionFlags);
@@ -193,7 +194,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    sb.append("onCreate[" + savedInstanceState + ", " + getIntent() + "]");
+    sb.append("onCreate[").append(savedInstanceState).append(", ").append(getIntent()).append("]");
     super.onCreate(savedInstanceState);
   }
 
@@ -229,13 +230,14 @@ public class ReusableFragmentActivity extends BaseActivity implements
 
   @Override
   public void initialise(@NonNull Bundle initBundle) {
-    sb.append("initialise[" + className + ", " + fragmentBundle + "] ");
+    sb.append("initialise[").append(className).append(", ").append(fragmentBundle).append("] ");
     super.initialise(initBundle);
     //Get Fragment details from initBundle:
     className = initBundle.getString(TAG_FRAGMENT_NAME);
     fragmentBundle = initBundle.getBundle(TAG_FRAGMENT_BUNDLE);
     optionFlags = initBundle.getInt(TAG_ACTIVITY_OPTIONS, FLAG_TOOLBAR);
-    sb.append("initialiseParsed[" + className + ", " + fragmentBundle + "] ");
+    sb.append("initialiseParsed[").append(className).append(", ")
+        .append(fragmentBundle).append("] ");
   }
 
   @Override
@@ -255,7 +257,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
 
   @Override
   public void initView(@NonNull Bundle initState) {
-    sb.append("initView[" + className + ", " + fragmentBundle + "] ");
+    sb.append("initView[").append(className).append(", ").append(fragmentBundle).append("] ");
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
     if (getSupportActionBar() != null) {
@@ -267,6 +269,13 @@ public class ReusableFragmentActivity extends BaseActivity implements
       } else {
         getSupportActionBar().hide();
       }
+    }
+
+    // Close activity if className is null
+    if (TextUtils.isEmpty(className)) {
+      Timber.e("Missing fragment classname in activity bundle");
+      finish();
+      return;
     }
 
     //Initialise Fragment:
