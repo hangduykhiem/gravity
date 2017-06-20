@@ -280,30 +280,32 @@ public class ReusableFragmentActivity extends BaseActivity implements
 
     //Initialise Fragment:
     //Use reflection to setup the Fragment:
-    try {
-      //Get the class (Fragment):
-      Class<?> fragmentClass = Class.forName(className);
-      //Get the default empty constructor:
-      Constructor<?> constructor = fragmentClass.getConstructor();
-      //Create new instance of the Fragment:
-      BaseFragment fragment = (BaseFragment) constructor.newInstance();
-      //Give the Bundle as argument:
-      fragment.setArguments(fragmentBundle);
-      //Show the Fragment:
-      setFragment(R.id.reusablefragmentactivity_fragmentcontainer, fragment);
-    } catch (Exception e) {
-      //CRASH!
-      //Collect more logs:
-      if (getIntent() != null && getIntent().getExtras() != null) {
-        Bundle extras = getIntent().getExtras();
-        for (String key : extras.keySet()) {
-          sb.append("key: " + key + " value: " + extras.get(key));
+    if (getInitialFragment() == null) {
+      try {
+        //Get the class (Fragment):
+        Class<?> fragmentClass = Class.forName(className);
+        //Get the default empty constructor:
+        Constructor<?> constructor = fragmentClass.getConstructor();
+        //Create new instance of the Fragment:
+        BaseFragment fragment = (BaseFragment) constructor.newInstance();
+        //Give the Bundle as argument:
+        fragment.setArguments(fragmentBundle);
+        //Show the Fragment:
+        setInitialFragment(R.id.reusablefragmentactivity_fragmentcontainer, fragment);
+      } catch (Exception e) {
+        //CRASH!
+        //Collect more logs:
+        if (getIntent() != null && getIntent().getExtras() != null) {
+          Bundle extras = getIntent().getExtras();
+          for (String key : extras.keySet()) {
+            sb.append("key: ").append(key).append(" value: ").append(extras.get(key));
+          }
         }
+        //Send crash log to HockeyApp:
+        Timber.wtf(e, "Error when initializing Fragment: %s", sb.toString());
+        //Recover by closing the Activity:
+        finish();
       }
-      //Send crash log to HockeyApp:
-      Timber.wtf(e, "Error when initializing Fragment: %s", sb.toString());
-      //Recover by closing the Activity:
-      finish();
     }
   }
 
@@ -363,9 +365,9 @@ public class ReusableFragmentActivity extends BaseActivity implements
   }
 
   @Override
-  protected void setFragment(int fragmentContainerId, BaseFragment fragment) {
-    sb.append("setFragment ");
-    super.setFragment(fragmentContainerId, fragment);
+  protected boolean setInitialFragment(int fragmentContainerId, BaseFragment fragment) {
+    sb.append("setInitialFragment ");
+    return super.setInitialFragment(fragmentContainerId, fragment);
   }
 
   @Override
