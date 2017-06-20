@@ -12,23 +12,6 @@ import org.zalando.core.ui.fragment.BaseFragment;
 public interface ReusableFragmentActivityView extends BaseView {
 
   /**
-   * Replaces the fragment container with the given {@link Fragment} using no animations or back
-   * stack.
-   *
-   * @param fragment {@link BaseFragment} to switch to.
-   */
-  void switchFragment(@NonNull BaseFragment fragment);
-
-  /**
-   * Replaces the fragment container with the given fragment
-   *
-   * @param fragment {@link BaseFragment} that will replace the previous one
-   * @param addToBackStack True if wanted to add to BackStack false otherwise
-   * @param animate True if you want to animate the change
-   */
-  void switchFragment(BaseFragment fragment, boolean addToBackStack, boolean animate);
-
-  /**
    * Sets the toolbar title to the given String.
    *
    * @param title The title to use

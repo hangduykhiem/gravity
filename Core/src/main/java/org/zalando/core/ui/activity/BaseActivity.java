@@ -1,6 +1,7 @@
 package org.zalando.core.ui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.AnimRes;
 import android.support.annotation.CallSuper;
@@ -35,14 +36,14 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
    * Internal private objects
    */
   private FragmentManager fragmentManager;
+  private int defaultFragmentLayoutId;
+  private OnReadyForTransitionListener onReadyForTransitionListener;
 
   /**
    * Protected objects
    */
   @Inject
   protected Lazy<Navigator> navigator;
-
-  private OnReadyForTransitionListener onReadyForTransitionListener;
 
   /**
    * Lifecycle method
@@ -168,16 +169,52 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
    *
    * @param fragmentContainerId layout id to place the fragment
    * @param fragment Fragment to add
+   * @return {@link Boolean} indicating if the initial fragment was added
    */
   @CallSuper
-  protected void setFragment(int fragmentContainerId, BaseFragment fragment) {
+  protected boolean setInitialFragment(int fragmentContainerId, BaseFragment fragment) {
 
-    // Add the fragment to the 'fragment_container' FrameLayout
+    defaultFragmentLayoutId = fragmentContainerId;
+    if (getInitialFragment() == null) {
+      FragmentTransaction ft = fragmentManager.beginTransaction();
+      ft.replace(fragmentContainerId, fragment, ((Object) fragment).getClass()
+          .getSimpleName());
+      ft.commitAllowingStateLoss();
+      fragmentManager.executePendingTransactions();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Replaces the fragment to the default fragment container
+   *
+   * @param fragmentContainerId layout id to place the fragment
+   * @param fragment Fragment to add
+   */
+  @CallSuper
+  protected void replaceFragment(int fragmentContainerId, BaseFragment fragment) {
+    defaultFragmentLayoutId = fragmentContainerId;
     FragmentTransaction ft = fragmentManager.beginTransaction();
     ft.replace(fragmentContainerId, fragment, ((Object) fragment).getClass()
         .getSimpleName());
     ft.commitAllowingStateLoss();
     fragmentManager.executePendingTransactions();
+  }
+
+  /**
+   * Provides the Fragment that was added as initial Fragment in the activity. It is useful when
+   * restarting activity, to avoid setting fragment again so recovering fragment state would be
+   * lost.
+   *
+   * @return {@link Fragment} that was initially added to the Activity. Null if still nothing has
+   * been added
+   */
+  @Nullable
+  protected final BaseFragment getInitialFragment() {
+    return fragmentManager.getFragments() != null && fragmentManager.getFragments().size() > 0
+        ? (BaseFragment) fragmentManager.getFragments().get(0) : null;
   }
 
   /**
@@ -236,9 +273,10 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
    * @param animate True if you want to animate the change
    */
   @CallSuper
-  protected void switchFragment(int fragmentContainerId, BaseFragment newFragment, boolean
-      addToBackStack, boolean animate) {
+  protected void switchFragment(int fragmentContainerId, BaseFragment newFragment,
+      boolean addToBackStack, boolean animate) {
 
+    defaultFragmentLayoutId = fragmentContainerId;
     String tag = ((Object) newFragment).getClass().getSimpleName();
     // check if the fragment does not exist to add it now to the fragment container
     if (fragmentManager.findFragmentByTag(tag) == null) {
@@ -278,6 +316,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
   protected void switchFragment(int fragmentContainerId, BaseFragment newFragment, boolean
       addToBackStack, @AnimRes int enterAnimation, @AnimRes int exitAnimation) {
 
+    defaultFragmentLayoutId = fragmentContainerId;
     String tag = ((Object) newFragment).getClass().getSimpleName();
     // check if the fragment does not exist to add it now to the fragment container
     if (fragmentManager.findFragmentByTag(tag) == null) {
