@@ -148,18 +148,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
   /**
    * Lifecycle method
-   */
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    Fragment fragment = getSupportFragmentManager().findFragmentById(defaultFragmentLayoutId);
-    if (fragment != null) {
-      fragment.onActivityResult(requestCode, resultCode, data);
-    }
-  }
-
-  /**
-   * Lifecycle method
    *
    * @param outState {@link Bundle} where the state of the activity is stored
    */
