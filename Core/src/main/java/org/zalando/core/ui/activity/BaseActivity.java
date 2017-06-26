@@ -11,6 +11,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import butterknife.ButterKnife;
 import dagger.Lazy;
@@ -139,6 +141,19 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
             ((BaseFragment) fragment).onBackStackPop();
           }
         }
+
+        // Check if the activity has a parent defined in the manifest so we need to rebuild the
+        // activity stack
+        Intent upIntent = NavUtils.getParentActivityIntent(this);
+        if (upIntent != null
+            // Create stack if activity is root and developer has defined parent activity in manifest
+            && (NavUtils.shouldUpRecreateTask(this, upIntent) || isTaskRoot())) {
+          TaskStackBuilder.create(this)
+              .addNextIntentWithParentStack(upIntent)
+              .startActivities();
+        }
+
+        // Delegate to android all the back pressed logic
         super.onBackPressed();
       }
     } catch (IllegalStateException exception) {
