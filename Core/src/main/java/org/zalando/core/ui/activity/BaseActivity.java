@@ -134,7 +134,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
           ((BaseFragment) fragment).onBackStackPop();
         }
         fragmentManager.popBackStack();
-      } else {
+      } else if (!isFinishing()) {
         if (fragmentManager.getFragments() != null) {
           final Fragment fragment = fragmentManager.getFragments().get(0);
           if (fragment != null && fragment instanceof BaseFragment) {
@@ -146,7 +146,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         // activity stack
         Intent upIntent = NavUtils.getParentActivityIntent(this);
         if (upIntent != null
-            // Create stack if activity is root and developer has defined parent activity in manifest
+            // Create stack if activity is root and developer
+            // has defined parent activity in manifest
             && (NavUtils.shouldUpRecreateTask(this, upIntent) || isTaskRoot())) {
           TaskStackBuilder.create(this)
               .addNextIntentWithParentStack(upIntent)
