@@ -25,6 +25,7 @@ import org.zalando.core.domain.helper.DisposableHelper;
 import org.zalando.core.ui.fragment.BaseFragment;
 import org.zalando.core.ui.presenter.StubPresenter;
 import org.zalando.core.ui.view.ReusableFragmentActivityView;
+import org.zalando.core.utils.TextUtils;
 import org.zalando.core.utils.UIUtils;
 import timber.log.Timber;
 
@@ -61,8 +62,6 @@ public class ReusableFragmentActivity extends BaseActivity implements
   private String className;
   private int optionFlags;
 
-  private static StringBuilder sb = new StringBuilder();
-
   /**
    * Launches ReusableFragmentActivity, and opens the given Fragment in it.
    *
@@ -81,12 +80,6 @@ public class ReusableFragmentActivity extends BaseActivity implements
       throw new ClassCastException("fragmentClass must extend " + BaseFragment.class
           .getName());
     }
-
-    //Logs:
-    sb = new StringBuilder(); //Clear the builder
-    sb.append("Launching Activity: " + launchActivity.getLocalClassName()
-        + " Fragment: " + fragmentClass.getName() + " ");
-
     //Pack the Fragment name and Bundle to the Intent:
     final Intent intent = new Intent(launchActivity, activityClass);
     intent.putExtra(TAG_FRAGMENT_NAME, fragmentClass.getName());
@@ -116,10 +109,6 @@ public class ReusableFragmentActivity extends BaseActivity implements
       int requestCode,
       int optionFlags,
       @Nullable List<Pair<View, String>> sharedElements) {
-    //Logs:
-    sb = new StringBuilder(); //Clear the builder
-    sb.append("Launching Activity: " + launchActivity.getLocalClassName()
-        + " Fragment: " + fragmentClass.getName() + " ");
 
     final Intent intent = createIntent(launchActivity, fragmentClass, bundleForFragment,
         optionFlags);
@@ -151,10 +140,6 @@ public class ReusableFragmentActivity extends BaseActivity implements
       int requestCode,
       int optionFlags,
       @Nullable List<Pair<View, String>> sharedElements) {
-    //Logs:
-    sb = new StringBuilder(); //Clear the builder
-    sb.append("Launching Fragment: " + launchFragment.getClass().getSimpleName()
-        + " Fragment: " + fragmentClass.getName() + " ");
 
     final Intent intent = createIntent(launchFragment.getActivity(), fragmentClass,
         bundleForFragment, optionFlags);
@@ -192,55 +177,16 @@ public class ReusableFragmentActivity extends BaseActivity implements
   }
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    sb.append("onCreate[" + savedInstanceState + ", " + getIntent() + "]");
-    super.onCreate(savedInstanceState);
-  }
-
-  @Override
-  protected void onResume() {
-    sb.append("onResume ");
-    super.onResume();
-  }
-
-  @Override
-  protected void onPause() {
-    sb.append("onPause ");
-    super.onPause();
-  }
-
-  @Override
-  protected void onRestart() {
-    sb.append("onRestart ");
-    super.onRestart();
-  }
-
-  @Override
-  protected void onStop() {
-    sb.append("onStop ");
-    super.onStop();
-  }
-
-  @Override
-  protected void onDestroy() {
-    sb.append("onDestroy ");
-    super.onDestroy();
-  }
-
-  @Override
   public void initialise(@NonNull Bundle initBundle) {
-    sb.append("initialise[" + className + ", " + fragmentBundle + "] ");
     super.initialise(initBundle);
     //Get Fragment details from initBundle:
     className = initBundle.getString(TAG_FRAGMENT_NAME);
     fragmentBundle = initBundle.getBundle(TAG_FRAGMENT_BUNDLE);
     optionFlags = initBundle.getInt(TAG_ACTIVITY_OPTIONS, FLAG_TOOLBAR);
-    sb.append("initialiseParsed[" + className + ", " + fragmentBundle + "] ");
   }
 
   @Override
   public void onSaveInstanceState(Bundle outState) {
-    sb.append("onSave ");
     outState.putString(TAG_FRAGMENT_NAME, className);
     outState.putBundle(TAG_FRAGMENT_BUNDLE, fragmentBundle);
     outState.putInt(TAG_ACTIVITY_OPTIONS, optionFlags);
@@ -248,14 +194,7 @@ public class ReusableFragmentActivity extends BaseActivity implements
   }
 
   @Override
-  protected void onRestoreInstanceState(Bundle savedInstanceState) {
-    sb.append("onRestore ");
-    super.onRestoreInstanceState(savedInstanceState);
-  }
-
-  @Override
   public void initView(@NonNull Bundle initState) {
-    sb.append("initView[" + className + ", " + fragmentBundle + "] ");
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
     if (getSupportActionBar() != null) {
@@ -269,32 +208,33 @@ public class ReusableFragmentActivity extends BaseActivity implements
       }
     }
 
+    // Close activity if className is null
+    if (TextUtils.isEmpty(className)) {
+      Timber.e("Missing fragment classname in activity bundle");
+      finish();
+      return;
+    }
+
     //Initialise Fragment:
     //Use reflection to setup the Fragment:
-    try {
-      //Get the class (Fragment):
-      Class<?> fragmentClass = Class.forName(className);
-      //Get the default empty constructor:
-      Constructor<?> constructor = fragmentClass.getConstructor();
-      //Create new instance of the Fragment:
-      BaseFragment fragment = (BaseFragment) constructor.newInstance();
-      //Give the Bundle as argument:
-      fragment.setArguments(fragmentBundle);
-      //Show the Fragment:
-      setFragment(R.id.reusablefragmentactivity_fragmentcontainer, fragment);
-    } catch (Exception e) {
-      //CRASH!
-      //Collect more logs:
-      if (getIntent() != null && getIntent().getExtras() != null) {
-        Bundle extras = getIntent().getExtras();
-        for (String key : extras.keySet()) {
-          sb.append("key: " + key + " value: " + extras.get(key));
-        }
+    if (getInitialFragment() == null) {
+      try {
+        //Get the class (Fragment):
+        Class<?> fragmentClass = Class.forName(className);
+        //Get the default empty constructor:
+        Constructor<?> constructor = fragmentClass.getConstructor();
+        //Create new instance of the Fragment:
+        BaseFragment fragment = (BaseFragment) constructor.newInstance();
+        //Give the Bundle as argument:
+        fragment.setArguments(fragmentBundle);
+        //Show the Fragment:
+        setInitialFragment(R.id.reusablefragmentactivity_fragmentcontainer, fragment);
+      } catch (Exception e) {
+        //Send crash log to HockeyApp:
+        Timber.wtf(e, "Error when initializing Fragment");
+        //Recover by closing the Activity:
+        finish();
       }
-      //Send crash log to HockeyApp:
-      Timber.wtf(e, "Error when initializing Fragment: %s", sb.toString());
-      //Recover by closing the Activity:
-      finish();
     }
   }
 
@@ -307,14 +247,12 @@ public class ReusableFragmentActivity extends BaseActivity implements
   @NonNull
   @Override
   protected StubPresenter getPresenter() {
-    sb.append("getPresenter ");
     return stubPresenter;
   }
 
   @Override
   @CallSuper
   protected void injectDependencies() {
-    sb.append("inject ");
     stubPresenter = new StubPresenter(new DisposableHelper());
   }
 
@@ -332,31 +270,11 @@ public class ReusableFragmentActivity extends BaseActivity implements
   }
 
   @Override
-  public void switchFragment(@NonNull BaseFragment fragment) {
-    sb.append("switchFragment ");
-    super.switchFragment(R.id.reusablefragmentactivity_fragmentcontainer, fragment,
-        false, false);
-  }
-
-  @Override
-  public void switchFragment(BaseFragment fragment, boolean addToBackStack, boolean animate) {
-    sb.append("switchFragment ");
-    super.switchFragment(R.id.reusablefragmentactivity_fragmentcontainer, fragment,
-        addToBackStack, animate);
-  }
-
-  @Override
   public void setToolbarTitle(String title) {
 
     if (getSupportActionBar() != null) {
       getSupportActionBar().setTitle(title);
     }
-  }
-
-  @Override
-  protected void setFragment(int fragmentContainerId, BaseFragment fragment) {
-    sb.append("setFragment ");
-    super.setFragment(fragmentContainerId, fragment);
   }
 
   @Override
